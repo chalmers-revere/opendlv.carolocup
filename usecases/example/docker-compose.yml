@@ -24,14 +24,14 @@ services:
         build: .
         network_mode: "host"
         volumes:
-        - .:/opt/scaledcars.data
-        command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 --configuration=/opt/scaledcars.data/configuration"
+        - .:/opt/carolocup.data
+        command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 --configuration=/opt/carolocup.data/configuration"
         
-    # scaledcars-control-example
-    scaledcars-control-example:
+    # carolocup-control-example
+    carolocup-control-example:
         build: .
         network_mode: "host"
         depends_on:
             - odsupercomponent
-        command: "/opt/opendlv.scaledcars/bin/scaledcars-control-example --cid=211 --freq=10"
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-example --cid=211 --freq=10"
 
