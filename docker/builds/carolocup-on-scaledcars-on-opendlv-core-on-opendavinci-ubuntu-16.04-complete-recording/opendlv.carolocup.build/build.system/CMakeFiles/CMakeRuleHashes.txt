@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+0b046b38c8a6ebe90c1bc9b8b036ab21 control/example/ExampleTestSuite.h-TestSuite.cpp
+68341d444cbbf47e441f4aa34ba9632c proxy-camera/ProxyCameraTestSuite.h-TestSuite.cpp

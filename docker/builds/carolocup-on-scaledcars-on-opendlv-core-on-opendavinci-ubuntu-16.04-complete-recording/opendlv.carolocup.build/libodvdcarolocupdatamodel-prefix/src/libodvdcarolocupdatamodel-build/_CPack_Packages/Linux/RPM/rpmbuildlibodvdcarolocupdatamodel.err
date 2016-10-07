@@ -1,0 +1,24 @@
+error: cannot open Packages database in /root/.rpmdb
++ umask 022
++ cd /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/BUILD
++ mv /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/libodvdcarolocupdatamodel_1.0.0_x86_64 /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/tmpBBroot
++ exit 0
++ umask 022
++ cd /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/BUILD
++ [ -e /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/libodvdcarolocupdatamodel_1.0.0_x86_64 ]
++ mv /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/tmpBBroot /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/libodvdcarolocupdatamodel_1.0.0_x86_64
++ /usr/lib/rpm/brp-compress
++ /usr/lib/rpm/brp-strip /usr/bin/strip
++ /usr/lib/rpm/brp-strip-static-archive /usr/bin/strip
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
++ /usr/lib/rpm/brp-strip-comment-note /usr/bin/strip /usr/bin/objdump
++ umask 022
++ cd /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/BUILD
++ exit 0

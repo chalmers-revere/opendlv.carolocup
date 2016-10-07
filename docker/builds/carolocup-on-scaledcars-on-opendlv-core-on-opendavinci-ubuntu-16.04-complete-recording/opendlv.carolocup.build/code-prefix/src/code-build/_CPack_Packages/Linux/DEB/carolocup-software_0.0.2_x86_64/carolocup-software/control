@@ -1,0 +1,10 @@
+Package: carolocup-software-carolocup-software
+Version: 0.0.2
+Section: main
+Priority: optional
+Architecture: amd64
+Depends: opendavinci-lib
+Installed-Size: 915
+Maintainer: Christian Berger
+Description: carolocup-software contains the software for CaroloCup realized with OpenDLV and OpenDaVINCI.
+

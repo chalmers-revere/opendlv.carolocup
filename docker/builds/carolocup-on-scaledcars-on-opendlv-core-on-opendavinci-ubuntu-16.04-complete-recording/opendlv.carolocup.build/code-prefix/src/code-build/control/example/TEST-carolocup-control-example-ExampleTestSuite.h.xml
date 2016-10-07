@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+<testsuite name="carolocup-control-example-ExampleTestSuite.h" tests="1" failures="0" errors="0" time="0" timestamp="Fri Oct  7 09:37:50 2016" file="/opt/opendlv.carolocup.sources/code/control/example/testsuites/ExampleTestSuite.h" >
+    <testcase name="testApplication" classname="ExampleTest" line="37" >    </testcase>
+</testsuite>
+</testsuites>

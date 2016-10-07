@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcarolocup-control-example-static.a  CMakeFiles/carolocup-control-example-static.dir/src/Example.cpp.o
+/usr/bin/ranlib libcarolocup-control-example-static.a

@@ -25,9 +25,9 @@ services:
         network_mode: "host"
         volumes:
         - .:/opt/carolocup.data
-        command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 --configuration=/opt/carolocup.data/configuration"
-
-    # proxy-camera
+        #command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 --configuration=/opt/carolocup.data/configuration"
+        command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 "    
+# proxy-camera
     carolocup-control-example:
         build: .
         network_mode: "host"

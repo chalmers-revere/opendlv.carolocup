@@ -1,0 +1,10 @@
+Package: libodvdcarolocupdatamodel
+Version: 1.0.0
+Section: devel
+Priority: optional
+Architecture: amd64
+Depends: ant,default-jre,default-jdk
+Installed-Size: 140
+Maintainer: First name Last name
+Description: This is a libodvdcarolocupdatamodel, a library containing data structures for distributed software systems realized with OpenDaVINCI.
+

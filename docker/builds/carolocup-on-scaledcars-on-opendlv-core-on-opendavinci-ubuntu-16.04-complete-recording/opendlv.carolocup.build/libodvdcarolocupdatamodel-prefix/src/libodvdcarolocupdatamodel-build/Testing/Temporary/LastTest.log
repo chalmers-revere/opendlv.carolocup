@@ -1,0 +1,19 @@
+Start testing: Oct 07 09:37 UTC
+----------------------------------------------------------
+1/1 Testing: chalmersrevere_carolocup_ExampleMessageTestSuite.h-TestSuite
+1/1 Test: chalmersrevere_carolocup_ExampleMessageTestSuite.h-TestSuite
+Command: "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/chalmersrevere_carolocup_ExampleMessageTestSuite.h-TestSuite"
+Directory: /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build
+"chalmersrevere_carolocup_ExampleMessageTestSuite.h-TestSuite" start time: Oct 07 09:37 UTC
+Output:
+----------------------------------------------------------
+Running libodvdcarolocupdatamodel-chalmersrevere_carolocup_ExampleMessageTestSuite.h tests (4 tests)....OK!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"chalmersrevere_carolocup_ExampleMessageTestSuite.h-TestSuite" end time: Oct 07 09:37 UTC
+"chalmersrevere_carolocup_ExampleMessageTestSuite.h-TestSuite" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 07 09:37 UTC

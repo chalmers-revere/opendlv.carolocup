@@ -1,0 +1,16 @@
+Building target platforms: x86_64
+Building for target x86_64
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.BK69Yc
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.4iBcFK
+Processing files: carolocup-software-carolocup-software-0.0.2-1.x86_64
+Provides: carolocup-software-carolocup-software = 0.0.2-1 carolocup-software-carolocup-software(x86-64) = 0.0.2-1
+Requires(interp): /bin/sh /bin/sh /bin/sh /bin/sh
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires(pre): /bin/sh
+Requires(post): /bin/sh
+Requires(preun): /bin/sh
+Requires(postun): /bin/sh
+Requires: libc.so.6()(64bit) libc.so.6(GLIBC_2.14)(64bit) libc.so.6(GLIBC_2.2.5)(64bit) libc.so.6(GLIBC_2.4)(64bit) libgcc_s.so.1()(64bit) libgcc_s.so.1(GCC_3.0)(64bit) libodvdcarolocupdatamodel.so()(64bit) libopencv_core.so.2.4()(64bit) libopencv_highgui.so.2.4()(64bit) libopencv_imgproc.so.2.4()(64bit) libopendavinci.so()(64bit) libpthread.so.0()(64bit) libpthread.so.0(GLIBC_2.2.5)(64bit) libstdc++.so.6()(64bit) libstdc++.so.6(CXXABI_1.3)(64bit) libstdc++.so.6(GLIBCXX_3.4)(64bit) libstdc++.so.6(GLIBCXX_3.4.21)(64bit) rtld(GNU_HASH)
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/carolocup-software_0.0.2_x86_64/carolocup-software
+Wrote: /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/carolocup-software_0.0.2_x86_64-carolocup-software.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.tf9Vrj

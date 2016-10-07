@@ -1,0 +1,7 @@
+/usr/bin/carolocup-control-example
+/usr/lib/libcarolocup-control-example-static.a
+/usr/man/man1/carolocup-control-example.1
+/usr/include/copplar-control-example/Example.h
+/usr/bin/opendlv-core-system-proxy-camera
+/usr/lib/libopendlv-core-system-proxy-camera-static.a
+/usr/man/man1/opendlv-core-system-proxy-camera.1

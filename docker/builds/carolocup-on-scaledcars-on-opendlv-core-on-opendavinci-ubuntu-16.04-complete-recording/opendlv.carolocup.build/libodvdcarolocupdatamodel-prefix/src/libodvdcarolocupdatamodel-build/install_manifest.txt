@@ -1,0 +1,8 @@
+/usr/lib/libodvdcarolocupdatamodel-static.a
+/usr/lib/libodvdcarolocupdatamodel.so
+/usr/include//odvdcarolocupdatamodel/GeneratedHeaders_ODVDCaroloCupDataModel_Helper.h
+/usr/include//odvdcarolocupdatamodel/generated/chalmersrevere/carolocup/ExampleMessage.h
+/usr/include//odvdcarolocupdatamodel/GeneratedHeaders_ODVDCaroloCupDataModel.h
+/usr/share/cmake-3.5/Modules/FindODVDCaroloCupDataModel.cmake
+/usr/share/cmake-2.8/Modules/FindODVDCaroloCupDataModel.cmake
+/usr/share/cmake-3.0/Modules/FindODVDCaroloCupDataModel.cmake

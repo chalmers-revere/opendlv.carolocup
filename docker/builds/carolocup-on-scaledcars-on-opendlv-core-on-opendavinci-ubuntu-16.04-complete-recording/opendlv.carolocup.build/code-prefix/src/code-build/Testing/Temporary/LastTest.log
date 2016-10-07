@@ -1,0 +1,35 @@
+Start testing: Oct 07 09:37 UTC
+----------------------------------------------------------
+1/2 Testing: ExampleTestSuite.h-TestSuite
+1/2 Test: ExampleTestSuite.h-TestSuite
+Command: "/opt/opendlv.carolocup.build/code-prefix/src/code-build/control/example/ExampleTestSuite.h-TestSuite"
+Directory: /opt/opendlv.carolocup.build/code-prefix/src/code-build/control/example
+"ExampleTestSuite.h-TestSuite" start time: Oct 07 09:37 UTC
+Output:
+----------------------------------------------------------
+Running carolocup-control-example-ExampleTestSuite.h tests (1 test).OK!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"ExampleTestSuite.h-TestSuite" end time: Oct 07 09:37 UTC
+"ExampleTestSuite.h-TestSuite" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/2 Testing: ProxyCameraTestSuite.h-TestSuite
+2/2 Test: ProxyCameraTestSuite.h-TestSuite
+Command: "/opt/opendlv.carolocup.build/code-prefix/src/code-build/proxy-camera/ProxyCameraTestSuite.h-TestSuite"
+Directory: /opt/opendlv.carolocup.build/code-prefix/src/code-build/proxy-camera
+"ProxyCameraTestSuite.h-TestSuite" start time: Oct 07 09:37 UTC
+Output:
+----------------------------------------------------------
+Running opendlv-core-system-proxy-camera-ProxyCameraTestSuite.h tests (1 test).OK!
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"ProxyCameraTestSuite.h-TestSuite" end time: Oct 07 09:37 UTC
+"ProxyCameraTestSuite.h-TestSuite" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 07 09:37 UTC

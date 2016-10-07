@@ -1,0 +1,7 @@
+975d61b179e78bc5026681a9edd5803d  usr/man/man1/carolocup-control-example.1
+d338fe3d9dde2cd09df4f8fc5cc6ee25  usr/man/man1/opendlv-core-system-proxy-camera.1
+98071960cf29357d83b35cd9290ba234  usr/lib/libopendlv-core-system-proxy-camera-static.a
+22e5aaa9fed7350cdbf99eb553cd0cd3  usr/lib/libcarolocup-control-example-static.a
+96a2036a1c3ae0387963cc19c5747e7f  usr/bin/opendlv-core-system-proxy-camera
+3db9395ea15d6fdf9304cf05662f9fd2  usr/bin/carolocup-control-example
+47ddd2b55618ac72dac35efb07b01536  usr/include/copplar-control-example/Example.h
