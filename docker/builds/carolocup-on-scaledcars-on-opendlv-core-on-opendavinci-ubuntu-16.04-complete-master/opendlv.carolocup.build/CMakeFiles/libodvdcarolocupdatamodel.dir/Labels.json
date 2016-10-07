@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel-complete.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-install.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-mkdir.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-download.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-update.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-patch.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-configure.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-build.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-stamp/libodvdcarolocupdatamodel-test.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"libodvdcarolocupdatamodel"
+		],
+		"name" : "libodvdcarolocupdatamodel"
+	}
+}

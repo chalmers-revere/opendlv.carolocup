@@ -1,0 +1,14 @@
+# Target labels
+ libodvdcarolocupdatamodel-cleanup
+# Source files and their labels
+/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel-cleanup
+/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel-cleanup.rule
+/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel-cleanup-complete.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-install.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-mkdir.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-download.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-update.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-patch.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-configure.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-build.rule
+/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-test.rule

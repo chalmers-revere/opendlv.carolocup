@@ -1,0 +1,22 @@
+error: cannot open Packages database in /root/.rpmdb
++ umask 022
++ cd /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/BUILD
++ mv /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/carolocup-software_0.0.2_x86_64/carolocup-software /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/tmpBBroot
++ exit 0
++ umask 022
++ cd /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/BUILD
++ [ -e /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/carolocup-software_0.0.2_x86_64/carolocup-software ]
++ mv /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/tmpBBroot /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/carolocup-software_0.0.2_x86_64/carolocup-software
++ /usr/lib/rpm/brp-compress
++ /usr/lib/rpm/brp-strip /usr/bin/strip
+find: 'file': No such file or directory
++ /usr/lib/rpm/brp-strip-static-archive /usr/bin/strip
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
+find: 'file': No such file or directory
++ /usr/lib/rpm/brp-strip-comment-note /usr/bin/strip /usr/bin/objdump
+find: 'file': No such file or directory
++ umask 022
++ cd /opt/opendlv.carolocup.build/code-prefix/src/code-build/_CPack_Packages/Linux/RPM/BUILD
++ exit 0

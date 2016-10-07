@@ -1,0 +1,15 @@
+Building target platforms: x86_64
+Building for target x86_64
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.nCf40J
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.l2OqWi
+Processing files: libodvdcarolocupdatamodel-1.0.0-1.x86_64
+Provides: libodvdcarolocupdatamodel = 1.0.0-1 libodvdcarolocupdatamodel(x86-64) = 1.0.0-1 libodvdcarolocupdatamodel.so()(64bit)
+Requires(interp): /bin/sh /bin/sh /bin/sh /bin/sh
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires(pre): /bin/sh
+Requires(post): /bin/sh
+Requires(preun): /bin/sh
+Requires(postun): /bin/sh
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/libodvdcarolocupdatamodel_1.0.0_x86_64
+Wrote: /opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-prefix/src/libodvdcarolocupdatamodel-build/_CPack_Packages/Linux/RPM/libodvdcarolocupdatamodel_1.0.0_x86_64.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.4uscaS

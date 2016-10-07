@@ -1,0 +1,4 @@
+975d61b179e78bc5026681a9edd5803d  usr/man/man1/carolocup-control-example.1
+22e5aaa9fed7350cdbf99eb553cd0cd3  usr/lib/libcarolocup-control-example-static.a
+3db9395ea15d6fdf9304cf05662f9fd2  usr/bin/carolocup-control-example
+47ddd2b55618ac72dac35efb07b01536  usr/include/copplar-control-example/Example.h

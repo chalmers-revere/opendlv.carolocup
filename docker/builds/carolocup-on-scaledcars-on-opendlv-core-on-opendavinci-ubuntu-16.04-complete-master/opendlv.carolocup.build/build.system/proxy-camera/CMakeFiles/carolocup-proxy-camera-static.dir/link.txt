@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcarolocup-proxy-camera-static.a  CMakeFiles/carolocup-proxy-camera-static.dir/src/uEyeCamera.cpp.o CMakeFiles/carolocup-proxy-camera-static.dir/src/ProxyCamera.cpp.o CMakeFiles/carolocup-proxy-camera-static.dir/src/Camera.cpp.o CMakeFiles/carolocup-proxy-camera-static.dir/src/OpenCVCamera.cpp.o
+/usr/bin/ranlib libcarolocup-proxy-camera-static.a

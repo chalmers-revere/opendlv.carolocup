@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+<testsuite name="opendlv-core-system-proxy-camera-ProxyCameraTestSuite.h" tests="1" failures="0" errors="0" time="0" timestamp="Thu Oct  6 12:46:50 2016" file="/opt/opendlv.carolocup.sources/code/proxy-camera/testsuites/ProxyCameraTestSuite.h" >
+    <testcase name="testApplication" classname="ProxyCameraTest" line="73" >    </testcase>
+</testsuite>
+</testsuites>

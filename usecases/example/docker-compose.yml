@@ -26,7 +26,7 @@ services:
         volumes:
         - .:/opt/carolocup.data
         command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 --configuration=/opt/carolocup.data/configuration"
-        
+
     # carolocup-control-example
     carolocup-control-example:
         build: .
@@ -34,4 +34,18 @@ services:
         depends_on:
             - odsupercomponent
         command: "/opt/opendlv.carolocup/bin/carolocup-control-example --cid=211 --freq=10"
+
+    # odcockpit
+    odcockpit:
+        build: .
+        network_mode: "host"
+        depends_on:
+            - odsupercomponent
+        command: "/opt/od4/bin/odcockpit --cid=211"
+        environment:
+             - DISPLAY=unix:0
+        volumes:
+              - /tmp/.X11-unix:/tmp/.X11-unix
+              - /home/andreas/Desktop/carrecording:/carrecording
+
 

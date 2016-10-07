@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel-cleanup"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel-cleanup.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/CMakeFiles/libodvdcarolocupdatamodel-cleanup-complete.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-install.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-mkdir.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-download.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-update.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-patch.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-configure.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-build.rule"
+		},
+		{
+			"file" : "/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel-cleanup-prefix/src/libodvdcarolocupdatamodel-cleanup-stamp/libodvdcarolocupdatamodel-cleanup-test.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"libodvdcarolocupdatamodel-cleanup"
+		],
+		"name" : "libodvdcarolocupdatamodel-cleanup"
+	}
+}

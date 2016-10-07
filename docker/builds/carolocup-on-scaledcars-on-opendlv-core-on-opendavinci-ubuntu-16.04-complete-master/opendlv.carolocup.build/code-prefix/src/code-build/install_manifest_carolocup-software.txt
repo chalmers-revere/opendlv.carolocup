@@ -1,0 +1,4 @@
+/usr/bin/carolocup-control-example
+/usr/lib/libcarolocup-control-example-static.a
+/usr/man/man1/carolocup-control-example.1
+/usr/include/copplar-control-example/Example.h

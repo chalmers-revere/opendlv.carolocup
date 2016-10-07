@@ -1,0 +1,19 @@
+Start testing: Oct 06 12:27 UTC
+----------------------------------------------------------
+1/1 Testing: ExampleTestSuite.h-TestSuite
+1/1 Test: ExampleTestSuite.h-TestSuite
+Command: "/opt/opendlv.carolocup.build/code-prefix/src/code-build/control/example/ExampleTestSuite.h-TestSuite"
+Directory: /opt/opendlv.carolocup.build/code-prefix/src/code-build/control/example
+"ExampleTestSuite.h-TestSuite" start time: Oct 06 12:27 UTC
+Output:
+----------------------------------------------------------
+Running carolocup-control-example-ExampleTestSuite.h tests (1 test).OK!
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"ExampleTestSuite.h-TestSuite" end time: Oct 06 12:27 UTC
+"ExampleTestSuite.h-TestSuite" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 06 12:27 UTC

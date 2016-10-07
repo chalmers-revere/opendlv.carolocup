@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+9d00f52f2a450888dc556a71f6c50035 chalmersrevere_carolocup_ExampleMessageTestSuite.h-TestSuite.cpp

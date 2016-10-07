@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+<testsuite name="libodvdcarolocupdatamodel-chalmersrevere_carolocup_ExampleMessageTestSuite.h" tests="4" failures="0" errors="0" time="0" timestamp="Thu Oct  6 12:27:40 2016" file="/opt/opendlv.carolocup.build/libodvdcarolocupdatamodel/testsuites/chalmersrevere_carolocup_ExampleMessageTestSuite.h" >
+    <testcase name="testCreateObject" classname="chalmersrevere_carolocup_ExampleMessage_TestSuite" line="28" >    </testcase>
+    <testcase name="testCreateAndCopyObject" classname="chalmersrevere_carolocup_ExampleMessage_TestSuite" line="39" >    </testcase>
+    <testcase name="testCreateAndAssignObject" classname="chalmersrevere_carolocup_ExampleMessage_TestSuite" line="60" >    </testcase>
+    <testcase name="testCreateAndSerializeObject" classname="chalmersrevere_carolocup_ExampleMessage_TestSuite" line="81" >    </testcase>
+</testsuite>
+</testsuites>

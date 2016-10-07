@@ -1,0 +1,22 @@
+Sending build context to Docker daemon 557.1 kBSending build context to Docker daemon 1.095 MBSending build context to Docker daemon 1.095 MB
+Step 1 : FROM seresearch/scaledcars-on-opendlv-core-on-opendavinci-ubuntu-16.04-complete
+ ---> 6216dbcbb3b3
+Step 2 : MAINTAINER Christian Berger "christian.berger@gu.se"
+ ---> Using cache
+ ---> 91a13522ce10
+Step 3 : ADD opt /opt
+ ---> Using cache
+ ---> 777dc418c4f0
+Step 4 : RUN chown -R 1000:1000 /opt/opendlv.carolocup
+ ---> Using cache
+ ---> 9791921ebddd
+Step 5 : ENV QT_X11_NO_MITSHM 1
+ ---> Using cache
+ ---> f365323c149a
+Step 6 : ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/opt/opendlv.carolocup/lib
+ ---> Using cache
+ ---> 691b4e76a172
+Step 7 : WORKDIR /opt/opendlv.carolocup/bin
+ ---> Using cache
+ ---> 963ce42e67ea
+Successfully built 963ce42e67ea

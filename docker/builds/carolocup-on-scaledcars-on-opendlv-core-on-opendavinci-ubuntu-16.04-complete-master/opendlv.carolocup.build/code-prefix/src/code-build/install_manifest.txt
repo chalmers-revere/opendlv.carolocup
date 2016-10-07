@@ -1,0 +1,4 @@
+/opt/opendlv.carolocup/bin/carolocup-control-example
+/opt/opendlv.carolocup/lib/libcarolocup-control-example-static.a
+/opt/opendlv.carolocup/man/man1/carolocup-control-example.1
+/opt/opendlv.carolocup/include/copplar-control-example/Example.h

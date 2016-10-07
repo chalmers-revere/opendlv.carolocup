@@ -47,7 +47,7 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Example::body() {
     cout << em.toString() << endl;
 
     while (getModuleStateAndWaitForRemainingTimeInTimeslice() == odcore::data::dmcp::ModuleStateMessage::RUNNING) {
-        cout << "Inside the main processing loop." << endl;
+ //       cout << "Inside the main processing loop." << endl;
     }
 
     return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;

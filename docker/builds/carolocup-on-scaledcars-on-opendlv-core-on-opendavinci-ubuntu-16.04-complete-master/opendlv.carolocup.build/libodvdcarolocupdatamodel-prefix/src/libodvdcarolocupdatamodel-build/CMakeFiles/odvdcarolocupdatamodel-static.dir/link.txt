@@ -1,0 +1,2 @@
+/usr/bin/ar qc libodvdcarolocupdatamodel-static.a  CMakeFiles/odvdcarolocupdatamodel-core.dir/src/GeneratedHeaders_ODVDCaroloCupDataModel_Helper.cpp.o CMakeFiles/odvdcarolocupdatamodel-core.dir/src/generated/chalmersrevere/carolocup/ExampleMessage.cpp.o
+/usr/bin/ranlib libodvdcarolocupdatamodel-static.a

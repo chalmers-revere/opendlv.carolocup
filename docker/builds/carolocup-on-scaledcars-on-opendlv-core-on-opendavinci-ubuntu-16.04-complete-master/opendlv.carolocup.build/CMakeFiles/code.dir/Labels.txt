@@ -1,0 +1,14 @@
+# Target labels
+ code
+# Source files and their labels
+/opt/opendlv.carolocup.build/CMakeFiles/code
+/opt/opendlv.carolocup.build/CMakeFiles/code.rule
+/opt/opendlv.carolocup.build/CMakeFiles/code-complete.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-install.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-mkdir.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-download.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-update.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-patch.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-configure.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-build.rule
+/opt/opendlv.carolocup.build/code-prefix/src/code-stamp/code-test.rule

@@ -1,0 +1,8 @@
+aa8e33a9fae55a184fd0ddb4ad0d6379  usr/lib/libodvdcarolocupdatamodel-static.a
+3d306ec981d48434571d2287275f34d4  usr/lib/libodvdcarolocupdatamodel.so
+1ea6fafb05dc259b44e199b4c362d06e  usr/share/cmake-3.0/Modules/FindODVDCaroloCupDataModel.cmake
+1ea6fafb05dc259b44e199b4c362d06e  usr/share/cmake-3.5/Modules/FindODVDCaroloCupDataModel.cmake
+1ea6fafb05dc259b44e199b4c362d06e  usr/share/cmake-2.8/Modules/FindODVDCaroloCupDataModel.cmake
+fe8c60b2d391ebeebc30a4bacc10d5d3  usr/include/odvdcarolocupdatamodel/GeneratedHeaders_ODVDCaroloCupDataModel_Helper.h
+584e3d107312dce0f3d20cf84ca84829  usr/include/odvdcarolocupdatamodel/generated/chalmersrevere/carolocup/ExampleMessage.h
+a53403383bdbf2038209a07ac0bdeabe  usr/include/odvdcarolocupdatamodel/GeneratedHeaders_ODVDCaroloCupDataModel.h
