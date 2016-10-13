@@ -41,7 +41,8 @@ services:
              - DISPLAY=$DISPLAY
         volumes:
               - /tmp/.X11-unix:/tmp/.X11-unix
-              - /home/andreas/Desktop/carrecording:/carrecording
               - ~/recordings:/opt/recordings
-
-
+        ipc: host
+        user: root
+        
+        
