@@ -19,4 +19,37 @@
 message chalmersrevere.carolocup.ExampleMessage [id = 901] {
     uint32 field1   [id = 1];
 }
-
+// message chalmersrevere.carolocup.CustomLine [id=902]{
+// 	Point center [id =1];
+// 	Point p1[id =2];
+// 	Point p2[id =3];
+//     float slope[id =4];
+//     int64 polygonIndex[id =5];
+// }
+// message chalmersrevere.carolocup.LaneDetectorDataToDriver [id=903] {
+// 	enum RoadState{
+//   	NOT_SET,
+//   	NORMAL,
+//   	INTERSECTION
+// };
+// 	int64 switchPointsLeftGoalLines0 [id =1]; 
+//     int64 switchPointsRightGoalLines0 [id =2];
+//     int64 switchPointsLeftGoalLines1[id =3];
+//     int64 switchPointsRightGoalLines1[id =4];
+//     CustomLine leftGoalLines0[id =5];
+//     CustomLine rightGoalLines0[id =6];
+//     CustomLine leftGoalLines1[id =7];
+//     CustomLine rightGoalLines1[id =8];
+//     CustomLine leftGoalLines2[id =9];
+//     CustomLine rightGoalLines2[id =10];
+//     CustomLine leftGoalLines3[id =11];
+//     CustomLine rightGoalLines3[id =12];		
+//     CustomLine currentLine[id =13];
+//     RoadState roadState[id =14];
+//     int64 confidenceLevel[id =15];
+//     int64 confidenceLevel_goalLine[id =16];
+//     bool noTrajectory[id =17];
+// }
+// message chalmersrevere.carolocup.Lines [id=904]{
+	
+// }

@@ -34,4 +34,10 @@ services:
         depends_on:
             - odsupercomponent
         command: "/opt/opendlv.carolocup/bin/carolocup-control-example --cid=211 --freq=10"
-
+    
+    carolocup-proxy:
+        build: .
+        network_mode: "host"
+        depends_on:
+            - odsupercomponent
+        command: "/opt/opendlv.carolocup/bin/carolocup-proxy --cid=211 --freq=10"
