@@ -71,7 +71,7 @@ namespace automotive {
         Proxy::~Proxy() {
         }
         
-        Container decodePayload(string payload){
+            Container Proxy::decodePayload(string payload){
             cout << "Decoding payload" <<endl;
             stringstream proto(payload);
             ProtoDeserializerVisitor protoDeserializerVisitor;

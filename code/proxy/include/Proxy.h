@@ -55,7 +55,7 @@ namespace automotive {
                 Proxy(const Proxy &/*obj*/);
                 
                 shared_ptr<odcore::wrapper::SerialPort> serial;
-                
+                odcore::data::Container decodePayload(string payload);
                 void nextString(const std::string &s);
 
                 /**
