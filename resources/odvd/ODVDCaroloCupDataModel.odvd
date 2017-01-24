@@ -15,6 +15,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+// #include "opencv2/opencv.hpp"
+// #include "opendavinci/odcore/data/SerializableData.h"
 
 message chalmersrevere.carolocup.ExampleMessage [id = 901] {
     uint32 field1   [id = 1];
@@ -26,11 +28,28 @@ message chalmersrevere.carolocup.ExampleMessage [id = 901] {
 //     float slope[id =4];
 //     int64 polygonIndex[id =5];
 // }
-// message chalmersrevere.carolocup.LaneDetectorDataToDriver [id=903] {
+// message chalmersrevere.carolocup.Lines [id=903]{
+// 	Vec4i leftLine [id =1];
+//     Vec4i rightLine [id =2];
+//     Vec4i dashedLine [id =3];
+//     CustomLine goalLine [id =4];
+//     CustomLine goalLineLeft [id =5];
+//     CustomLine currentLine [id =6];
+//     int64 pGain [id =7];
+//     int64 intGain [id =8];
+//     int64 derGain [id =9];
+//     int64 speed [id =10];
+//     int64 width [id =11];
+//     int64 height [id =12];
+//     int64 startLineHeight [id =13];
+//     int64 stopLineHeight [id =14];
+
+// }
+// message chalmersrevere.carolocup.LaneDetectorDataToDriver [id=904] {
 // 	enum RoadState{
-//   	NOT_SET,
-//   	NORMAL,
-//   	INTERSECTION
+//   	NOT_SET =-1,
+//   	NORMAL =0,
+//   	INTERSECTION=1,
 // };
 // 	int64 switchPointsLeftGoalLines0 [id =1]; 
 //     int64 switchPointsRightGoalLines0 [id =2];
@@ -49,7 +68,4 @@ message chalmersrevere.carolocup.ExampleMessage [id = 901] {
 //     int64 confidenceLevel[id =15];
 //     int64 confidenceLevel_goalLine[id =16];
 //     bool noTrajectory[id =17];
-// }
-// message chalmersrevere.carolocup.Lines [id=904]{
-	
 // }
