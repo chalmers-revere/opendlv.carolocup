@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # completeBuild.sh - Script to build opendlv.carolocup.
-# Copyright (C) 2016 Christian Berger
+# Copyright (C) 2017 Christian Berger
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 
 BUILD_AS=$1
 UID_AS=$2
+PACKAGING_ENABLED=$3
 
 # Adding user for building.
 groupadd $BUILD_AS
@@ -30,7 +31,7 @@ cd /opt/opendlv.carolocup.build
 
 echo "[opendlv.carolocup Docker builder] Complete build."
 cmake -E remove_directory .
-PATH=/opt/od4/bin:$PATH cmake -D OPENDAVINCI_DIR=/opt/od4 -D CMAKE_INSTALL_PREFIX=/opt/opendlv.carolocup /opt/opendlv.carolocup.sources
+PATH=/opt/od4/bin:$PATH cmake -D OPENDAVINCI_DIR=/opt/od4 -D CMAKE_INSTALL_PREFIX=/opt/opendlv.carolocup -D PACKAGING_ENABLED=$PACKAGING_ENABLED /opt/opendlv.carolocup.sources
 make -j4
 EOF
 

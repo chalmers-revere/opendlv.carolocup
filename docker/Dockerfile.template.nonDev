@@ -20,7 +20,7 @@ FROM BASEIMAGE
 MAINTAINER Christian Berger "christian.berger@gu.se"
 
 # Add binaries.
-ADD opt /opt
+ADD opt.nonDev /opt
 
 # Change owner for binaries.
 RUN chown -R 1000:1000 /opt/opendlv.carolocup
