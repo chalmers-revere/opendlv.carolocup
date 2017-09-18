@@ -28,10 +28,15 @@ services:
         command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 --configuration=/opt/carolocup.data/configuration"
         
     # carolocup-control-example
-    carolocup-control-example:
+    carolocup-control-lidarhandler:
         build: .
         network_mode: "host"
+        ipc : host
         depends_on:
             - odsupercomponent
-        command: "/opt/opendlv.carolocup/bin/carolocup-control-example --cid=211 --freq=10"
+        devices:
+          - "/dev/ttyUSB0:/dev/ttyUSB0"
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-lidarhandler --cid=211 --freq=10"
 
