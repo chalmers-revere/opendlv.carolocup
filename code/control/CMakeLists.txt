@@ -18,4 +18,5 @@
 project(carolocup-control)
 
 add_subdirectory(example)
-
+add_subdirectory(lidarHandler)
+add_subdirectory(libsweep)
