@@ -19,7 +19,8 @@
 
 #include "Example.h"
 
-int32_t main(int32_t argc, char **argv) {
+int32_t main(int32_t argc, char **argv)
+{
     carolocup::control::Example example(argc, argv);
     return example.runModule();
 }

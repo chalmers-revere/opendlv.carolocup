@@ -1,5 +1,5 @@
 /**
- * LIDARHandler - LIDARHandler code.
+ * Overtaker - Overtaker code.
  * Copyright (C) 2016 Christian Berger
  *
  * This program is free software; you can redistribute it and/or
@@ -17,10 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "LIDARHandler.h"
+#ifndef SCALEDCARS_CONTROL_OVERTAKER_TESTSUITE_H
+#define SCALEDCARS_CONTROL_OVERTAKER_TESTSUITE_H
 
-int32_t main(int32_t argc, char **argv)
+#include "cxxtest/TestSuite.h"
+
+// Include local header files.
+#include "../include/Overtaker.h"
+
+using namespace std;
+using namespace carolocup::control;
+
+class OvertakerTest : public CxxTest::TestSuite
 {
-    carolocup::control::LIDARHandler lidarHandler(argc, argv);
-    return lidarHandler.runModule();
-}
+public:
+    void setUp()
+    {}
+
+    void tearDown()
+    {}
+
+    void testApplication()
+    {
+        TS_ASSERT(true);
+    }
+};
+
+#endif /*SCALEDCARS_CONTROL_OVERTAKER_TESTSUITE_H*/

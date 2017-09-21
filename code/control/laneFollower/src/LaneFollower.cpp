@@ -1,5 +1,5 @@
 /**
- * Example - Example code.
+ * LaneFollower - LaneFollower code.
  * Copyright (C) 2016 Christian Berger
  *
  * This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 
 #include "odvdcarolocupdatamodel/generated/chalmersrevere/carolocup/ExampleMessage.h"
 
-#include "Example.h"
+#include "LaneFollower.h"
 
 namespace carolocup
 {
@@ -33,26 +33,21 @@ namespace carolocup
         using namespace std;
         using namespace odcore::base;
 
-        Example::Example(const int &argc, char **argv)
-                : TimeTriggeredConferenceClientModule(argc, argv, "carolocup-example")
+        LaneFollower::LaneFollower(const int &argc, char **argv)
+                : TimeTriggeredConferenceClientModule(argc, argv, "carolocup-lanefollower")
         {}
 
-        Example::~Example()
+        LaneFollower::~LaneFollower()
         {}
 
-        void Example::setUp()
+        void LaneFollower::setUp()
         {}
 
-        void Example::tearDown()
+        void LaneFollower::tearDown()
         {}
 
-        odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Example::body()
+        odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode LaneFollower::body()
         {
-            chalmersrevere::carolocup::ExampleMessage em;
-            cout << em.toString() << endl;
-            em.setField1(1234);
-            cout << em.toString() << endl;
-
             while (getModuleStateAndWaitForRemainingTimeInTimeslice() ==
                    odcore::data::dmcp::ModuleStateMessage::RUNNING)
             {
