@@ -1,5 +1,5 @@
 /**
- * Example - Example code.
+ * LIDARHandler - LIDARHandler code.
  * Copyright (C) 2016 Christian Berger
  *
  * This program is free software; you can redistribute it and/or
@@ -28,13 +28,17 @@
 using namespace std;
 using namespace carolocup::control;
 
-class LIDARHandlerTest : public CxxTest::TestSuite {
-   public:
-    void setUp() {}
+class LIDARHandlerTest : public CxxTest::TestSuite
+{
+public:
+    void setUp()
+    {}
 
-    void tearDown() {}
+    void tearDown()
+    {}
 
-    void testApplication() {
+    void testApplication()
+    {
         TS_ASSERT(true);
     }
 };

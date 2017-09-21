@@ -1,5 +1,5 @@
 /**
- * Example - Example code.
+ * LIDARHandler - LIDARHandler code.
  * Copyright (C) 2016 Christian Berger
  *
  * This program is free software; you can redistribute it and/or

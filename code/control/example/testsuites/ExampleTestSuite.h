@@ -28,13 +28,17 @@
 using namespace std;
 using namespace carolocup::control;
 
-class ExampleTest : public CxxTest::TestSuite {
-   public:
-    void setUp() {}
+class ExampleTest : public CxxTest::TestSuite
+{
+public:
+    void setUp()
+    {}
 
-    void tearDown() {}
+    void tearDown()
+    {}
 
-    void testApplication() {
+    void testApplication()
+    {
         TS_ASSERT(true);
     }
 };

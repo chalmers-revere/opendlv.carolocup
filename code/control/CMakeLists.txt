@@ -17,6 +17,12 @@
 
 project(carolocup-control)
 
+add_subdirectory(communicationLink)
 add_subdirectory(example)
-add_subdirectory(lidarHandler)
+add_subdirectory(laneFollower)
 add_subdirectory(libsweep)
+add_subdirectory(lidarHandler)
+add_subdirectory(overtaker)
+add_subdirectory(parker)
+add_subdirectory(proxy)
+add_subdirectory(serialHandler)

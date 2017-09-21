@@ -1,5 +1,5 @@
 /**
- * LIDARHandler - LIDARHandler code.
+ * SerialHandler - SerialHandler code.
  * Copyright (C) 2016 Christian Berger
  *
  * This program is free software; you can redistribute it and/or
@@ -17,24 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef CONTROL_LIDARHANDLER_H
-#define CONTROL_LIDARHANDLER_H
+#ifndef CONTROL_SERIALHANDLER_H
+#define CONTROL_SERIALHANDLER_H
 
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
-#include "sweep/sweep.hpp"
-#include <cmath>
-#include <iostream>
-#include <memory>
-#include <stdint.h>
-#include <string>
-#include <vector>
-#include <cctype>
-#include <algorithm>
-#include <stdlib.h>
-
-#define PORT "/dev/ttyUSB0"
-#define MAX_DIS 301
-#define MIN_DIS 2
 
 namespace carolocup
 {
@@ -42,17 +28,16 @@ namespace carolocup
     {
 
         using namespace std;
-        using namespace sweep;
 
 /**
- * Time-triggered LIDARHandler.
+ * Time-triggered example.
  */
-        class LIDARHandler : public odcore::base::module::TimeTriggeredConferenceClientModule
+        class SerialHandler : public odcore::base::module::TimeTriggeredConferenceClientModule
         {
         private:
-            LIDARHandler(const LIDARHandler & /*obj*/) = delete;
+            SerialHandler(const SerialHandler & /*obj*/) = delete;
 
-            LIDARHandler &operator=(const LIDARHandler & /*obj*/) = delete;
+            SerialHandler &operator=(const SerialHandler & /*obj*/) = delete;
 
         public:
             /**
@@ -61,9 +46,9 @@ namespace carolocup
              * @param argc Number of command line arguments.
              * @param argv Command line arguments.
              */
-            LIDARHandler(const int &argc, char **argv);
+            SerialHandler(const int &argc, char **argv);
 
-            virtual ~LIDARHandler();
+            virtual ~SerialHandler();
 
         private:
             void setUp();
@@ -71,17 +56,8 @@ namespace carolocup
             void tearDown();
 
             odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-
-            void startDevice();
-
-            void stopDevice();
-
-            sweep::sweep device;
-            map <uint32_t, vector<int>> lidar;
-            map<uint32_t, int> lidar_data;
-            int count;
         };
     }
 } // carolocup::control
 
-#endif /*CONTROL_LIDARHandler_H*/
+#endif /*CONTROL_SERIALHANDLER_H*/

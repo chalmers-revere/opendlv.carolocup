@@ -22,36 +22,42 @@
 
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 
-namespace carolocup {
-namespace control {
+namespace carolocup
+{
+    namespace control
+    {
 
-using namespace std;
+        using namespace std;
 
 /**
  * Time-triggered example.
  */
-class Example : public odcore::base::module::TimeTriggeredConferenceClientModule {
-   private:
-    Example(const Example & /*obj*/) = delete;
-    Example &operator=(const Example & /*obj*/) = delete;
+        class Example : public odcore::base::module::TimeTriggeredConferenceClientModule
+        {
+        private:
+            Example(const Example & /*obj*/) = delete;
 
-   public:
-    /**
-     * Constructor.
-     *
-     * @param argc Number of command line arguments.
-     * @param argv Command line arguments.
-     */
-    Example(const int &argc, char **argv);
+            Example &operator=(const Example & /*obj*/) = delete;
 
-    virtual ~Example();
+        public:
+            /**
+             * Constructor.
+             *
+             * @param argc Number of command line arguments.
+             * @param argv Command line arguments.
+             */
+            Example(const int &argc, char **argv);
 
-   private:
-    void setUp();
-    void tearDown();
-    odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-};
-}
+            virtual ~Example();
+
+        private:
+            void setUp();
+
+            void tearDown();
+
+            odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+        };
+    }
 } // carolocup::control
 
 #endif /*CONTROL_EXAMPLE_H*/
