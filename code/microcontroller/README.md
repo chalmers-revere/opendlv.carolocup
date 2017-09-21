@@ -1,1 +1,1 @@
-# _`Microcontroller code for carolocup`_
+# _Microcontroller code for carolocup_
