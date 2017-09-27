@@ -20,7 +20,21 @@
 #ifndef CONTROL_PROXY_H
 #define CONTROL_PROXY_H
 
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include "../../defines/defines.h"
+
+#include <map>
+#include <memory>
+#include <iostream>
+#include <stdint.h>
+
+#include "opendavinci/odcore/base/KeyValueConfiguration.h"
+#include "opendavinci/odcore/data/TimeStamp.h"
+#include "OpenCVCamera.h"
+#include "opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h"
+#include "opendavinci/odcore/data/Container.h"
+#include "opendavinci/odtools/recorder/Recorder.h"
+
+#include "Camera.h"
 
 namespace carolocup
 {
@@ -56,6 +70,12 @@ namespace carolocup
             void tearDown();
 
             odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+
+            void distribute(odcore::data::Container c);
+
+            unique_ptr <odtools::recorder::Recorder> m_recorder;
+
+            unique_ptr <Camera> m_camera;
         };
     }
 } // carolocup::control

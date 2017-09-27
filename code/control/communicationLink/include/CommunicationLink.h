@@ -20,7 +20,26 @@
 #ifndef CONTROL_COMMUNICATIONLINK_H
 #define CONTROL_COMMUNICATIONLINK_H
 
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include "../../defines/defines.h"
+#include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/data/Container.h>
+#include <opendavinci/odcore/data/TimeStamp.h>
+
+#include <opendavinci/odcore/wrapper/SharedMemory.h>
+#include <opendavinci/odcore/wrapper/SharedMemoryFactory.h>
+
+#include <opendavinci/odcore/base/Thread.h>
+#include "odvdcarolocupdatamodel/generated/gap/CommunicationLinkMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/LaneFollowerMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/OvertakerMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/ParkerMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
+#include <opendavinci/odcore/base/KeyValueConfiguration.h>
+
+#include <iostream>
+#include <memory>
+#include <stdint.h>
+#include <string>
 
 namespace carolocup
 {
@@ -28,11 +47,16 @@ namespace carolocup
     {
 
         using namespace std;
+        using namespace odcore;
+        using namespace odcore::base::module;
+        using namespace odcore::data;
+        using namespace odcore::wrapper;
+        using namespace gap;
 
 /**
  * Time-triggered CommunicationLink.
  */
-        class CommunicationLink : public odcore::base::module::TimeTriggeredConferenceClientModule
+        class CommunicationLink : public odcore::base::module::DataTriggeredConferenceClientModule
         {
         private:
             CommunicationLink(const CommunicationLink & /*obj*/) = delete;
@@ -55,7 +79,13 @@ namespace carolocup
 
             void tearDown();
 
-            odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+            virtual void nextContainer(Container &c);
+
+            CommunicationLinkMSG communicationLinkMSG;
+            LaneFollowerMSG laneFollowerMSG;
+            OvertakerMSG overtakerMSG;
+            ParkerMSG parkerMSG;
+            SensorsMSG sensorsMSG;
         };
     }
 } // carolocup::control
