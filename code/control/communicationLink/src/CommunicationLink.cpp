@@ -17,12 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <stdint.h>
-
-#include <iostream>
-
-#include "odvdcarolocupdatamodel/generated/chalmersrevere/carolocup/ExampleMessage.h"
-
 #include "CommunicationLink.h"
 
 namespace carolocup
@@ -32,30 +26,116 @@ namespace carolocup
 
         using namespace std;
         using namespace odcore::base;
+        using namespace odcore;
+        using namespace odcore::base::module;
+        using namespace odcore::data;
+        using namespace odcore::wrapper;
+        using namespace odcore::data::dmcp;
+        using namespace gap;
 
         CommunicationLink::CommunicationLink(const int &argc, char **argv)
-                : TimeTriggeredConferenceClientModule(argc, argv, "carolocup-communicationlink")
+                : DataTriggeredConferenceClientModule(argc, argv, "carolocup-communicationlink"),
+                  communicationLinkMSG(),
+                  laneFollowerMSG(),
+                  overtakerMSG(),
+                  parkerMSG(),
+                  sensorsMSG()
         {}
 
         CommunicationLink::~CommunicationLink()
         {}
 
         void CommunicationLink::setUp()
-        {}
+        {
+            cout << "Starting CommunicationLink" << endl;
+
+            // Get configuration data.
+            KeyValueConfiguration kv = getKeyValueConfiguration();
+
+            communicationLinkMSG.setStateLaneFollower(kv.getValue<int32_t>("communicationlink.functionlane"));
+            int func2 = kv.getValue<int32_t>("communicationlink.function2");
+
+            if (func2 == 1)
+            {
+                communicationLinkMSG.setStateOvertaker(0);
+                communicationLinkMSG.setStateParker(1);
+            } else if (func2 == 0)
+            {
+                communicationLinkMSG.setStateOvertaker(1);
+                communicationLinkMSG.setStateParker(0);
+            } else
+            {
+                communicationLinkMSG.setStateOvertaker(0);
+                communicationLinkMSG.setStateParker(0);
+            }
+        }
 
         void CommunicationLink::tearDown()
-        {}
+        {
+            cout << "Shutting down CommunicationLink" << endl;
+        }
 
-        odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode CommunicationLink::body()
+        void CommunicationLink::nextContainer(Container &c)
         {
 
-            while (getModuleStateAndWaitForRemainingTimeInTimeslice() ==
-                   odcore::data::dmcp::ModuleStateMessage::RUNNING)
+            if (c.getDataType() == SensorsMSG::ID())
             {
-                cout << "Inside the main processing loop." << endl;
-            }
+                Container sensorBoardDataContainer = c.getData<SensorsMSG>();
 
-            return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
+                sensorsMSG = sensorBoardDataContainer.getData<SensorsMSG>();
+
+                communicationLinkMSG.setWheelEncoder(sensorsMSG.getTravelledDistance());
+
+                communicationLinkMSG.setUltraSonicFrontCenter(
+                        sensorsMSG.getValueForKey_MapOfDistances(ID_IN_ULTRASONIC_CENTER));
+
+                communicationLinkMSG.setUltraSonicFrontRight(
+                        sensorsMSG.getValueForKey_MapOfDistances(ID_IN_ULTRASONIC_SIDE_FRONT));
+
+                communicationLinkMSG.setInfraredSideFront(
+                        sensorsMSG.getValueForKey_MapOfDistances(ID_IN_INFRARED_SIDE_FRONT));
+
+                communicationLinkMSG.setInfraredSideBack(
+                        sensorsMSG.getValueForKey_MapOfDistances(ID_IN_INFRARED_SIDE_BACK));
+
+                communicationLinkMSG.setInfraredBack(sensorsMSG.getValueForKey_MapOfDistances(ID_IN_INFRARED_BACK));
+
+                Container container(communicationLinkMSG);
+                // Send container.
+                getConference().send(container);
+            } else if (c.getDataType() == OvertakerMSG::ID())
+            {
+                Container overtakerMSGContainer = c.getData<OvertakerMSG>();
+                overtakerMSG = overtakerMSGContainer.getData<OvertakerMSG>();
+
+
+                Container container(communicationLinkMSG);
+                // Send container.
+                getConference().send(container);
+            } else if (c.getDataType() == ParkerMSG::ID())
+            {
+                Container parkerMSGContainer = c.getData<ParkerMSG>();
+                parkerMSG = parkerMSGContainer.getData<ParkerMSG>();
+
+                Container container(communicationLinkMSG);
+                // Send container.
+                getConference().send(container);
+            } else if (c.getDataType() == LaneFollowerMSG::ID())
+            {
+                Container laneFollowerMSGContainer = c.getData<LaneFollowerMSG>();
+                laneFollowerMSG = laneFollowerMSGContainer.getData<LaneFollowerMSG>();
+
+                communicationLinkMSG.setDrivingLane(laneFollowerMSG.getStateLane());
+                communicationLinkMSG.setDistanceToRightLane(laneFollowerMSG.getDistanceToRightLane());
+                communicationLinkMSG.setStop(laneFollowerMSG.getDanger());
+                Container container(communicationLinkMSG);
+                // Send container.
+                getConference().send(container);
+            }
+            Container container(communicationLinkMSG);
+            // Send container.
+            getConference().send(container);
         }
+
     }
 } // carolocup::control
