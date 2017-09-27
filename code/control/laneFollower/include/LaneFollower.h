@@ -42,7 +42,6 @@
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 #include "opendavinci/odcore/io/conference/ContainerConference.h"
 #include <opendavinci/odcore/data/Container.h>
-
 #include <opendavinci/odcore/data/TimeStamp.h>
 
 #include <opendavinci/odcore/wrapper/SharedMemoryFactory.h>
@@ -60,6 +59,7 @@ namespace carolocup
         using namespace std;
         using namespace gap;
         using namespace cv;
+        using namespace odcore::data::image;
 /**
  * Time-triggered laneFollower.
  */
@@ -98,7 +98,7 @@ namespace carolocup
 
             shared_ptr <odcore::wrapper::SharedMemory> m_sharedImageMemory;
             shared_ptr <odcore::wrapper::SharedMemory> m_sharedProcessedImageMemory;
-            odcore::data::image::SharedImage m_sharedProcessedImage;
+            SharedImage m_sharedProcessedImage;
 
             bool m_hasAttachedToSharedImageMemory;
             bool m_debug;
