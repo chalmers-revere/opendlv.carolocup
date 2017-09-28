@@ -47,6 +47,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
 
 ###########################################################################
 # Add subfolders with sources.
+add_subdirectory(libsweep)
 #add_subdirectory(perception)
 add_subdirectory(control)
 

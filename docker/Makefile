@@ -20,8 +20,7 @@
 # For example, seresearch/base is a generic name to the base image to be used
 # that, for example, could point to seresearch/ubuntu
 REPOSITORY=seresearch
-#IMAGE=scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base
-IMAGE=opendlv-on-opendlv-core-on-opendavinci-on-base
+IMAGE=scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base
 BASE_IMAGE=$(REPOSITORY)/$(IMAGE)
 #BASE_IMAGE_VERSION=v0.1.4
 BASE_IMAGE_VERSION=latest

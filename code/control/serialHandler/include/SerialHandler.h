@@ -20,6 +20,8 @@
 #ifndef CONTROL_SERIALHANDLER_H
 #define CONTROL_SERIALHANDLER_H
 
+#include "../../defines/defines.h"
+
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 
 namespace carolocup

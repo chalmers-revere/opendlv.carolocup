@@ -41,7 +41,7 @@ endif()
 
 # Generate include/sweep/config.h on the fly and insert version numbers.
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
+configure_file(cmake/config.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/include/sweep/config.h)
 
 
@@ -87,12 +87,12 @@ install(TARGETS sweep-ctl DESTINATION bin)
 install(FILES man/sweep-ctl.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # Make FindPackage(Sweep) work for CMake users.
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/SweepConfig.cmake DESTINATION lib/cmake/sweep)
+install(FILES cmake/SweepConfig.cmake DESTINATION lib/cmake/sweep)
 
 
 # make uninstall target.
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeUninstall.cmake.in"
+configure_file("cmake/CMakeUninstall.cmake.in"
                "${CMAKE_CURRENT_BINARY_DIR}/cmake/CMakeUninstall.cmake"
                IMMEDIATE @ONLY)
 

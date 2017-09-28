@@ -49,6 +49,10 @@ FIND_PACKAGE(OpenDaVINCI REQUIRED)
 FIND_PACKAGE(OpenCV REQUIRED)
 
 ###########################################################################
+# Find AutomotiveData.
+FIND_PACKAGE (AutomotiveData REQUIRED)
+
+###########################################################################
 # Find ODVDCaroloCupDataModel.
 find_package(ODVDCaroloCupDataModel REQUIRED)
 
@@ -59,11 +63,14 @@ INCLUDE_DIRECTORIES(SYSTEM ${OpenCV_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(SYSTEM ${ODVDCAROLOCUPDATAMODEL_INCLUDE_DIRS})
 # Set header files from OpenDaVINCI.
 INCLUDE_DIRECTORIES(SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
+# Set header files from AutomotiveData.
+INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})
 # Set include directory.
 INCLUDE_DIRECTORIES(include)
 
 # Set libraries to link against.
 set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
+        ${AUTOMOTIVEDATA_LIBRARIES}
         ${ODVDCAROLOCUPDATAMODEL_LIBRARIES}
         ${OpenCV_LIBS})
 

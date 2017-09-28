@@ -31,7 +31,6 @@ namespace carolocup
         using namespace odcore::data::image;
         using namespace odcore::wrapper;
         using namespace odcore::data::dmcp;
-        //using namespace automotive::miniature;
         using namespace gap;
 
         LaneFollower::LaneFollower(const int &argc, char **argv)
