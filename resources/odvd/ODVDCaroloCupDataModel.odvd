@@ -24,42 +24,48 @@ message gap.CommunicationLinkMSG [id = 555 ] {
     uint8 stateLaneFollower [id = 1];
     uint8 stateOvertaker [id = 2];
     uint8 stateParker [id = 3];
-    double ultraSonicFrontCenter [id = 4];
-    double ultraSonicFrontRight [id = 5];
-    double infraredSideFront [id = 6];
-    double infraredSideBack [id = 7];
-    double infraredBack [id = 8];
-    double wheelEncoder [id = 9];
-    uint8 drivingLane [id = 10];
-    uint8 unpark [id = 11];
-    uint16 distanceToRightLane [id = 12];
-    uint8 stop [id = 13];
+    map<uint32, double> sensors [id = 4];
+    map<uint32, double> lidarDistances [id = 5];
+    map<uint32, double> lidarStrength [id = 6];
+    uint8 drivingLane [id = 7];
+    uint16 distanceToRightLane [id = 8];
 }
 
 message gap.LaneFollowerMSG [id = 556 ] {
-    uint8 stateLane [id = 1];
-    uint16 distanceToRightLane [id = 2];
-    uint8 danger [id = 3];
+    uint8 stateStop [id = 1]; // 0 move or 1 stop
+    uint8 stateLane [id = 2]; // 0 right lane or 1 left lane
+    uint16 distanceToRightLane [id = 3];
 }
 
 message gap.OvertakerMSG [id = 557 ] {
-    uint8 stateStop [id = 1];
-    uint8 stateLane [id = 2];
-    uint8 state [id = 3];
+    uint8 stateStop [id = 1]; // 0 move or 1 stop
+    uint8 stateLane [id = 2]; // 0 right lane or 1 left lane
 }
 
 message gap.ParkerMSG [id = 558 ] {
-    uint8 stateStop [id = 1];
+    uint8 stateStop [id = 1]; // 0 move or 1 stop
 }
 
 message gap.SensorsMSG [id = 559 ] {
-    uint64 travelledDistance [id = 1];
-    map<uint32, double> distances [id = 2];
-    uint64 travelledKm [id = 3];
+    map<uint32, double> sensors [id = 1];
+    map<uint32, double> lidarDistances [id = 2];
+    map<uint32, double> lidarStrength [id = 3];
 }
 
 message gap.AutomotiveMSG [id = 560 ] {
     uint64 speed [id = 1];
     double steeringWheelAngle [id = 2];
     bool brakeLights [id = 3];
+    bool IFLLights [id = 4]; //indicator front left
+    bool IFRLights [id = 5]; //indicator front right
+    bool IBLLights [id = 6]; //indicator back left
+    bool IBRLights [id = 7]; //indicator back right
+    bool headLights [id = 8];
+}
+
+message gap.UdpMSG [id = 561 ] {
+    uint8 stateFunctionLane [id = 1];
+    uint8 stateFunctionOvertaker [id = 2];
+    uint8 stateFunctionParker [id = 3];
+    uint8 stateStop [id = 4];
 }

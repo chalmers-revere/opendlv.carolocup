@@ -23,20 +23,73 @@ services:
     odsupercomponent:
         build: .
         network_mode: "host"
-        volumes:
-        - .:/opt/carolocup.data
-        command: "/opt/od4/bin/odsupercomponent --cid=211 --verbose=1 --configuration=/opt/carolocup.data/configuration"
-        
-    # carolocup-control-example
-    carolocup-control-lidarhandler:
-        build: .
-        network_mode: "host"
         ipc : host
-        depends_on:
-            - odsupercomponent
-        devices:
-          - "/dev/ttyUSB0:/dev/ttyUSB0"
         restart: on-failure
         privileged: true
-        command: "/opt/opendlv.carolocup/bin/carolocup-control-lidarhandler --cid=211 --freq=10"
+        volumes:
+            - .:/opt/carolocup.data
+            - ./config:/opt/configuration
+        command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
 
+    #Micro-service for camera
+    cameraproxy:
+        build: .
+        network_mode: host
+        ipc: host
+        group_add:
+            - video
+        environment:
+            - DISPLAY=$DISPLAY
+        volumes:
+            - .:/opt/carolocup.data
+            - ./config:/opt/configuration
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        depends_on:
+            - odsupercomponent
+        privileged: true
+        restart: on-failure
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-cameraproxy --cid=${CID} --freq=20 --configuration=/opt/configuration/configuration"
+
+    # carolocup-control-proxy-serialinhandler
+#    carolocup-control-proxy-serialinhandler:
+#        build: .
+#        network_mode: "host"
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        devices:
+#            - "/dev/ttyUSB0:/dev/ttyUSB0"
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=in"
+
+    # carolocup-control-proxy-serialouthandler
+#    carolocup-control-proxy-serialouthandler:
+#        build: .
+#        network_mode: "host"
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        devices:
+#            - "/dev/ttyUSB0:/dev/ttyUSB0"
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
+#
+
+    #Micro-service for lanedtecter scenario.
+    lanefollower:
+         build: .
+         network_mode: host
+         ipc: host
+         environment:
+             - DISPLAY=$DISPLAY
+         volumes:
+             - ./DIT-168:/opt/configuration
+         depends_on:
+             - odsupercomponent
+             #- proxy
+             #- communicationlink
+         restart: on-failure
+         privileged: true
+         command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"

@@ -1,5 +1,5 @@
 /**
- * Parker - Parker code.
+ * Example - Example code.
  * Copyright (C) 2016 Christian Berger
  *
  * This program is free software; you can redistribute it and/or
@@ -17,40 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Parker.h"
+#ifndef SCALEDCARS_CONTROL_UDPCONNECTIONSTREAMER_TESTSUITE_H
+#define SCALEDCARS_CONTROL_UDPCONNECTIONSTREAMER_TESTSUITE_H
 
-namespace carolocup
+#include "cxxtest/TestSuite.h"
+
+// Include local header files.
+#include "../include/UDPConnectionStreamer.h"
+
+using namespace std;
+using namespace carolocup::control;
+
+class UDPConnectionStreamerTest : public CxxTest::TestSuite
 {
-	namespace control
-	{
+public:
+    void setUp()
+    {}
 
-		using namespace std;
-		using namespace odcore::base;
-		using namespace odcore::data;
-		using namespace gap;
+    void tearDown()
+    {}
 
-		Parker::Parker(const int &argc, char **argv)
-				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-parker")
-		{}
+    void testApplication()
+    {
+        TS_ASSERT(true);
+    }
+};
 
-		Parker::~Parker()
-		{}
-
-		void Parker::setUp()
-		{}
-
-		void Parker::tearDown()
-		{}
-
-		void Parker::nextContainer(Container &c)
-		{
-			if (c.getDataType() == CommunicationLinkMSG::ID())
-			{
-				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
-				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-
-			}
-		}
-
-	}
-} // carolocup::control
+#endif /*SCALEDCARS_CONTROL_UDPCONNECTIONSTREAMER_TESTSUITE_H*/

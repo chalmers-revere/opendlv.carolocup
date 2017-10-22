@@ -17,11 +17,12 @@
 
 project(carolocup-control)
 
-add_subdirectory(communicationLink)
-add_subdirectory(example)
 add_subdirectory(laneFollower)
 add_subdirectory(overtaker)
 add_subdirectory(parker)
-add_subdirectory(proxy)
-add_subdirectory(serialHandler)
-#add_subdirectory(lidarHandler)
+add_subdirectory(proxy/communicationLink)
+add_subdirectory(proxy/cameraProxy)
+add_subdirectory(proxy/serialHandler)
+add_subdirectory(proxy/udpconnectionreceiver)
+add_subdirectory(proxy/udpconnectionstreamer)
+#add_subdirectory(proxy/lidarHandler)

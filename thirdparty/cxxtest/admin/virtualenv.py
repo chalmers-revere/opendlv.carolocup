@@ -2447,7 +2447,7 @@ maxint = majver == 3 and getattr(sys, 'maxsize') or getattr(sys, 'maxint')
 
 class fileview(object):
     """
-    A proxy for file-like objects that exposes a given view of a file.
+    A cameraProxy for file-like objects that exposes a given view of a file.
     Modified from macholib.
     """
 
