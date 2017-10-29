@@ -66,7 +66,7 @@ namespace carolocup
                 // Run recorder in asynchronous mode to allow real-time recording in background.
                 const bool THREADING = true;
                 // Dump shared images and shared data?
-                const bool DUMP_SHARED_DATA = kv.getValue<uint32_t>("global.cameraProxy.recorder.dumpshareddata") == 1;
+                const bool DUMP_SHARED_DATA = kv.getValue<uint32_t>("global.cameraProxy.camera.dumpSharedData") == 1;
 
                 m_recorder = unique_ptr<Recorder>(
                         new Recorder(recordingURL.str(), MEMORY_SEGMENT_SIZE, NUMBER_OF_SEGMENTS, THREADING,

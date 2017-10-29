@@ -1,0 +1,44 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+CaroloCupSensors	KEYWORD1
+Odometer	KEYWORD1
+UltrasonicSensor	KEYWORD1
+Axes	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+attach	KEYWORD2
+init	KEYWORD2
+encodeAndWrite	KEYWORD2
+getDistance	KEYWORD2
+setGain	KEYWORD2
+setRange	KEYWORD2
+setPingDelay	KEYWORD2
+changeAddress	KEYWORD2
+begin	KEYWORD2
+waitConnection	KEYWORD2
+getSpeed	KEYWORD2
+resetWheelCounters	KEYWORD2
+getStep	KEYWORD2
+readAccelerometer	KEYWORD2
+getAX	KEYWORD2
+getAY	KEYWORD2
+getAZ	KEYWORD2
+readGyro	KEYWORD2
+getGX	KEYWORD2
+getGY	KEYWORD2
+getGZ	KEYWORD2
+wait	KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+#######################################
+DUMMY	LITERAL1
+BAUD	LITERAL1
+

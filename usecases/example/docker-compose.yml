@@ -32,7 +32,7 @@ services:
         command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
 
     #Micro-service for camera
-    cameraproxy:
+    camera-proxy:
         build: .
         network_mode: host
         ipc: host
@@ -85,7 +85,7 @@ services:
          environment:
              - DISPLAY=$DISPLAY
          volumes:
-             - ./DIT-168:/opt/configuration
+             - ./config:/opt/configuration
          depends_on:
              - odsupercomponent
              #- proxy

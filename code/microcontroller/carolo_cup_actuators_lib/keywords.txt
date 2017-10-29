@@ -1,0 +1,42 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+CaroloCupActuators	KEYWORD1
+RCReceiver	KEYWORD1
+LED	KEYWORD1
+ESCMotor	KEYWORD1
+SteeringMotor	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+brake	KEYWORD2
+attach	KEYWORD2
+init	KEYWORD2
+begin	KEYWORD2
+setAngle	KEYWORD2
+arm	KEYWORD2
+setSpeed	KEYWORD2
+convertPulse	KEYWORD2
+setLED	KEYWORD2
+readChannel1	KEYWORD2
+readChannel2	KEYWORD2
+filter	KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+#######################################
+
+BRAKE_LIGHTS	LITERAL1
+RC_LIGHT	LITERAL1
+INDICATOR_FRONT_LEFT	LITERAL1
+INDICATOR_FRONT_RIGHT	LITERAL1
+INDICATOR_BACK_LEFT	LITERAL1
+INDICATOR_BACK_RIGHT	LITERAL1
+HEADLIGHTS	LITERAL1
+BAUD	LITERAL1

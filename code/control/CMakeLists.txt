@@ -25,4 +25,4 @@ add_subdirectory(proxy/cameraProxy)
 add_subdirectory(proxy/serialHandler)
 add_subdirectory(proxy/udpconnectionreceiver)
 add_subdirectory(proxy/udpconnectionstreamer)
-#add_subdirectory(proxy/lidarHandler)
+#add_subdirectory(proxy/lidarHandler)  ### FIRST BUILD COMPLETE THEN UNCOMMNET THIS AND BUILD INCREMENTAL
