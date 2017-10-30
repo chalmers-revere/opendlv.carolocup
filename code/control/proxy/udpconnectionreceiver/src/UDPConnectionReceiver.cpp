@@ -126,7 +126,7 @@ namespace carolocup
                     // Start receiving bytes.
                     udp_receiver->start();
 
-                    const uint32_t ONE_SECOND = 1000 * 1000;
+                    //const uint32_t ONE_SECOND = 1000 * 1000;
                     odcore::base::Thread::usleepFor(30 * ONE_SECOND);
 
                     // Stop receiving bytes and unregister our handler.

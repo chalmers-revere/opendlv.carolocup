@@ -48,11 +48,14 @@ message gap.ParkerMSG [id = 558 ] {
 
 message gap.SensorsMSG [id = 559 ] {
     map<uint32, double> sensors [id = 1];
-    map<uint32, double> lidarDistances [id = 2];
-    map<uint32, double> lidarStrength [id = 3];
 }
 
-message gap.AutomotiveMSG [id = 560 ] {
+message gap.LIDARMSG [id = 560 ] {
+    map<uint32, double> lidarDistances [id = 1];
+    map<uint32, double> lidarStrength [id = 2];
+}
+
+message gap.AutomotiveMSG [id = 561 ] {
     uint64 speed [id = 1];
     double steeringWheelAngle [id = 2];
     bool brakeLights [id = 3];
@@ -63,7 +66,7 @@ message gap.AutomotiveMSG [id = 560 ] {
     bool headLights [id = 8];
 }
 
-message gap.UdpMSG [id = 561 ] {
+message gap.UdpMSG [id = 562 ] {
     uint8 stateFunctionLane [id = 1];
     uint8 stateFunctionOvertaker [id = 2];
     uint8 stateFunctionParker [id = 3];

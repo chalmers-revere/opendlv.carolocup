@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <glib.h>
+#include "Protocol.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,9 +11,6 @@ extern "C" {
 
 typedef struct
 {
-
-	uint8_t incoming_frame_t;
-	uint8_t outgoing_frame_t;
 
 	void (*on_read)(uint8_t b);
 
@@ -49,9 +47,9 @@ void serial_start(serial_state *state);
 
 void serial_stop(serial_state *state);
 
-bool serial_receive(serial_state *state, uint8_t hb);
+bool serial_receive(serial_state *state, protocol_data *data);
 
-void serial_send(serial_state *state, uint8_t hb);
+void serial_send(serial_state *state, protocol_data data);
 
 #ifdef __cplusplus
 }

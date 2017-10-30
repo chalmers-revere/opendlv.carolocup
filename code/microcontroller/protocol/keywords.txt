@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Protocol	KEYWORD1
+protocol_data	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+getBufferIn	KEYWORD2
+getBufferOut	KEYWORD2
+encode	KEYWORD2
+decode	KEYWORD2
+isValid	KEYWORD2
+getId	KEYWORD2
+getValue	KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+#######################################
+DUMMY	LITERAL1
+BUFFER_SIZE	LITERAL1
+HEADER	LITERAL1
+CHECK	LITERAL1
+

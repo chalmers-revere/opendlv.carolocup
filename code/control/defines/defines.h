@@ -16,13 +16,18 @@
 #define ID_IN_ULTRASONIC_SIDE_FRONT 3
 #define ID_IN_ULTRASONIC_SIDE_BACK  4
 #define ID_IN_ULTRASONIC_BACK       5
-#define ID_IN_ENCODER               6
-#define ID_IN_BUTTON_LANE           7
-#define ID_IN_BUTTON_PARK           8
-#define ID_IN_BUTTON_OVERTAKE       9
-#define ID_IN_X                     10
-#define ID_IN_Y                     11
-#define ID_IN_Z                     12
+#define ID_IN_ENCODER_L             6
+#define ID_IN_ENCODER_R             7
+#define ID_IN_BUTTON_LANE           8
+#define ID_IN_BUTTON_PARK           9
+#define ID_IN_BUTTON_OVERTAKE       10
+#define ID_IN_GX                    11
+#define ID_IN_GY                    12
+#define ID_IN_GZ                    13
+#define ID_IN_AX                    14
+#define ID_IN_AY                    15
+#define ID_IN_AZ                    16
+#define ID_IN_STEP                  17
 
 #define IR 0
 #define US 1
@@ -32,7 +37,11 @@
 #define INGAP_RIGHT_TURN 3
 #define END 4
 
+#define _PI 3.1415926535897
+#define KM_IN_CM  100000
+
+#define BAUD_RATE 115200
+
+#define ONE_SECOND 1000000
+
 #endif
-
-
-//#include "../../../defines/defines.h"

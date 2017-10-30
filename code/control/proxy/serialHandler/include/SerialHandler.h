@@ -22,44 +22,103 @@
 
 #include "../../../defines/defines.h"
 
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
+
+#include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
+#include <automotivedata/GeneratedHeaders_AutomotiveData.h>
+
+#include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
+
+#include <opendavinci/odcore/data/Container.h>
+#include <opendavinci/odcore/data/TimeStamp.h>
+#include <opendavinci/odcore/base/Thread.h>
+
+#include <opendavinci/odcore/base/Service.h>
+
+#include <opendavinci/odcore/wrapper/SerialPort.h>
+#include <opendavinci/odcore/wrapper/SerialPortFactory.h>
+#include <opendavinci/odcore/wrapper/SharedMemory.h>
+#include <opendavinci/odcore/wrapper/SharedMemoryFactory.h>
+
+#include <opendavinci/odcore/base/KeyValueConfiguration.h>
+
+
+#include <iostream>
+#include <memory>
+#include <stdint.h>
+#include <string>
+#include <vector>
+#include <cctype>
+#include <algorithm>
+
+#include "serial.h"
+#include "Protocol.h"
 
 namespace carolocup
 {
-    namespace control
-    {
+	namespace control
+	{
 
-        using namespace std;
+		using namespace std;
+		using namespace odcore;
+		using namespace odcore::base::module;
+		using namespace odcore::data;
+		using namespace odcore::wrapper;
+		using namespace automotive;
+		using namespace automotive::miniature;
+		using namespace gap;
+
+		void __on_read(uint8_t b);
+
+		void __on_write(uint8_t b);
 
 /**
  * Time-triggered SerialHandler.
  */
-        class SerialHandler : public odcore::base::module::TimeTriggeredConferenceClientModule
-        {
-        private:
+		class SerialHandler : public odcore::base::module::DataTriggeredConferenceClientModule
+		{
+		private:
 			SerialHandler(const SerialHandler & /*obj*/) = delete;
 
 			SerialHandler &operator=(const SerialHandler & /*obj*/) = delete;
 
-        public:
-            /**
-             * Constructor.
-             *
-             * @param argc Number of command line arguments.
-             * @param argv Command line arguments.
-             */
+		public:
+			/**
+			 * Constructor.
+			 *
+			 * @param argc Number of command line arguments.
+			 * @param argv Command line arguments.
+			 */
 			SerialHandler(const int &argc, char **argv);
 
-            virtual ~SerialHandler();
+			virtual ~SerialHandler();
 
-        private:
-            void setUp();
+		private:
+			void setUp();
 
-            void tearDown();
+			void tearDown();
 
-            odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-        };
-    }
+			virtual void nextContainer(Container &c);
+
+			void filterData(int id, int value);
+
+			void sendSensorBoardData(std::map<uint32_t, double> sensor);
+
+			serial_state *serial;
+
+			string SERIAL_PORT;
+
+			int motor;
+			int servo;
+
+			SensorsMSG sbd;
+
+			map<int, vector<int>> sensors;
+
+			string serialBehaviour;
+		};
+	}
 } // carolocup::control
 
 #endif /*CONTROL_SERIALHANDLER_H*/

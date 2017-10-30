@@ -1,7 +1,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "CannotResolve"
-#ifndef CAROLOCUPCAR_H
-#define CAROLOCUPCAR_H
+#ifndef CAROLOCUPSENSORS_H
+#define CAROLOCUPSENSORS_H
 
 #include <Arduino.h>
 #include <Wire.h>
