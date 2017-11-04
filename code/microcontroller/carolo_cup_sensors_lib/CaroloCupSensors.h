@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "CannotResolve"
 #ifndef CAROLO_CUP_SENSORS_LIBRARY_H
 #define CAROLO_CUP_SENSORS_LIBRARY_H
 
@@ -125,6 +123,4 @@ private:
 	float gx, gy, gz; //scaled Gyro values
 };
 
-
 #endif
-#pragma clang diagnostic pop
