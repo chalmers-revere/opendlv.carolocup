@@ -4,6 +4,26 @@ boolean stepEventsEnabeled = true;   // whether you're polling or using events
 volatile long lastStepCount = 0;              // step count on previous polling check
 volatile int steps = 0;
 
+/* Instead of using step detection event notifications,
+   we can check the step count periodically */
+static void updateStepCount()
+{
+	// get the step count:
+	int stepCount = CurieIMU.getStepCount();
+
+	// if the step count has changed, print it:
+	if (stepCount != lastStepCount)
+	{
+		// save the current count for comparison next check:
+		steps = stepCount - lastStepCount;
+		lastStepCount = stepCount;
+	}
+	else
+	{
+		steps = 0;
+	}
+}
+
 static void eventCallback(void)
 {
 	if (CurieIMU.stepsDetected())
@@ -48,26 +68,6 @@ void Axes::begin()
 int Axes::getStep()
 {
 	return steps;
-}
-
-/* Instead of using step detection event notifications,
-   we can check the step count periodically */
-static void updateStepCount()
-{
-	// get the step count:
-	int stepCount = CurieIMU.getStepCount();
-
-	// if the step count has changed, print it:
-	if (stepCount != lastStepCount)
-	{
-		// save the current count for comparison next check:
-		steps = stepCount - lastStepCount;
-		lastStepCount = stepCount;
-	}
-	else
-	{
-		steps = 0;
-	}
 }
 
 void Axes::readAccelerometer()
