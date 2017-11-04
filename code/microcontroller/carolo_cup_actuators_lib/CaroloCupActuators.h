@@ -1,7 +1,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "CannotResolve"
-#ifndef CAROLOCUPACTUATORS_H
-#define CAROLOCUPACTUATORS_H
+#ifndef CAROLO_CUP_ACTUATORS_LIBRARY_H
+#define CAROLO_CUP_ACTUATORS_LIBRARY_H
 
 #include <Arduino.h>
 #include <Wire.h>
@@ -10,11 +10,20 @@
 
 #define BAUD 115200
 
+#define ID_OUT_BRAKE                0
+#define ID_OUT_MOTOR                1
+#define ID_OUT_SERVO                2
+#define ID_OUT_LIGHTS_EFFECT        3
+#define ID_OUT_INDICATOR_LF         6
+#define ID_OUT_INDICATOR_RF         7
+#define ID_OUT_INDICATOR_LB         8
+#define ID_OUT_INDICATOR_RB         10
+
 #define SERVO_PIN 0 //steering servo pin
 #define ESC_PIN 9 //ESC motor pin
 
-#define CH_1 2 //RC receiver channel 1 pin
-#define CH_2 3 //RC receiver channel 2 pin
+#define CH_1 2 //RC receiver channel 1 pin (steer)
+#define CH_2 3 //RC receiver channel 2 pin (drive)
 
 #define BRAKE_LIGHTS 4
 #define RC_LIGHT 5
@@ -33,6 +42,7 @@
 #define DEAD_LOW 1430
 #define DEAD_HIGH 1570
 
+//servo 308
 #define SERVOMIN  171 // this is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  530 // this is the 'maximum' pulse length count (out of 4096)
 #define MAX_RIGHT_ANGLE 180
@@ -66,7 +76,7 @@ class ESCMotor : public Servo
 public:
 	explicit ESCMotor();
 
-	void init(unsigned short pin);
+	void init();
 
 	void setSpeed(int speed);
 
@@ -80,13 +90,19 @@ private:
 	int _speed;
 };
 
-class LED
+class LEDControl
 {
 public:
-	explicit LED();
+	explicit LEDControl();
 	void begin();
-	void setLED(int pin, int state);
+	void setIndicators(unsigned int id, unsigned int state);
+	void setBrakeLights();
+	void setHeadLights(unsigned int state);
+	void setRCLight();
+	void wait(long milliseconds);
 private:
+	unsigned long currentMillis;
+	long interval;
 };
 
 class RCReceiver

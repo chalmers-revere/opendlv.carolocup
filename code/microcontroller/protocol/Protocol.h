@@ -2,8 +2,8 @@
 // Created by raphael on 10/30/17.
 //
 
-#ifndef PROTOCOL_H
-#define PROTOCOL_H
+#ifndef PROTOCOL_LIBRARY_H
+#define PROTOCOL_LIBRARY_H
 
 #include <stdint.h>
 

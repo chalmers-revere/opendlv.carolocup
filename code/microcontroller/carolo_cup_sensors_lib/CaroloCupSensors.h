@@ -1,13 +1,31 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "CannotResolve"
-#ifndef CAROLOCUPSENSORS_H
-#define CAROLOCUPSENSORS_H
+#ifndef CAROLO_CUP_SENSORS_LIBRARY_H
+#define CAROLO_CUP_SENSORS_LIBRARY_H
 
 #include <Arduino.h>
 #include <Wire.h>
 #include "CurieIMU.h"
 
 #define BAUD 115200
+
+#define ID_IN_ULTRASONIC_CENTER     1
+#define ID_IN_ULTRASONIC_CENTER_R   2
+#define ID_IN_ULTRASONIC_SIDE_FRONT 3
+#define ID_IN_ULTRASONIC_SIDE_BACK  4
+#define ID_IN_ULTRASONIC_BACK       5
+#define ID_IN_ENCODER_L             6
+#define ID_IN_ENCODER_R             7
+#define ID_IN_BUTTON_LANE           8
+#define ID_IN_BUTTON_PARK           9
+#define ID_IN_BUTTON_OVERTAKE       10
+#define ID_IN_GX                    11
+#define ID_IN_GY                    12
+#define ID_IN_GZ                    13
+#define ID_IN_AX                    14
+#define ID_IN_AY                    15
+#define ID_IN_AZ                    16
+#define ID_IN_STEP                  17
 
 #define US_FRONT 0x71 //front ultrasonic pin
 #define US_FRONT_T 0x72 //front tilted right ultrasonic
@@ -17,6 +35,10 @@
 
 #define ENCODER_A 2 //wheel encoder channel A pin
 #define ENCODER_B 3 //wheel encoder channel B pin
+
+#define BUTTON_PARK 4
+#define BUTTON_LANE 5
+#define BUTTON_OVERTAKE 6
 
 #define WHEEL_CIRCUMFERENCE 18 //change this after accurate measurement of wheel circumference
 
@@ -37,8 +59,6 @@ public:
 
 	void changeAddress(unsigned short newAddress);
 
-	void encodeAndWrite(int id, int value);
-
 	void wait(long milliseconds);
 
 private:
@@ -57,7 +77,7 @@ public:
 
 	void begin();
 
-	unsigned long getDistance();
+	int getDistance();
 
 	float getSpeed();
 
@@ -81,23 +101,23 @@ public:
 
 	void begin();
 
-	long getStep();
+	int getStep();
 
 	void readAccelerometer();
 
-	float getAX();
+	int getAX();
 
-	float getAY();
+	int getAY();
 
-	float getAZ();
+	int getAZ();
 
 	void readGyro();
 
-	float getGX();
+	int getGX();
 
-	float getGY();
+	int getGY();
 
-	float getGZ();
+	int getGZ();
 
 private:
 	float ax, ay, az;   //scaled accelerometer values

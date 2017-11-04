@@ -12,7 +12,7 @@ static unsigned short LAST_ADDRESS = 127;
 
 UltrasonicSensor::UltrasonicSensor()
 {
-	_address = 0, _delay = 0; //some initial invalid values
+	_ADDRESS = DEFAULT_SRF08_ADDRESS, _delay = 0; //some initial invalid values
 }
 
 void UltrasonicSensor::attach(unsigned short address)
@@ -28,7 +28,7 @@ void UltrasonicSensor::attach(unsigned short address)
  */
 void UltrasonicSensor::setGain(unsigned short gainValue)
 {
-	gainValue = constrain(address, 0, 31);
+	gainValue = constrain(gainValue, 0, 31);
 	Wire.beginTransmission(_ADDRESS); //start transmission
 	Wire.write(0x01); //write to GAIN register location 1
 	Wire.write(gainValue); //write constrained value
@@ -115,10 +115,6 @@ void UltrasonicSensor::changeAddress(unsigned short newAddress)
 	Wire.endTransmission();
 
 	_ADDRESS = newAddress;
-}
-
-void UltrasonicSensor::encodeAndWrite(int id, int value) {
-
 }
 
 void UltrasonicSensor::wait(long milliseconds)

@@ -5,9 +5,9 @@ ESCMotor::ESCMotor()
 	_speed = IDLE_SPEED;
 }
 
-void ESCMotor::init(unsigned short pin)
+void ESCMotor::init()
 {
-	_pin = pin;
+	_pin = ESC_PIN;
 	attach(_pin); //attach the servo to its pin
 	arm();
 }
@@ -20,7 +20,6 @@ void ESCMotor::arm()
 void ESCMotor::setSpeed(int speed)
 { //receives a speed in the scale of 0 to 180
 	speed = constrain(speed, FULL_BACKWARD, FULL_FORWARD);
-
 	if (speed != _speed)
 	{
 		_speed = speed;

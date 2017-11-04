@@ -14,13 +14,13 @@ void RCReceiver::begin()
 
 int RCReceiver::readChannel1()
 {
-	ch1 = pulseIn(CH_1, HIGH, PULSE_TIMEOUT); //
+	ch1 = pulseIn(CH_1, HIGH); //PULSE_TIMEOUT maybe add timeout
 	return  ch1;
 }
 
 int RCReceiver::readChannel2()
 {
-	ch2 = pulseIn(CH_2, HIGH); //
+	ch2 = pulseIn(CH_2, HIGH); //PULSE_TIMEOUT maybe add timeout
 	return ch2;
 }
 

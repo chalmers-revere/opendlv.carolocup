@@ -23,13 +23,18 @@ void Odometer::begin()
 	wheelCircumference = WHEEL_CIRCUMFERENCE;
 }
 
-unsigned long Odometer::getDistance()
+int Odometer::getDistance()
 {
 	unsigned long left = wheelCircumference * (halfRevolutionsLeftWheel * 2);
 
 	unsigned long right = wheelCircumference * (halfRevolutionsRightWheel * 2);
 
-	return (left + right) / 2;
+	unsigned long t = (left + right) / 2;
+
+	if (t > 500) {
+		t = t - 500;
+	}
+	return t;
 }
 
 float Odometer::getSpeed()

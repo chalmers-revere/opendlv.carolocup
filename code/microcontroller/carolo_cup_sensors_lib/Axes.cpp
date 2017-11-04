@@ -38,9 +38,9 @@ void Axes::begin()
 	CurieIMU.setGyroRange(250);
 }
 
-long Axes::getStep()
+int Axes::getStep()
 {
-	return lastStepCount;
+	return (int) steps;
 }
 
 /* Instead of using step detection event notifications,
@@ -55,6 +55,9 @@ static void updateStepCount()
 	{
 		// save the current count for comparison next check:
 		lastStepCount = stepCount;
+		if (lastStepCount > 500) {
+			lastStepCount = lastStepCount - 500;
+		}
 	}
 }
 
@@ -70,14 +73,14 @@ void Axes::readAccelerometer()
 	CurieIMU.readAccelerometerScaled(ax, ay, az);
 }
 
-float Axes::getAX()
-{ return ax; }
+int Axes::getAX()
+{ return (int) ax; }
 
-float Axes::getAY()
-{ return ay; }
+int Axes::getAY()
+{ return (int) ay; }
 
-float Axes::getAZ()
-{ return az; }
+int Axes::getAZ()
+{ return (int) az; }
 
 void Axes::readGyro()
 {
@@ -85,11 +88,11 @@ void Axes::readGyro()
 	CurieIMU.readGyroScaled(gx, gy, gz);
 }
 
-float Axes::getGX()
-{ return gx; }
+int Axes::getGX()
+{ return (int) gx; }
 
-float Axes::getGY()
-{ return gy; }
+int Axes::getGY()
+{ return (int) gy; }
 
-float Axes::getGZ()
-{ return gz; }
+int Axes::getGZ()
+{ return (int) gz; }

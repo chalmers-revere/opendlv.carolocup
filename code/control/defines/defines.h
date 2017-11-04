@@ -1,15 +1,14 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define ID_OUT_BRAKE                0
 #define ID_OUT_MOTOR                1
 #define ID_OUT_SERVO                2
-#define ID_OUT_BRAKE_LIGHTS         3
-#define ID_OUT_HEAD_LIGHTS          4
-#define ID_OUT_RC_LIGHTS            5
+#define ID_OUT_LIGHTS_EFFECT        3
 #define ID_OUT_INDICATOR_LF         6
 #define ID_OUT_INDICATOR_RF         7
 #define ID_OUT_INDICATOR_LB         8
-#define ID_OUT_INDICATOR_RB         9
+#define ID_OUT_INDICATOR_RB         10
 
 #define ID_IN_ULTRASONIC_CENTER     1
 #define ID_IN_ULTRASONIC_CENTER_R   2
