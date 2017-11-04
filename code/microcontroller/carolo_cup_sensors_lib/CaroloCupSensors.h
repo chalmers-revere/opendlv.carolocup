@@ -51,7 +51,7 @@ public:
 
 	void setRange(unsigned short rangeValue);
 
-	void setPingDelay(unsigned short milliseconds = DEFAULT_PING_DELAY);
+	void setPingDelay(unsigned short milliseconds);
 
 	unsigned int getDistance();
 
