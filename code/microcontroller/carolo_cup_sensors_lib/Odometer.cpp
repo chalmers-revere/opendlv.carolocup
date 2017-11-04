@@ -19,7 +19,7 @@ void Odometer::begin()
 
 	rpmReadingLeftWheel = 0;
 	rpmReadingRightWheel = 0;
-	timeold = 0;
+	timeOld = 0;
 	wheelCircumference = WHEEL_CIRCUMFERENCE;
 }
 
