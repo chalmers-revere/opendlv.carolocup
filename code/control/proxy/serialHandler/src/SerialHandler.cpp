@@ -225,8 +225,6 @@ namespace carolocup
 					if (serial_receive(serial, &incoming))
 					{
 						filterData(incoming.id, incoming.value);
-						//cout << ">> read " << incoming.id << " | >> read " << incoming.value << endl;
-
 					}//end of filtering
 				}
 
@@ -257,6 +255,7 @@ namespace carolocup
 		{
 			if (id >= IDS_MIN_RANGE && id <= IDS_MAX_RANGE)
 			{
+				cout << ">> ID " << id << " | >> VALUE " << value << endl;
 				if (id >= ID_IN_ULTRASONIC_CENTER && id <= ID_IN_ULTRASONIC_BACK)
 				{
 					if (value > US_MIN_RANGE && value < US_MAX_RANGE) //TODO set values to define list
@@ -306,8 +305,8 @@ namespace carolocup
 						km++;
 					}
 
-					sensors[id] = realOdometer;
-					sensors[ID_IN_KM] = counter;
+					sensors[id] = odometerCounter;
+					sensors[ID_IN_KM] = km;
 				}
 				else if (id == ID_IN_STEP)
 				{
@@ -347,7 +346,8 @@ namespace carolocup
 
 		void __on_write(uint8_t b)
 		{
-			cout << "<< write " << (int) b << endl;
+			b = b;
+			//cout << "<< write " << (int) b << endl;
 		}
 	}
 } // carolocup::control

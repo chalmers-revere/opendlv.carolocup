@@ -45,8 +45,8 @@ uint8_t Protocol::encode(int _id, int _value)
 		b = div;
 
 		bufferOut[1] = _id & 0xFF;
-		bufferOut[2] =  a & 0xFF;
-		bufferOut[3] =  b & 0xFF;
+		bufferOut[2] = a & 0xFF;
+		bufferOut[3] = b & 0xFF;
 
 		bufferOut[4] = checksum();
 

@@ -59,7 +59,7 @@ message gap.AutomotiveMSG [id = 561 ] {
     uint64 speed [id = 1];
     double steeringWheelAngle [id = 2];
     bool brakeLights [id = 3];
-    uint8 lights [id = 4]; //0 - off,
+    uint8 lights [id = 4]; //
     bool headLights [id = 5];
 }
 
