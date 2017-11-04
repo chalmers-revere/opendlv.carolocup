@@ -74,7 +74,7 @@ namespace carolocup
 		void __on_write(uint8_t b);
 
 /**
- * Time-triggered SerialHandler.
+ * DataTriggered SerialHandler.
  */
 		class SerialHandler : public odcore::base::module::DataTriggeredConferenceClientModule
 		{
@@ -103,6 +103,8 @@ namespace carolocup
 
 			void filterData(int id, int value);
 
+			void sensorBoardDataMedian(int id, vector<int> sensorList);
+
 			void sendSensorBoardData(std::map<uint32_t, double> sensor);
 
 			serial_state *serial;
@@ -114,7 +116,17 @@ namespace carolocup
 
 			SensorsMSG sbd;
 
-			map<int, vector<int>> sensors;
+			map<uint32_t, double> sensors;
+
+			map<int, vector<int>> raw_sensors;
+
+			int steps;
+
+			int odometerCounter;
+
+			int km;
+
+			bool isSensorValues;
 
 			string serialBehaviour;
 		};

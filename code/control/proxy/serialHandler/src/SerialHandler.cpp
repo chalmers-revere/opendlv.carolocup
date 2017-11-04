@@ -35,7 +35,12 @@ namespace carolocup
 				  motor(90),
 				  servo(90),
 				  sbd(),
-				  sensors()
+				  sensors(),
+				  raw_sensors(),
+				  steps(0),
+				  odometerCounter(0),
+				  km(0),
+				  isSensorValues(false)
 		{
 			for (int i = 0; i < argc; ++i)
 			{
@@ -59,15 +64,15 @@ namespace carolocup
 		{
 			try
 			{
-				if (serialBehaviour.compare("arduino=in") || serialBehaviour.compare("arduino=out"))
+				if (serialBehaviour.compare("arduino=in") == 0 || serialBehaviour.compare("arduino=out") == 0)
 				{
 					KeyValueConfiguration kv = getKeyValueConfiguration();
 
-					if (serialBehaviour.compare("arduino=in"))
+					if (serialBehaviour.compare("arduino=in") == 0)
 					{
 						SERIAL_PORT = kv.getValue<string>("global.serialhandler.sensors");
 					}
-					else if (serialBehaviour.compare("arduino=out"))
+					else if (serialBehaviour.compare("arduino=out") == 0)
 					{
 						SERIAL_PORT = kv.getValue<string>("global.serialhandler.actuators");
 					}
@@ -84,20 +89,28 @@ namespace carolocup
 					const char *_port = _S_PORT.c_str();
 					serial_open(this->serial, _port, BAUD_RATE);
 
-					//serial_handshake(this->serial, '\n');
+					serial_handshake(this->serial, '\n');
 
 					odcore::base::Thread::usleepFor(5 * ONE_SECOND);
 
-					//TODO send first data
+					if (serialBehaviour.compare("arduino=out") == 0)
+					{
+						protocol_data d_motor;
+						d_motor.id = ID_OUT_MOTOR;
+						d_motor.value = MOTOR_IDLE;
 
-					//serial_send(this->serial, d_motor);
-					//serial_send(this->serial, d_servo);
+						serial_send(this->serial, d_motor);
+
+						protocol_data d_servo;
+						d_servo.id = ID_OUT_SERVO;
+						d_servo.value = STRAIGHT_DEGREES;
+
+						serial_send(this->serial, d_servo);
+					}
 
 					odcore::base::Thread::usleepFor(2 * ONE_SECOND);
 
 					serial_start(this->serial);
-
-					//serial_ = this->serial;
 				}
 				else
 				{
@@ -113,13 +126,19 @@ namespace carolocup
 
 		void SerialHandler::tearDown()
 		{
-			if (serialBehaviour.compare("arduino=out"))
+			if (serialBehaviour.compare("arduino=out") == 0)
 			{
-				//TODO send stop data
+				protocol_data d_motor;
+				d_motor.id = ID_OUT_MOTOR;
+				d_motor.value = MOTOR_IDLE;
 
-				//serial_send(this->serial, d_motor);
-				//serial_send(this->serial, d_servo);
+				serial_send(this->serial, d_motor);
 
+				protocol_data d_servo;
+				d_servo.id = ID_OUT_SERVO;
+				d_servo.value = STRAIGHT_DEGREES;
+
+				serial_send(this->serial, d_servo);
 			}
 
 			odcore::base::Thread::usleepFor(2 * ONE_SECOND);
@@ -132,7 +151,6 @@ namespace carolocup
 		{
 			if (serialBehaviour.compare("arduino=out") == 0)
 			{
-				cout << "<< out " << endl;
 				if (c.getDataType() == AutomotiveMSG::ID())
 				{
 					const AutomotiveMSG automotiveMSG =
@@ -183,37 +201,133 @@ namespace carolocup
 			else if (serialBehaviour.compare("arduino=in") == 0)
 			{
 				c = c;
-				cout << "<< in " << endl;
+				isSensorValues = false;
+				raw_sensors[ID_IN_ULTRASONIC_CENTER].clear();
+				raw_sensors[ID_IN_ULTRASONIC_CENTER_R].clear();
+				raw_sensors[ID_IN_ULTRASONIC_SIDE_FRONT].clear();
+				raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK].clear();
+				raw_sensors[ID_IN_ULTRASONIC_BACK].clear();
+
+				raw_sensors[ID_IN_GX].clear();
+				raw_sensors[ID_IN_GY].clear();
+				raw_sensors[ID_IN_GZ].clear();
+
+				raw_sensors[ID_IN_AX].clear();
+				raw_sensors[ID_IN_AY].clear();
+				raw_sensors[ID_IN_AZ].clear();
+
 				int pending = g_async_queue_length(serial->incoming_queue);
 				protocol_data incoming;
-				//TODO clear every single vector
 
 				for (int i = 0; i < pending; i++)
 				{
+					//If data available in the queue filter it
 					if (serial_receive(serial, &incoming))
 					{
 						filterData(incoming.id, incoming.value);
-						cout << ">> read " << incoming.id << " | >> read " << incoming.value <<endl;
-					}
+						//cout << ">> read " << incoming.id << " | >> read " << incoming.value << endl;
 
-					//TODO sort and take the median
-
-					//isSensorValues = true;
+					}//end of filtering
 				}
 
-//				if (isSensorValues)
-//				{
-//					sendSensorBoardData(sensors);
-//				}
+				//If sensor data available
+				if (isSensorValues)
+				{
+					sensorBoardDataMedian(ID_IN_ULTRASONIC_CENTER, raw_sensors[ID_IN_ULTRASONIC_CENTER]);
+					sensorBoardDataMedian(ID_IN_ULTRASONIC_CENTER_R, raw_sensors[ID_IN_ULTRASONIC_CENTER_R]);
+					sensorBoardDataMedian(ID_IN_ULTRASONIC_SIDE_FRONT, raw_sensors[ID_IN_ULTRASONIC_SIDE_FRONT]);
+					sensorBoardDataMedian(ID_IN_ULTRASONIC_SIDE_BACK, raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK]);
+					sensorBoardDataMedian(ID_IN_ULTRASONIC_BACK, raw_sensors[ID_IN_ULTRASONIC_BACK]);
+
+					sensorBoardDataMedian(ID_IN_GX, raw_sensors[ID_IN_GX]);
+					sensorBoardDataMedian(ID_IN_GY, raw_sensors[ID_IN_GY]);
+					sensorBoardDataMedian(ID_IN_GZ, raw_sensors[ID_IN_GZ]);
+
+					sensorBoardDataMedian(ID_IN_AX, raw_sensors[ID_IN_AX]);
+					sensorBoardDataMedian(ID_IN_AY, raw_sensors[ID_IN_AY]);
+					sensorBoardDataMedian(ID_IN_AZ, raw_sensors[ID_IN_AZ]);
+
+					sendSensorBoardData(sensors);
+				}//end
 			}
 
 		}
 
 		void SerialHandler::filterData(int id, int value)
 		{
-			//TODO filter incomming data
-			id=id;
-			value =value;
+			if (id >= IDS_MIN_RANGE && id <= IDS_MAX_RANGE)
+			{
+				if (id >= ID_IN_ULTRASONIC_CENTER && id <= ID_IN_ULTRASONIC_BACK)
+				{
+					if (value > US_MIN_RANGE && value < US_MAX_RANGE) //TODO set values to define list
+					{
+						raw_sensors[id].push_back(value);
+					}
+					else
+					{
+						raw_sensors[id].push_back(NO_OBSTACLE);
+					}
+				}
+				else if (id >= ID_IN_GX && id <= ID_IN_GZ)
+				{
+					if (value >= G_MIN_RANGE && value < G_MAX_RANGE) //TODO set values to define list
+					{
+						raw_sensors[id].push_back(value);
+					}
+					else
+					{
+						raw_sensors[id].push_back(-1);
+					}
+				}
+				else if (id >= ID_IN_AX && id <= ID_IN_AZ)
+				{
+					if (value >= A_MIN_RANGE && value < A_MAX_RANGE) //TODO set values to define list
+					{
+						raw_sensors[id].push_back(value);
+					}
+					else
+					{
+						raw_sensors[id].push_back(-1);
+					}
+				}
+				else if (id >= ID_IN_BUTTON_LANE && id <= ID_IN_BUTTON_OVERTAKE)
+				{
+					if (value == 1 || value == 0) {
+						sensors[id] = value;
+					}
+				}
+				else if (id == ID_IN_ENCODER_L)
+				{
+					odometerCounter += value;
+
+					if (odometerCounter >= KM_IN_CM)
+					{
+						odometerCounter -= KM_IN_CM;
+						km++;
+					}
+
+					sensors[id] = realOdometer;
+					sensors[ID_IN_KM] = counter;
+				}
+				else if (id == ID_IN_STEP)
+				{
+					steps += value;
+
+					sensors[id] = steps;
+				}
+
+				isSensorValues = true;
+			}
+		}
+
+		void SerialHandler::sensorBoardDataMedian(int id, vector<int> sensorList)
+		{
+			if (sensorList.size() > 0)
+			{
+				sort(sensorList.begin(), sensorList.end());
+				int med = (int) sensorList.size() / 2;
+				sensors[id] = sensorList[med];
+			}
 		}
 
 		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor)

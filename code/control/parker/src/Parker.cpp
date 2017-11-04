@@ -30,7 +30,11 @@ namespace carolocup
 		using namespace gap;
 
 		Parker::Parker(const int &argc, char **argv)
-				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-parker")
+				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-parker"),
+				  state(Search),
+				  currentSpaceSize(0),
+				  m_foundGaps(),
+				  m_simulator(false) //Set m_simulator to true if simulator is used and false otherwise.
 		{}
 
 		Parker::~Parker()
@@ -51,6 +55,11 @@ namespace carolocup
 
 			}
 		}
+
+		vector<double> Parker::getFoundGaps() const {
+			return m_foundGaps;
+		}
+
 
 	}
 } // carolocup::control

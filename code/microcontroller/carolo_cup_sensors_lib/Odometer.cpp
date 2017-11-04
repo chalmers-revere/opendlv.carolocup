@@ -31,9 +31,9 @@ int Odometer::getDistance()
 
 	unsigned long t = (left + right) / 2;
 
-	if (t > 500) {
-		t = t - 500;
-	}
+	halfRevolutionsLeftWheel = 0;
+	halfRevolutionsRightWheel = 0;
+
 	return t;
 }
 

@@ -26,59 +26,86 @@
 #include <cmath>
 #include <iostream>
 #include <math.h>
+#include <cstring>
 
 #include "opendavinci/odcore/io/conference/ContainerConference.h"
 #include "opendavinci/odcore/data/Container.h"
 
+#include "opendavinci/odcore/base/KeyValueConfiguration.h"
+#include "opendavinci/odcore/data/TimeStamp.h"
+
+#include <opendavinci/odcore/base/Thread.h>
 #include "opendavinci/GeneratedHeaders_OpenDaVINCI.h"
 
 #include "opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h"
-#include "automotivedata/generated/automotive/miniature/SensorBoardData.h"
+
 #include "odvdcarolocupdatamodel/generated/gap/CommunicationLinkMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/ParkerMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
 
 namespace carolocup
 {
-    namespace control
-    {
+	namespace control
+	{
 
-        using namespace std;
-        using namespace odcore::base;
-        using namespace odcore::base::module;
-        using namespace odcore::data;
-        using namespace gap;
+		using namespace std;
+		using namespace odcore::base;
+		using namespace odcore::base::module;
+		using namespace odcore::data;
+		using namespace gap;
 
 /**
  * Time-triggered Parker.
  */
-        class Parker : public odcore::base::module::DataTriggeredConferenceClientModule
-        {
-        private:
-            Parker(const Parker & /*obj*/) = delete;
+		class Parker : public odcore::base::module::DataTriggeredConferenceClientModule
+		{
+		private:
+			Parker(const Parker & /*obj*/) = delete;
 
-            Parker &operator=(const Parker & /*obj*/) = delete;
+			Parker &operator=(const Parker & /*obj*/) = delete;
 
-        public:
-            /**
-             * Constructor.
-             *
-             * @param argc Number of command line arguments.
-             * @param argv Command line arguments.
-             */
-            Parker(const int &argc, char **argv);
+		public:
+			/**
+			 * Constructor.
+			 *
+			 * @param argc Number of command line arguments.
+			 * @param argv Command line arguments.
+			 */
+			Parker(const int &argc, char **argv);
 
-            virtual ~Parker();
+			virtual ~Parker();
 
-        private:
-            void setUp();
+		private:
+			void setUp();
 
-            void tearDown();
+			void tearDown();
 
-            virtual void nextContainer(Container &c);
+			virtual void nextContainer(Container &c);
 
-        };
-    }
+			/**
+ 			 * This method returns the gaps found during the parking process.
+			 *
+ 			 * return Gaps found during the parking process.
+ 			 */
+			vector<double> getFoundGaps() const;
+
+			char readOdometer();
+			int readSensorData(int sensorId);
+
+			void sendMotionData(double steeringAngle, int speed);
+
+			enum CarState
+			{
+				Search, Park
+			};
+			CarState state;
+			double currentSpaceSize;
+
+			vector<double> m_foundGaps;
+			bool m_simulator;
+
+		};
+	}
 } // carolocup::control
 
 #endif /*CONTROL_PARKER_H*/

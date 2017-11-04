@@ -2,6 +2,7 @@
 
 boolean stepEventsEnabeled = true;   // whether you're polling or using events
 volatile long lastStepCount = 0;              // step count on previous polling check
+volatile int steps = 0;
 
 Axes::Axes()
 {
@@ -40,7 +41,7 @@ void Axes::begin()
 
 int Axes::getStep()
 {
-	return (int) steps;
+	return steps;
 }
 
 /* Instead of using step detection event notifications,
@@ -54,10 +55,12 @@ static void updateStepCount()
 	if (stepCount != lastStepCount)
 	{
 		// save the current count for comparison next check:
+		steps = stepCount - lastStepCount;
 		lastStepCount = stepCount;
-		if (lastStepCount > 500) {
-			lastStepCount = lastStepCount - 500;
-		}
+	}
+	else
+	{
+		steps = 0;
 	}
 }
 

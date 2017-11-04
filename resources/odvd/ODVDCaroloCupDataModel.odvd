@@ -59,11 +59,8 @@ message gap.AutomotiveMSG [id = 561 ] {
     uint64 speed [id = 1];
     double steeringWheelAngle [id = 2];
     bool brakeLights [id = 3];
-    bool IFLLights [id = 4]; //indicator front left
-    bool IFRLights [id = 5]; //indicator front right
-    bool IBLLights [id = 6]; //indicator back left
-    bool IBRLights [id = 7]; //indicator back right
-    bool headLights [id = 8];
+    uint8 lights [id = 4]; //0 - off,
+    bool headLights [id = 5];
 }
 
 message gap.UdpMSG [id = 562 ] {
