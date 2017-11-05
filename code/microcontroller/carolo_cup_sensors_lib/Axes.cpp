@@ -53,19 +53,19 @@ void Axes::readMotion()
 		CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
 
 		// convert from raw data to gravity and degrees/second units
-		_ax = convertRawAcceleration(aix);
-		_ay = convertRawAcceleration(aiy);
-		_az = convertRawAcceleration(aiz);
-		_gx = convertRawGyro(gix);
-		_gy = convertRawGyro(giy);
-		_gz = convertRawGyro(giz);
+		_ax = convertRawAcceleration(ax);
+		_ay = convertRawAcceleration(ay);
+		_az = convertRawAcceleration(az);
+		_gx = convertRawGyro(gx);
+		_gy = convertRawGyro(gy);
+		_gz = convertRawGyro(gz);
 
 		// update the filter, which computes orientation
 		filter.updateIMU(_gx, _gy, _gz, _ax, _ay, _az);
 
 		roll = (int) filter.getRoll();
 		pitch = (int) filter.getPitch();
-		heading = (int) filter.getYaw();
+		yaw = (int) filter.getYaw();
 	}
 
 	//CurieIMU.readGyro(gx, gy, gz);
