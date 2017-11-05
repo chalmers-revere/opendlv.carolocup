@@ -58,6 +58,8 @@ void loop() {
     //encodeAndWrite(ID_IN_GZ, axes.getGZ());
 
     //encodeAndWrite(ID_IN_STEP, axes.getStep());
+
+    Serial.println(axes.getGZ());
 }
 
 void encodeAndWrite(int id, int value)
