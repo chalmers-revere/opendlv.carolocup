@@ -40,6 +40,9 @@
 
 #define WHEEL_CIRCUMFERENCE 18 //change this after accurate measurement of wheel circumference
 
+#define DEFAULT_SRF08_ADDRESS 112
+#define MIN_PING_DELAY 64
+
 class UltrasonicSensor
 {
 public:
@@ -57,13 +60,13 @@ public:
 
 	void changeAddress(unsigned short newAddress);
 
-	void wait(long milliseconds);
+	void wait(unsigned long milliseconds);
 
 private:
 	uint8_t _ADDRESS;
 	unsigned short _DELAY;
-	long currentMillis;
-	long interval;
+	unsigned long currentMillis;
+	unsigned long interval;
 };
 
 class Odometer

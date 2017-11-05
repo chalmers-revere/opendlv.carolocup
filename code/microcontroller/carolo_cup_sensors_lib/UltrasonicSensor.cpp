@@ -4,15 +4,12 @@
  */
 #include "CaroloCupSensors.h"
 
-const unsigned short UltrasonicSensor::DEFAULT_SRF08_ADDRESS = 112;
-const unsigned short UltrasonicSensor::MIN_PING_DELAY = 64;
-
 static unsigned short FIRST_ADDRESS = 112; //please refer to: http://www.robot-electronics.co.uk/htm/srf08tech.html
 static unsigned short LAST_ADDRESS = 127;
 
 UltrasonicSensor::UltrasonicSensor()
 {
-	_ADDRESS = DEFAULT_SRF08_ADDRESS, _delay = 0; //some initial invalid values
+	_ADDRESS = DEFAULT_SRF08_ADDRESS, _DELAY = MIN_PING_DELAY; //some initial invalid values
 }
 
 void UltrasonicSensor::attach(unsigned short address)
@@ -79,7 +76,8 @@ unsigned int UltrasonicSensor::getDistance()
 	Wire.write(byte(0x02));
 	Wire.endTransmission();
 
-	Wire.requestFrom(_ADDRESS, 2);
+	uint8_t request = 2;
+	Wire.requestFrom(_ADDRESS, request);
 
 	if (2 <= Wire.available())
 	{ // if two bytes were received
@@ -117,7 +115,7 @@ void UltrasonicSensor::changeAddress(unsigned short newAddress)
 	_ADDRESS = newAddress;
 }
 
-void UltrasonicSensor::wait(long milliseconds)
+void UltrasonicSensor::wait(unsigned long milliseconds)
 {
 	interval = milliseconds;
 	currentMillis = millis();
