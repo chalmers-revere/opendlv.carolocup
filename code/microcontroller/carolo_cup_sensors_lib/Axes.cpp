@@ -35,19 +35,19 @@ void Axes::readMotion()
 }
 
 int Axes::getAX()
-{ return (int) ax; }
+{ return ax; }
 
 int Axes::getAY()
-{ return (int) ay; }
+{ return ay; }
 
 int Axes::getAZ()
-{ return (int) az; }
+{ return az; }
 
 int Axes::getGX()
-{ return (int) gx; }
+{ return gx; }
 
 int Axes::getGY()
-{ return (int) gy; }
+{ return gy; }
 
 int Axes::getGZ()
-{ return (int) gz; }
+{ return gz; }

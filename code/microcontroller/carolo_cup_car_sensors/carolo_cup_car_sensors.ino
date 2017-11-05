@@ -28,37 +28,36 @@ void setup() {
     u_right_back.attach(US_SIDE_BACK);
     u_back.attach(US_BACK);
 
-    establishContact('\n');
+    //establishContact('\n');
 
     pinMode(BUTTON_PARK, INPUT);
     pinMode(BUTTON_LANE, INPUT);
     pinMode(BUTTON_OVERTAKE, INPUT);
 
-    attachInterrupt(digitalPinToInterrupt(BUTTON_PARK), parkInterrupt, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(BUTTON_LANE), laneInterrupt, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(BUTTON_OVERTAKE), overtakeInterrupt, CHANGE);
+    //attachInterrupt(digitalPinToInterrupt(BUTTON_PARK), parkInterrupt, CHANGE);
+    //attachInterrupt(digitalPinToInterrupt(BUTTON_LANE), laneInterrupt, CHANGE);
+    //attachInterrupt(digitalPinToInterrupt(BUTTON_OVERTAKE), overtakeInterrupt, CHANGE);
 }
 
 void loop() {
-    encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
-    encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
-    encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
-    encodeAndWrite(ID_IN_ULTRASONIC_SIDE_BACK, u_right_back.getDistance());
-    encodeAndWrite(ID_IN_ULTRASONIC_BACK , u_back.getDistance());
+    //encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
+    //encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
+    //encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
+    //encodeAndWrite(ID_IN_ULTRASONIC_SIDE_BACK, u_right_back.getDistance());
+    //encodeAndWrite(ID_IN_ULTRASONIC_BACK , u_back.getDistance());
 
     //encodeAndWrite(ID_IN_ENCODER_L, odometer.getDistance());
 
-    axes.readAccelerometer();
-    encodeAndWrite(ID_IN_AX, axes.getAX());
-    encodeAndWrite(ID_IN_AY, axes.getAY());
-    encodeAndWrite(ID_IN_AZ, axes.getAZ());
+    axes.readMotion();
+    //encodeAndWrite(ID_IN_AX, axes.getAX());
+    //encodeAndWrite(ID_IN_AY, axes.getAY());
+    //encodeAndWrite(ID_IN_AZ, axes.getAZ());
 
-    axes.readGyro();
-    encodeAndWrite(ID_IN_GX, axes.getGX());
-    encodeAndWrite(ID_IN_GY, axes.getGY());
-    encodeAndWrite(ID_IN_GZ, axes.getGZ());
+    //encodeAndWrite(ID_IN_GX, axes.getGX());
+    //encodeAndWrite(ID_IN_GY, axes.getGY());
+    //encodeAndWrite(ID_IN_GZ, axes.getGZ());
 
-    encodeAndWrite(ID_IN_STEP, axes.getStep());
+    //encodeAndWrite(ID_IN_STEP, axes.getStep());
 }
 
 void encodeAndWrite(int id, int value)

@@ -115,9 +115,9 @@ public:
 	int getGZ();
 
 private:
-	float ax, ay, az;   //scaled accelerometer values
+	int ax, ay, az;   //scaled accelerometer values
 
-	float gx, gy, gz; //scaled Gyro values
+	int gx, gy, gz; //scaled Gyro values
 };
 
 #endif
