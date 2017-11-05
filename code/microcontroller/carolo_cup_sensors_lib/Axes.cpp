@@ -32,7 +32,7 @@ void Axes::begin()
 	//CurieIMU.setAccelerometerRange(2);
 
 	// Set the accelerometer range to 250 degrees/second
-	//CurieIMU.setGyroRange(250);
+	CurieIMU.setGyroRange(250);
 
 	//CurieImu.gyroOffsetEnabled();
 }
