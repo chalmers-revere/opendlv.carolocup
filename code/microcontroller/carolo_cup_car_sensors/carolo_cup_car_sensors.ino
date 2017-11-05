@@ -40,7 +40,7 @@ void setup() {
 }
 
 void loop() {
-    sendButtonsIDLE();
+    //sendButtonsIDLE();
 
     //encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
     //encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
@@ -51,21 +51,15 @@ void loop() {
     //encodeAndWrite(ID_IN_ENCODER_L, odometer.getDistance());
 
     axes.readMotion();
-    //encodeAndWrite(ID_IN_AX, axes.getAX());
-    //encodeAndWrite(ID_IN_AY, axes.getAY());
-    //encodeAndWrite(ID_IN_AZ, axes.getAZ());
+    //encodeAndWrite(ID_IN_YAW, axes.getYaw());
+    //encodeAndWrite(ID_IN_ROLL, axes.getRoll());
+    //encodeAndWrite(ID_IN_PITCH, axes.getPitch());
 
-    //encodeAndWrite(ID_IN_GX, axes.getGX());
-    //encodeAndWrite(ID_IN_GY, axes.getGY());
-    //encodeAndWrite(ID_IN_GZ, axes.getGZ());
+    Serial.println(axes.getYaw());
 
-    //encodeAndWrite(ID_IN_STEP, axes.getStep());
+    Serial.println(axes.getRoll());
 
-    Serial.println(axes.getGZ());
-
-    Serial.println(axes.getGX());
-
-    Serial.println(axes.getGY());
+    Serial.println(axes.getPitch());
 }
 
 void encodeAndWrite(int id, int value)

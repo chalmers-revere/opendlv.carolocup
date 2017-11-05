@@ -26,12 +26,9 @@
 #define ID_IN_BUTTON_LANE           8
 #define ID_IN_BUTTON_PARK           9
 #define ID_IN_BUTTON_OVERTAKE       10
-#define ID_IN_GX                    11
-#define ID_IN_GY                    12
-#define ID_IN_GZ                    13
-#define ID_IN_AX                    14
-#define ID_IN_AY                    15
-#define ID_IN_AZ                    16
+#define ID_IN_YAW                   11
+#define ID_IN_ROLL                  12
+#define ID_IN_PITCH                 13
 #define ID_IN_KM                    0
 //#####################################################################################################################
 // SERIAL
@@ -47,12 +44,10 @@
 #define MAX_DEGREES 180
 #define US_MIN_RANGE 0
 #define US_MAX_RANGE 100
-#define A_MIN_RANGE 0
-#define A_MAX_RANGE 361
 #define G_MIN_RANGE 0
 #define G_MAX_RANGE 361
 #define IDS_MIN_RANGE 0
-#define IDS_MAX_RANGE 16
+#define IDS_MAX_RANGE 13
 //#####################################################################################################################
 // GLOBAL
 //#####################################################################################################################

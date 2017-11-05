@@ -70,8 +70,6 @@ void Axes::readMotion()
 		// increment previous time, so we keep proper pace
 		microsPrevious = microsPrevious + microsPerReading;
 	}
-
-	//CurieIMU.readGyro(gx, gy, gz);
 }
 
 float Axes::convertRawAcceleration(int aRaw) {
@@ -92,20 +90,11 @@ float Axes::convertRawGyro(int gRaw) {
 	return g;
 }
 
-int Axes::getAX()
-{ return ax; }
-
-int Axes::getAY()
-{ return ay; }
-
-int Axes::getAZ()
-{ return az; }
-
-int Axes::getGX()
+int Axes::getYaw()
 { return yaw; }
 
-int Axes::getGY()
+int Axes::getPitch()
 { return pitch; }
 
-int Axes::getGZ()
+int Axes::getRoll()
 { return roll; }

@@ -227,13 +227,9 @@ namespace carolocup
 				raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK].clear();
 				raw_sensors[ID_IN_ULTRASONIC_BACK].clear();
 
-				raw_sensors[ID_IN_GX].clear();
-				raw_sensors[ID_IN_GY].clear();
-				raw_sensors[ID_IN_GZ].clear();
-
-				raw_sensors[ID_IN_AX].clear();
-				raw_sensors[ID_IN_AY].clear();
-				raw_sensors[ID_IN_AZ].clear();
+				raw_sensors[ID_IN_YAW].clear();
+				raw_sensors[ID_IN_ROLL].clear();
+				raw_sensors[ID_IN_PITCH].clear();
 
 				int pending = g_async_queue_length(serial->incoming_queue);
 				protocol_data incoming;
@@ -256,13 +252,9 @@ namespace carolocup
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_SIDE_BACK, raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK]);
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_BACK, raw_sensors[ID_IN_ULTRASONIC_BACK]);
 
-					sensorBoardDataMedian(ID_IN_GX, raw_sensors[ID_IN_GX]);
-					sensorBoardDataMedian(ID_IN_GY, raw_sensors[ID_IN_GY]);
-					sensorBoardDataMedian(ID_IN_GZ, raw_sensors[ID_IN_GZ]);
-
-					sensorBoardDataMedian(ID_IN_AX, raw_sensors[ID_IN_AX]);
-					sensorBoardDataMedian(ID_IN_AY, raw_sensors[ID_IN_AY]);
-					sensorBoardDataMedian(ID_IN_AZ, raw_sensors[ID_IN_AZ]);
+					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
+					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
+					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
 
 					sendSensorBoardData(sensors);
 				}//end
@@ -288,20 +280,9 @@ namespace carolocup
 						raw_sensors[id].push_back(NO_OBSTACLE);
 					}
 				}
-				else if (id >= ID_IN_GX && id <= ID_IN_GZ)
+				else if (id >= ID_IN_YAW && id <= ID_IN_PITCH)
 				{
 					if (value >= G_MIN_RANGE && value < G_MAX_RANGE)
-					{
-						raw_sensors[id].push_back(value);
-					}
-					else
-					{
-						raw_sensors[id].push_back(-1);
-					}
-				}
-				else if (id >= ID_IN_AX && id <= ID_IN_AZ)
-				{
-					if (value >= A_MIN_RANGE && value < A_MAX_RANGE)
 					{
 						raw_sensors[id].push_back(value);
 					}

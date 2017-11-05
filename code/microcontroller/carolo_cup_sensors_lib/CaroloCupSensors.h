@@ -18,13 +18,9 @@
 #define ID_IN_BUTTON_LANE           8
 #define ID_IN_BUTTON_PARK           9
 #define ID_IN_BUTTON_OVERTAKE       10
-#define ID_IN_GX                    11
-#define ID_IN_GY                    12
-#define ID_IN_GZ                    13
-#define ID_IN_AX                    14
-#define ID_IN_AY                    15
-#define ID_IN_AZ                    16
-#define ID_IN_STEP                  17
+#define ID_IN_YAW                   11
+#define ID_IN_ROLL                  12
+#define ID_IN_PITCH                 13
 
 #define US_FRONT 0x71 //front ultrasonic pin
 #define US_FRONT_T 0x72 //front tilted right ultrasonic
@@ -103,17 +99,11 @@ public:
 
 	void readMotion();
 
-	int getAX();
+	int getYaw();
 
-	int getAY();
+	int getPitch();
 
-	int getAZ();
-
-	int getGX();
-
-	int getGY();
-
-	int getGZ();
+	int getRoll();
 
 	float convertRawAcceleration(int aRaw);
 
