@@ -14,13 +14,17 @@ Axes::Axes()
 	pitch = 0;
 	roll = 0;
 
-	factor = 800; // variable by which to divide gyroscope values, used to control sensitivity
+	// initialize variables to pace updates to correct rate
+	microsPerReading = 1000000 / 25;
 }
 
 void Axes::begin()
 {
 	// intialize the sensor:
 	CurieIMU.begin();
+	CurieIMU.setGyroRate(25);
+	CurieIMU.setAccelerometerRate(25);
+	filter.begin(25);
 
 	CurieIMU.autoCalibrateGyroOffset();
 
@@ -29,30 +33,42 @@ void Axes::begin()
 	CurieIMU.autoCalibrateAccelerometerOffset(Z_AXIS, 0);
 
 	// Set the accelerometer range to 2G
-	//CurieIMU.setAccelerometerRange(2);
+	CurieIMU.setAccelerometerRange(2);
 
 	// Set the accelerometer range to 250 degrees/second
-	//CurieIMU.setGyroRange(250);
+	CurieIMU.setGyroRange(250);
 
-	//CurieImu.gyroOffsetEnabled();
+	microsPrevious = micros();
 }
 
 void Axes::readMotion()
 {
-	//  read the accelerometer and gyroscope using this function.
-	//CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
+	float _ax, _ay, _az;
+	float _gx, _gy, _gz;
+	// check if it's time to read data and update the filter
+	microsNow = micros();
+	if (microsNow - microsPrevious >= microsPerReading)
+	{
+		//  read the accelerometer and gyroscope using this function.
+		CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
+
+		// convert from raw data to gravity and degrees/second units
+		_ax = convertRawAcceleration(aix);
+		_ay = convertRawAcceleration(aiy);
+		_az = convertRawAcceleration(aiz);
+		_gx = convertRawGyro(gix);
+		_gy = convertRawGyro(giy);
+		_gz = convertRawGyro(giz);
+
+		// update the filter, which computes orientation
+		filter.updateIMU(_gx, _gy, _gz, _ax, _ay, _az);
+
+		roll = (int) filter.getRoll();
+		pitch = (int) filter.getPitch();
+		heading = (int) filter.getYaw();
+	}
+
 	//CurieIMU.readGyro(gx, gy, gz);
-
-	gx = CurieIMU.getRotationX();
-	gy = CurieIMU.getRotationY();
-	gz = CurieIMU.getRotationZ();
-
-	filter.updateIMU(gx/factor, gy/factor, gz/factor, 0.0, 0.0, 0.0);
-
-	// functions to find yaw roll and pitch from quaternions
-	yaw = int(filter.getYaw()*100);
-	roll = int(filter.getRoll()*100);
-	pitch = int(filter.getPitch()*100);
 }
 
 int Axes::getAX()

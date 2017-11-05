@@ -127,6 +127,9 @@ private:
 	int roll;
 
 	int factor; // variable by which to divide gyroscope values, used to control sensitivity
+
+	unsigned long microsPerReading, microsPrevious;
+	float accelScale, gyroScale;
 };
 
 #endif
