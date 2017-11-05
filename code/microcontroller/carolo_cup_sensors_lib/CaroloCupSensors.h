@@ -100,8 +100,6 @@ public:
 
 	void begin();
 
-	int getStep();
-
 	void readAccelerometer();
 
 	int getAX();
