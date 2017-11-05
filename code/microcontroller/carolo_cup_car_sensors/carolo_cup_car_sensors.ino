@@ -50,16 +50,10 @@ void loop() {
 
     //encodeAndWrite(ID_IN_ENCODER_L, odometer.getDistance());
 
-    axes.readMotion();
+    //axes.readMotion();
     //encodeAndWrite(ID_IN_YAW, axes.getYaw());
-    //encodeAndWrite(ID_IN_ROLL, axes.getRoll());
-    //encodeAndWrite(ID_IN_PITCH, axes.getPitch());
 
-    Serial.println(axes.getYaw());
-
-    Serial.println(axes.getRoll());
-
-    Serial.println(axes.getPitch());
+    Serial.println();
 }
 
 void encodeAndWrite(int id, int value)

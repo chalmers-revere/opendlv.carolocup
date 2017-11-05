@@ -101,9 +101,9 @@ public:
 
 	int getYaw();
 
-	int getPitch();
+	int getPitch(); // if necessary protocol has to be modified to accept negative numbers
 
-	int getRoll();
+	int getRoll(); // if necessary protocol has to be modified to accept negative numbers
 
 	float convertRawAcceleration(int aRaw);
 
