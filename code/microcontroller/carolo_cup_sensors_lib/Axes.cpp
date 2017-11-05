@@ -46,7 +46,7 @@ void Axes::readMotion()
 	float _ax, _ay, _az;
 	float _gx, _gy, _gz;
 	// check if it's time to read data and update the filter
-	microsNow = micros();
+	unsigned long microsNow = micros();
 	if (microsNow - microsPrevious >= microsPerReading)
 	{
 		//  read the accelerometer and gyroscope using this function.
