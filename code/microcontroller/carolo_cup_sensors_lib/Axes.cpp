@@ -34,16 +34,14 @@ void Axes::begin()
 	// Set the accelerometer range to 250 degrees/second
 	//CurieIMU.setGyroRange(250);
 
-	CurieImu.setGyroOffsetEnabled(true);
+	CurieImu.gyroOffsetEnabled();
 }
 
 void Axes::readMotion()
 {
 	//  read the accelerometer and gyroscope using this function.
 	//CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
-	gx = CurieImu.getRotationX();
-	gy = CurieImu.getRotationY();
-	gz = CurieImu.getRotationZ();
+	readGyro(gx, gy, gz);
 
 	filter.updateIMU(gx/factor, gy/factor, gz/factor, 0.0, 0.0, 0.0);
 
