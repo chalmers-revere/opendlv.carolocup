@@ -115,6 +115,10 @@ public:
 
 	int getGZ();
 
+	float convertRawAcceleration(int aRaw);
+
+	float convertRawGyro(int gRaw);
+
 private:
 	int ax, ay, az;   //scaled accelerometer values
 

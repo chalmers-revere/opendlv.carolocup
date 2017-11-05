@@ -66,9 +66,30 @@ void Axes::readMotion()
 		roll = (int) filter.getRoll();
 		pitch = (int) filter.getPitch();
 		yaw = (int) filter.getYaw();
+
+		// increment previous time, so we keep proper pace
+		microsPrevious = microsPrevious + microsPerReading;
 	}
 
 	//CurieIMU.readGyro(gx, gy, gz);
+}
+
+float Axes::convertRawAcceleration(int aRaw) {
+	// since we are using 2G range
+	// -2g maps to a raw value of -32768
+	// +2g maps to a raw value of 32767
+
+	float a = (aRaw * 2.0) / 32768.0;
+	return a;
+}
+
+float Axes::convertRawGyro(int gRaw) {
+	// since we are using 250 degrees/seconds range
+	// -250 maps to a raw value of -32768
+	// +250 maps to a raw value of 32767
+
+	float g = (gRaw * 250.0) / 32768.0;
+	return g;
 }
 
 int Axes::getAX()
