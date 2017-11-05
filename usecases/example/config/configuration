@@ -134,5 +134,5 @@ global.udpconnectionstreamer.ip = $IP
 #
 # SERIALS
 #
-global.serialhandler.sensors = $SENSORS
-global.serialhandler.actuators = $ACTUATORS
+global.serialhandler.one = $SENSORS
+global.serialhandler.two = $ACTUATORS

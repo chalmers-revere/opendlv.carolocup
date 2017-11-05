@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "CurieIMU.h"
+#include "MadgwickAHRS.h"
 
 #define BAUD 115200
 
@@ -118,6 +119,14 @@ private:
 	int ax, ay, az;   //scaled accelerometer values
 
 	int gx, gy, gz; //scaled Gyro values
+
+	Madgwick filter;
+
+	int yaw;
+	int pitch;
+	int roll;
+
+	int factor; // variable by which to divide gyroscope values, used to control sensitivity
 };
 
 #endif

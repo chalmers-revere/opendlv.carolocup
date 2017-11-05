@@ -34,37 +34,11 @@ void LEDControl::setRCLight()
 	digitalWrite(RC_LIGHT, LOW);
 }
 
-void LEDControl::setIndicators(unsigned int id, unsigned int state)
+void LEDControl::setIndicators(unsigned int state)
 {
 	switch (state)
-	{ //LEDS has 4 states; 0 off, 1 on, 2 blinking, 3 blink 3 times
-		case 0:
-			switch (id) {
-				case INDICATOR_FRONT_LEFT:
-					digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
-					wait(500);
-					digitalWrite(INDICATOR_FRONT_LEFT, LOW);
-					break;
-				case INDICATOR_FRONT_RIGHT:
-					digitalWrite(INDICATOR_FRONT_RIGHT, HIGH);
-					wait(500);
-					digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
-					break;
-				case INDICATOR_BACK_LEFT:
-					digitalWrite(INDICATOR_BACK_LEFT, HIGH);
-					wait(500);
-					digitalWrite(INDICATOR_BACK_LEFT, LOW);
-					break;
-				case INDICATOR_BACK_RIGHT:
-					digitalWrite(INDICATOR_BACK_RIGHT, HIGH);
-					wait(500);
-					digitalWrite(INDICATOR_BACK_RIGHT, LOW);
-					break;
-			    default:
-			        break;
-			 }
-			break;
-		case 1:
+	{
+		case ID_OUT_LIGHTS_EFFECT:
 			for (int i = 0; i < 3; ++i)
 			{
 				digitalWrite(INDICATOR_BACK_RIGHT, HIGH);
@@ -79,6 +53,26 @@ void LEDControl::setIndicators(unsigned int id, unsigned int state)
 				digitalWrite(INDICATOR_BACK_LEFT, LOW);
 				digitalWrite(INDICATOR_FRONT_LEFT, LOW);
 			}
+			break;
+		case INDICATOR_FRONT_LEFT:
+			digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
+			wait(500);
+			digitalWrite(INDICATOR_FRONT_LEFT, LOW);
+			break;
+		case INDICATOR_FRONT_RIGHT:
+			digitalWrite(INDICATOR_FRONT_RIGHT, HIGH);
+			wait(500);
+			digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
+			break;
+		case INDICATOR_BACK_LEFT:
+			digitalWrite(INDICATOR_BACK_LEFT, HIGH);
+			wait(500);
+			digitalWrite(INDICATOR_BACK_LEFT, LOW);
+			break;
+		case INDICATOR_BACK_RIGHT:
+			digitalWrite(INDICATOR_BACK_RIGHT, HIGH);
+			wait(500);
+			digitalWrite(INDICATOR_BACK_RIGHT, LOW);
 			break;
 		default:
 			break;

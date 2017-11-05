@@ -29,10 +29,11 @@ message gap.CommunicationLinkMSG [id = 555 ] {
     map<uint32, double> lidarStrength [id = 6];
     uint8 drivingLane [id = 7];
     uint16 distanceToRightLane [id = 8];
+    uint8 stateDanger [id = 0]; // 0 no danger or 1 danger
 }
 
 message gap.LaneFollowerMSG [id = 556 ] {
-    uint8 stateStop [id = 1]; // 0 move or 1 stop
+    uint8 stateDanger [id = 1]; // 0 move or 1 stop
     uint8 stateLane [id = 2]; // 0 right lane or 1 left lane
     uint16 distanceToRightLane [id = 3];
 }
@@ -59,7 +60,7 @@ message gap.AutomotiveMSG [id = 561 ] {
     uint64 speed [id = 1];
     double steeringWheelAngle [id = 2];
     bool brakeLights [id = 3];
-    uint8 lights [id = 4]; //
+    uint8 lights [id = 4]; // 3 effect blink 3x, 6 left front, 7 right front, 8 left back, 10 right back
     bool headLights [id = 5];
 }
 
@@ -67,5 +68,4 @@ message gap.UdpMSG [id = 562 ] {
     uint8 stateFunctionLane [id = 1];
     uint8 stateFunctionOvertaker [id = 2];
     uint8 stateFunctionParker [id = 3];
-    uint8 stateStop [id = 4];
 }

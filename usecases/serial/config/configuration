@@ -136,3 +136,5 @@ global.udpconnectionstreamer.ip = $IP
 #
 global.serialhandler.sensors = /dev/ttyACM0
 global.serialhandler.actuators = /dev/ttyACM0
+global.serialhandler.one = /dev/ttyACM0
+global.serialhandler.two = /dev/ttyACM1

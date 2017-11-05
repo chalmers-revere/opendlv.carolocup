@@ -21,96 +21,111 @@
 
 namespace carolocup
 {
-    namespace control
-    {
+	namespace control
+	{
 
-        using namespace std;
-        using namespace odcore::base;
-        using namespace odcore;
-        using namespace odcore::base::module;
-        using namespace odcore::data;
-        using namespace odcore::wrapper;
-        using namespace odcore::data::dmcp;
-        using namespace gap;
+		using namespace std;
+		using namespace odcore::base;
+		using namespace odcore;
+		using namespace odcore::base::module;
+		using namespace odcore::data;
+		using namespace odcore::wrapper;
+		using namespace odcore::data::dmcp;
+		using namespace gap;
 
-        CommunicationLink::CommunicationLink(const int &argc, char **argv)
-                : DataTriggeredConferenceClientModule(argc, argv, "carolocup-communicationlink"),
-                  communicationLinkMSG(),
-                  laneFollowerMSG(),
-                  overtakerMSG(),
-                  parkerMSG(),
-                  sensorsMSG()
-                  //UDPMSG()
-        {}
+		CommunicationLink::CommunicationLink(const int &argc, char **argv)
+				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-communicationlink"),
+				  communicationLinkMSG()
+		{}
 
-        CommunicationLink::~CommunicationLink()
-        {}
+		CommunicationLink::~CommunicationLink()
+		{}
 
-        void CommunicationLink::setUp()
-        {
-            cout << "Starting CommunicationLink" << endl;
+		void CommunicationLink::setUp()
+		{
+			cout << "Starting CommunicationLink" << endl;
 
-            // Get configuration data.
-            KeyValueConfiguration kv = getKeyValueConfiguration();
+			// Get configuration data.
+			//KeyValueConfiguration kv = getKeyValueConfiguration();
 
-            communicationLinkMSG.setStateLaneFollower(kv.getValue<int32_t>("global.communicationlink.functionlane"));
-            communicationLinkMSG.setStateOvertaker(kv.getValue<int32_t>("global.communicationlink.functionovertake"));
-            communicationLinkMSG.setStateParker(kv.getValue<int32_t>("global.communicationlink.functionpark"));
-        }
+		}
 
-        void CommunicationLink::tearDown()
-        {
-            cout << "Shutting down CommunicationLink" << endl;
-        }
+		void CommunicationLink::tearDown()
+		{
+			cout << "Shutting down CommunicationLink" << endl;
+		}
 
-        void CommunicationLink::nextContainer(Container &c)
-        {
+		void CommunicationLink::nextContainer(Container &c)
+		{
 
-            if (c.getDataType() == SensorsMSG::ID())
-            {
-                Container sensorBoardDataContainer = c.getData<SensorsMSG>();
+			if (c.getDataType() == SensorsMSG::ID())
+			{
+				Container sensorBoardDataContainer = c.getData<SensorsMSG>();
+				SensorsMSG sensorsMSG = sensorBoardDataContainer.getData<SensorsMSG>();
 
-                sensorsMSG = sensorBoardDataContainer.getData<SensorsMSG>();
+				communicationLinkMSG.setMapOfSensors(sensorsMSG.getMapOfSensors());
+				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_LANE) != 2) {
+					communicationLinkMSG.setStateLaneFollower();
+				}
 
-                //TODO set sensor data to comm link msg
+				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_PARK) != 2) {
+					communicationLinkMSG.setStateParker();
+				}
 
-                Container container(communicationLinkMSG);
-                // Send container.
-                getConference().send(container);
-            } else if (c.getDataType() == OvertakerMSG::ID())
-            {
-                Container overtakerMSGContainer = c.getData<OvertakerMSG>();
-                overtakerMSG = overtakerMSGContainer.getData<OvertakerMSG>();
+				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_OVERTAKE) != 2) {
+					communicationLinkMSG.setStateOvertaker();
+				}
+			}
+			else if (c.getDataType() == OvertakerMSG::ID())
+			{
+				Container overtakerMSGContainer = c.getData<OvertakerMSG>();
+				OvertakerMSG overtakerMSG = overtakerMSGContainer.getData<OvertakerMSG>();
 
-                //TODO set overtake to comm link msg
+				communicationLinkMSG.setStateLaneFollower(overtakerMSG.getStateStop());
+				communicationLinkMSG.setStateParker(0);
+				communicationLinkMSG.setDrivingLane(overtakerMSG.getStateLane());
 
-                Container container(communicationLinkMSG);
-                // Send container.
-                getConference().send(container);
-            } else if (c.getDataType() == ParkerMSG::ID())
-            {
-                Container parkerMSGContainer = c.getData<ParkerMSG>();
-                parkerMSG = parkerMSGContainer.getData<ParkerMSG>();
+			}
+			else if (c.getDataType() == ParkerMSG::ID())
+			{
+				Container parkerMSGContainer = c.getData<ParkerMSG>();
+				ParkerMSG parkerMSG = parkerMSGContainer.getData<ParkerMSG>();
 
-                //TODO set park to comm link msg
+				communicationLinkMSG.setStateLaneFollower(parkerMSG.getStateStop());
+				communicationLinkMSG.setStateOvertaker(0);
+			}
+			else if (c.getDataType() == LaneFollowerMSG::ID())
+			{
+				Container laneFollowerMSGContainer = c.getData<LaneFollowerMSG>();
+				LaneFollowerMSG laneFollowerMSG = laneFollowerMSGContainer.getData<LaneFollowerMSG>();
 
-                Container container(communicationLinkMSG);
-                // Send container.
-                getConference().send(container);
-            } else if (c.getDataType() == LaneFollowerMSG::ID())
-            {
-                Container laneFollowerMSGContainer = c.getData<LaneFollowerMSG>();
-                laneFollowerMSG = laneFollowerMSGContainer.getData<LaneFollowerMSG>();
+				communicationLinkMSG.setStateDanger(laneFollowerMSG.getStateDanger());
+				communicationLinkMSG.setDrivingLane(laneFollowerMSG.getStateLane());
+				communicationLinkMSG.setDistanceRightLane(laneFollowerMSG.getDistanceRightLane());
 
-                //TODO set lane to comm link msg
+			}
+			else if (c.getDataType() == LIDARMSG::ID())
+			{
+				Container lidarMSGContainer = c.getData<LIDARMSG>();
+				LIDARMSG lidarMSG = LIDARMSGContainer.getData<LIDARMSG>();
 
-                Container container(communicationLinkMSG);
-                // Send container.
-                getConference().send(container);
-            }
+				communicationLinkMSG.setMapOfLidarDistances(lidarMSG.getMapOfLidarDistances());
+				communicationLinkMSG.setMapOfLidarStrength(lidarMSG.getMapOfLidarStrength());
+			}
+			else if (c.getDataType() == UdpMSG::ID())
+			{
+				Container udpMSGContainer = c.getData<UdpMSG>();
+				UdpMSG udpMSG = udpMSGContainer.getData<UdpMSG>();
 
-            //TODO UDPMSG AND LIDAR
-        }
+				communicationLinkMSG.setStateLaneFollower(udpMSG.getStateFunctionLane());
+				communicationLinkMSG.setStateOvertaker(udpMSG.getStateFunctionOvertaker());
+				communicationLinkMSG.setStateParker(udpMSG.getStateFunctionParker());
+			}
 
-    }
+			Container container(communicationLinkMSG);
+			// Send container.
+			getConference().send(container);
+		}
+
+	}
 } // carolocup::control

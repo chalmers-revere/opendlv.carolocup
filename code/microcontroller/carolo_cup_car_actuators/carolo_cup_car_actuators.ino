@@ -64,7 +64,7 @@ void establishContact(char toSend) {
   Serial.read();
   wait(5);
   esc.arm();
-  ledControl.setIndicators(0, 1); //blink 4 indicators to aware car is on
+  ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT); //blink 4 indicators to aware car is on
   ledControl.setHeadLights(1);
 }
 
@@ -108,20 +108,8 @@ void serialEvent() {
           case ID_OUT_SERVO:
             servo.setAngle(value);
             break;
-          case ID_OUT_LIGHTS_EFFECT:
-            ledControl.setIndicators(0, 1);
-            break;
-          case ID_OUT_INDICATOR_LF:
-            ledControl.setIndicators(ID_OUT_INDICATOR_LF, 0);
-            break;
-          case ID_OUT_INDICATOR_RF:
-            ledControl.setIndicators(ID_OUT_INDICATOR_RF, 0);
-            break;
-          case ID_OUT_INDICATOR_LB:
-            ledControl.setIndicators(ID_OUT_INDICATOR_LB, 0);
-            break;
-          case ID_OUT_INDICATOR_RB:
-            ledControl.setIndicators(ID_OUT_INDICATOR_RB, 0);
+          case ID_OUT_INDICATORS:
+            ledControl.setIndicators(value);
             break;
           default:
             break;

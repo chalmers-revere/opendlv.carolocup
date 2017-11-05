@@ -37,10 +37,10 @@ namespace carolocup
 				  sbd(),
 				  sensors(),
 				  raw_sensors(),
-				  steps(0),
 				  odometerCounter(0),
 				  km(0),
-				  isSensorValues(false)
+				  isSensorValues(false),
+				  _debug(false)
 		{
 			for (int i = 0; i < argc; ++i)
 			{
@@ -64,17 +64,19 @@ namespace carolocup
 		{
 			try
 			{
-				if (serialBehaviour.compare("arduino=in") == 0 || serialBehaviour.compare("arduino=out") == 0)
+				if (serialBehaviour.compare("arduino=one") == 0 || serialBehaviour.compare("arduino=two") == 0)
 				{
 					KeyValueConfiguration kv = getKeyValueConfiguration();
 
-					if (serialBehaviour.compare("arduino=in") == 0)
+					_debug = kv.getValue<int32_t>("global.debug") == 1;
+
+					if (serialBehaviour.compare("arduino=one") == 0)
 					{
-						SERIAL_PORT = kv.getValue<string>("global.serialhandler.sensors");
+						SERIAL_PORT = kv.getValue<string>("global.serialhandler.one");
 					}
-					else if (serialBehaviour.compare("arduino=out") == 0)
+					else if (serialBehaviour.compare("arduino=two") == 0)
 					{
-						SERIAL_PORT = kv.getValue<string>("global.serialhandler.actuators");
+						SERIAL_PORT = kv.getValue<string>("global.serialhandler.two");
 					}
 
 					const string _S_PORT = SERIAL_PORT;
@@ -89,7 +91,13 @@ namespace carolocup
 					const char *_port = _S_PORT.c_str();
 					serial_open(this->serial, _port, BAUD_RATE);
 
-					serial_handshake(this->serial, '\n');
+					uint8_t rb = serial_handshake(this->serial, 'a', 's');
+
+					if (rb == 'a') {
+						serialBehaviour = "arduino=out";
+					} else if (rb == 's') {
+						serialBehaviour = "arduino=in";
+					}
 
 					odcore::base::Thread::usleepFor(5 * ONE_SECOND);
 
@@ -156,18 +164,20 @@ namespace carolocup
 					const AutomotiveMSG automotiveMSG =
 							c.getData<AutomotiveMSG>();
 
-					if (!automotiveMSG.getBrakeLights())
+					bool brake = automotiveMSG.getBrakeLights();
+					int lights = automotiveMSG.getLights();
+					if (!brake)
 					{
 						double angle = automotiveMSG.getSteeringWheelAngle();
 
-						int arduinoAngle = 90 + (angle * (180 / _PI));
-						if (arduinoAngle < 0)
+						int arduinoAngle = STRAIGHT_DEGREES + (angle * (MAX_DEGREES / _PI));
+						if (arduinoAngle < MIN_DEGREES)
 						{
-							arduinoAngle = 0;
+							arduinoAngle = MIN_DEGREES;
 						}
-						else if (arduinoAngle > 180)
+						else if (arduinoAngle > MAX_DEGREES)
 						{
-							arduinoAngle = 180;
+							arduinoAngle = MAX_DEGREES;
 						}
 
 						int speed = automotiveMSG.getSpeed();
@@ -178,25 +188,34 @@ namespace carolocup
 					}
 					else
 					{
-						this->motor = 90;
-						this->servo = 90;
+						this->motor = MOTOR_IDLE;
+						this->servo = STRAIGHT_DEGREES;
+
+						protocol_data d_brake;
+						d_brake.id = ID_OUT_BRAKE;
+						d_brake.value = NO_DATA;
+
+						serial_send(this->serial, d_brake);
 					}
+
+					protocol_data d_lights;
+					d_lights.id = ID_OUT_INDICATORS;
+					d_lights.value = lights;
+
+					serial_send(this->serial, d_lights);
+
+					protocol_data d_motor;
+					d_motor.id = ID_OUT_MOTOR;
+					d_motor.value = this->motor;
+
+					serial_send(this->serial, d_motor);
+
+					protocol_data d_servo;
+					d_servo.id = ID_OUT_SERVO;
+					d_servo.value = this->servo;
+
+					serial_send(this->serial, d_servo);
 				}
-
-
-				protocol_data d_motor;
-				d_motor.id = ID_OUT_MOTOR;
-				d_motor.value = this->motor;
-
-				serial_send(this->serial, d_motor);
-
-				protocol_data d_servo;
-				d_servo.id = ID_OUT_SERVO;
-				d_servo.value = this->servo;
-
-				serial_send(this->serial, d_servo);
-
-				//TODO send rest of data (lights)
 			}
 			else if (serialBehaviour.compare("arduino=in") == 0)
 			{
@@ -255,10 +274,12 @@ namespace carolocup
 		{
 			if (id >= IDS_MIN_RANGE && id <= IDS_MAX_RANGE)
 			{
-				cout << ">> ID " << id << " | >> VALUE " << value << endl;
+				if (_debug) {
+					cout << ">> ID " << id << " | >> VALUE " << value << endl;
+				}
 				if (id >= ID_IN_ULTRASONIC_CENTER && id <= ID_IN_ULTRASONIC_BACK)
 				{
-					if (value > US_MIN_RANGE && value < US_MAX_RANGE) //TODO set values to define list
+					if (value > US_MIN_RANGE && value < US_MAX_RANGE)
 					{
 						raw_sensors[id].push_back(value);
 					}
@@ -269,7 +290,7 @@ namespace carolocup
 				}
 				else if (id >= ID_IN_GX && id <= ID_IN_GZ)
 				{
-					if (value >= G_MIN_RANGE && value < G_MAX_RANGE) //TODO set values to define list
+					if (value >= G_MIN_RANGE && value < G_MAX_RANGE)
 					{
 						raw_sensors[id].push_back(value);
 					}
@@ -280,7 +301,7 @@ namespace carolocup
 				}
 				else if (id >= ID_IN_AX && id <= ID_IN_AZ)
 				{
-					if (value >= A_MIN_RANGE && value < A_MAX_RANGE) //TODO set values to define list
+					if (value >= A_MIN_RANGE && value < A_MAX_RANGE)
 					{
 						raw_sensors[id].push_back(value);
 					}
@@ -291,7 +312,11 @@ namespace carolocup
 				}
 				else if (id >= ID_IN_BUTTON_LANE && id <= ID_IN_BUTTON_OVERTAKE)
 				{
-					if (value == 1 || value == 0) {
+					if (value == 0 || value == 1) {
+						sensors[id] = value;
+						sendSensorBoardData(sensors); //send signal
+					}
+					else if (value == 2) {
 						sensors[id] = value;
 					}
 				}
@@ -307,12 +332,6 @@ namespace carolocup
 
 					sensors[id] = odometerCounter;
 					sensors[ID_IN_KM] = km;
-				}
-				else if (id == ID_IN_STEP)
-				{
-					steps += value;
-
-					sensors[id] = steps;
 				}
 
 				isSensorValues = true;
@@ -331,23 +350,26 @@ namespace carolocup
 
 		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor)
 		{
-//			sbd.setMapOfDistances(sensor);
-//			Container c(sbd);
-//			getConference().send(c);
-//			isSensorValues = false;
-			sensor = sensor;
+			sbd.setMapOfSensors(sensor);
+			Container c(sbd);
+			getConference().send(c);
+			isSensorValues = false;
 		}
 
 		void __on_read(uint8_t b)
 		{
-			b = b;
-			//cout << ">> read " << (int) b << endl;
+			if (_debug)
+			{
+				cout << ">> read " << (int) b << endl;
+			}
 		}
 
 		void __on_write(uint8_t b)
 		{
-			b = b;
-			//cout << "<< write " << (int) b << endl;
+			if (_debug)
+			{
+				cout << "<< write " << (int) b << endl;
+			}
 		}
 	}
 } // carolocup::control

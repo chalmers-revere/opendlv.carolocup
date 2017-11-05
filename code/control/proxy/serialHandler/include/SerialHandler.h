@@ -120,13 +120,13 @@ namespace carolocup
 
 			map<int, vector<int>> raw_sensors;
 
-			int steps;
-
 			int odometerCounter;
 
 			int km;
 
 			bool isSensorValues;
+
+			bool _debug;
 
 			string serialBehaviour;
 		};

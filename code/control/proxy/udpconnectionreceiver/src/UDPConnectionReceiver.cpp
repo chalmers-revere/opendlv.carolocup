@@ -21,125 +21,132 @@
 
 namespace carolocup
 {
-    namespace control
-    {
-        using namespace std;
-        using namespace odcore::base;
-        using namespace odcore::base::module;
-        using namespace odcore::data;
-        using namespace odcore::data::image;
-        using namespace odcore::wrapper;
-        using namespace odcore;
-        using namespace odcore::io;
-        using namespace odcore::io::udp;
-        using namespace odcore::io::conference;
-        using namespace gap;
-        using namespace odcore::data::dmcp;
+	namespace control
+	{
+		using namespace std;
+		using namespace odcore::base;
+		using namespace odcore::base::module;
+		using namespace odcore::data;
+		using namespace odcore::data::image;
+		using namespace odcore::wrapper;
+		using namespace odcore;
+		using namespace odcore::io;
+		using namespace odcore::io::udp;
+		using namespace odcore::io::conference;
+		using namespace gap;
+		using namespace odcore::data::dmcp;
 
-        int hasConference = 0;
-        int notValid = 1;
-        UdpMSG _udpmsg;
-        ContainerConference *conference;
+		int hasConference = 0;
+		int notValid = 1;
+		UdpMSG _udpmsg;
+		ContainerConference *conference;
 
-        void UDPReceiveBytes::nextString(const string &s)
-        {
-            cout << "RECEIVED : " << s.length() << " bytes containing '" << s << "'" << endl;
-            string received = decodedNetString(s).c_str();
+		void UDPReceiveBytes::nextString(const string &s)
+		{
+			cout << "RECEIVED : " << s.length() << " bytes containing '" << s << "'" << endl;
+			string received = decodedNetString(s).c_str();
 
-            if (!(notValid = received.compare("move")))
-            {
-                _udpmsg.setStateStop(0);
-            } else if (!(notValid = received.compare("stop")))
-            {
-                _udpmsg.setStateStop(1);
-                _udpmsg.setStateFunctionOvertaker(0);
-                _udpmsg.setStateFunctionParker(0);
-            } else if (!(notValid = received.compare("overtake")))
-            {
-                _udpmsg.setStateFunctionOvertaker(1);
-                _udpmsg.setStateFunctionParker(0);
-            } else if (!(notValid = received.compare("park")))
-            {
-                _udpmsg.setStateFunctionOvertaker(0);
-                _udpmsg.setStateFunctionParker(1);
-            }
+			if (!(notValid = received.compare("stop")))
+			{
+				_udpmsg.setStateFunctionLane(0);
+				_udpmsg.setStateFunctionOvertaker(0);
+				_udpmsg.setStateFunctionParker(0);
+			}
+			else if (!(notValid = received.compare("lane")))
+			{
+				_udpmsg.setStateFunctionLane(1);
+				_udpmsg.setStateFunctionOvertaker(0);
+				_udpmsg.setStateFunctionParker(0);
+			}
+			else if (!(notValid = received.compare("overtake")))
+			{
+				_udpmsg.setStateFunctionLane(0);
+				_udpmsg.setStateFunctionOvertaker(1);
+				_udpmsg.setStateFunctionParker(0);
+			}
+			else if (!(notValid = received.compare("park")))
+			{
+				_udpmsg.setStateFunctionLane(0);
+				_udpmsg.setStateFunctionOvertaker(0);
+				_udpmsg.setStateFunctionParker(1);
+			}
 
-            if (!notValid && hasConference)
-            {
-                cout << "SENDING CONTAINER" << endl;
-                Container container(_udpmsg);
-                // Send container.
-                conference->send(container);
-            }
-            notValid = 1;
-        }
+			if (!notValid && hasConference)
+			{
+				cout << "SENDING CONTAINER" << endl;
+				Container container(_udpmsg);
+				// Send container.
+				conference->send(container);
+			}
+			notValid = 1;
+		}
 
-        UDPConnectionReceiver::UDPConnectionReceiver(const int &argc, char **argv)
-                : TimeTriggeredConferenceClientModule(argc, argv, "carolocup-udpconnectionreceiver"),
-                  udp_receiver()
-        {}
+		UDPConnectionReceiver::UDPConnectionReceiver(const int &argc, char **argv)
+				: TimeTriggeredConferenceClientModule(argc, argv, "carolocup-udpconnectionreceiver"),
+				  udp_receiver()
+		{}
 
 
-        UDPConnectionReceiver::~UDPConnectionReceiver()
-        {}
+		UDPConnectionReceiver::~UDPConnectionReceiver()
+		{}
 
-        void UDPConnectionReceiver::setUp()
-        {
-            cout << "Starting UDPConnectionReceiver" << endl;
-        }
+		void UDPConnectionReceiver::setUp()
+		{
+			cout << "Starting UDPConnectionReceiver" << endl;
+		}
 
-        void UDPConnectionReceiver::tearDown()
-        {
-            cout << "Shutting down UDPConnectionReceiver" << endl;
+		void UDPConnectionReceiver::tearDown()
+		{
+			cout << "Shutting down UDPConnectionReceiver" << endl;
 
-            // Stop receiving bytes and unregister our handler.
-            udp_receiver->stop();
-            udp_receiver->setStringListener(NULL);
-        }
+			// Stop receiving bytes and unregister our handler.
+			udp_receiver->stop();
+			udp_receiver->setStringListener(NULL);
+		}
 
-        odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode UDPConnectionReceiver::body()
-        {
+		odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode UDPConnectionReceiver::body()
+		{
 
-            while (getModuleStateAndWaitForRemainingTimeInTimeslice() ==
-                   odcore::data::dmcp::ModuleStateMessage::RUNNING)
-            {
+			while (getModuleStateAndWaitForRemainingTimeInTimeslice() ==
+				   odcore::data::dmcp::ModuleStateMessage::RUNNING)
+			{
 
-                if (!hasConference)
-                {
-                    conference = &getConference();
-                    hasConference = 1;
-                }
+				if (!hasConference)
+				{
+					conference = &getConference();
+					hasConference = 1;
+				}
 
-                const string RECEIVER = "0.0.0.0";
-                const uint32_t PORT = 8888;
+				const string RECEIVER = "0.0.0.0";
+				const uint32_t PORT = 8888;
 
-                try
-                {
-                    std::shared_ptr <UDPReceiver>
-                            udpreceiver(UDPFactory::createUDPReceiver(RECEIVER, PORT));
-                    udp_receiver = udpreceiver;
-                    // This instance will handle any bytes that are received
-                    // by our UDP socket.
-                    UDPReceiveBytes handler;
-                    udp_receiver->setStringListener(&handler);
+				try
+				{
+					std::shared_ptr <UDPReceiver>
+							udpreceiver(UDPFactory::createUDPReceiver(RECEIVER, PORT));
+					udp_receiver = udpreceiver;
+					// This instance will handle any bytes that are received
+					// by our UDP socket.
+					UDPReceiveBytes handler;
+					udp_receiver->setStringListener(&handler);
 
-                    // Start receiving bytes.
-                    udp_receiver->start();
+					// Start receiving bytes.
+					udp_receiver->start();
 
-                    //const uint32_t ONE_SECOND = 1000 * 1000;
-                    odcore::base::Thread::usleepFor(30 * ONE_SECOND);
+					//const uint32_t ONE_SECOND = 1000 * 1000;
+					odcore::base::Thread::usleepFor(30 * ONE_SECOND);
 
-                    // Stop receiving bytes and unregister our handler.
-                    udp_receiver->stop();
+					// Stop receiving bytes and unregister our handler.
+					udp_receiver->stop();
 
-                    udp_receiver->setStringListener(NULL);
-                }
-                catch (string &exception)
-                {
-                    cerr << "Error while creating UDP receiver: " << exception << endl;
-                }
-            }
-            return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
-        }
-    }
+					udp_receiver->setStringListener(NULL);
+				}
+				catch (string &exception)
+				{
+					cerr << "Error while creating UDP receiver: " << exception << endl;
+				}
+			}
+			return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
+		}
+	}
 } // carolocup::control

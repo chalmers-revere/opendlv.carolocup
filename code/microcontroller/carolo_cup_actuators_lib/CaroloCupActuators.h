@@ -14,6 +14,7 @@
 #define ID_OUT_MOTOR                1
 #define ID_OUT_SERVO                2
 #define ID_OUT_LIGHTS_EFFECT        3
+#define ID_OUT_INDICATORS           4
 #define ID_OUT_INDICATOR_LF         6
 #define ID_OUT_INDICATOR_RF         7
 #define ID_OUT_INDICATOR_LB         8
@@ -95,7 +96,7 @@ class LEDControl
 public:
 	explicit LEDControl();
 	void begin();
-	void setIndicators(unsigned int id, unsigned int state);
+	void setIndicators(unsigned int state);
 	void setBrakeLights();
 	void setHeadLights(unsigned int state);
 	void setRCLight();

@@ -36,8 +36,6 @@ namespace carolocup
         using namespace odcore::data::dmcp;
         using namespace cv;
 
-        string clientIp = "";
-
         UDPConnectionStreamer::UDPConnectionStreamer(const int &argc, char **argv)
                 : DataTriggeredConferenceClientModule(argc, argv, "carolocup-udpconnectionstreamer"),
                   m_hasAttachedToSharedImageMemory(false),
@@ -60,9 +58,9 @@ namespace carolocup
         {
             cout << "Starting UDPConnectionStreamer" << endl;
             // Get configuration data.
-            KeyValueConfiguration kv = getKeyValueConfiguration();
+            //KeyValueConfiguration kv = getKeyValueConfiguration();
 
-            clientIp = kv.getValue<string>("global.udpconnectionstreamer.ip");
+            //clientIp = kv.getValue<string>("global.udpconnectionstreamer.ip");
         }
 
         void UDPConnectionStreamer::tearDown()
@@ -201,8 +199,8 @@ namespace carolocup
 
                     string s(reinterpret_cast<char const *>(buffer), compressedSize);
 
-                    const string SEND_TO = clientIp;
-                    const uint32_t _PORT = 1234;
+                    const string SEND_TO = "0.0.0.0";
+                    const uint32_t _PORT = 8899;
 
                     // We are using OpenDaVINCI's std::shared_ptr to automatically
                     // release any acquired resources.

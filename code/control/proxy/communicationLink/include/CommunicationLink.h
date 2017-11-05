@@ -34,6 +34,8 @@
 #include "odvdcarolocupdatamodel/generated/gap/OvertakerMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/ParkerMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/LIDARMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/UdpMSG.h"
 #include <opendavinci/odcore/base/KeyValueConfiguration.h>
 
 #include <iostream>
@@ -82,11 +84,6 @@ namespace carolocup
             virtual void nextContainer(Container &c);
 
             CommunicationLinkMSG communicationLinkMSG;
-            LaneFollowerMSG laneFollowerMSG;
-            OvertakerMSG overtakerMSG;
-            ParkerMSG parkerMSG;
-            SensorsMSG sensorsMSG;
-            //UdpMSG UDPMSG;
         };
     }
 } // carolocup::control

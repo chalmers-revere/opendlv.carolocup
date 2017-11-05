@@ -8,6 +8,7 @@
 #define ID_OUT_MOTOR                1
 #define ID_OUT_SERVO                2
 #define ID_OUT_LIGHTS_EFFECT        3
+#define ID_OUT_INDICATORS           4
 #define ID_OUT_INDICATOR_LF         6
 #define ID_OUT_INDICATOR_RF         7
 #define ID_OUT_INDICATOR_LB         8
@@ -31,7 +32,6 @@
 #define ID_IN_AX                    14
 #define ID_IN_AY                    15
 #define ID_IN_AZ                    16
-#define ID_IN_STEP                  17
 #define ID_IN_KM                    0
 //#####################################################################################################################
 // SERIAL
@@ -40,7 +40,11 @@
 #define KM_IN_CM  100000
 #define BAUD_RATE 115200
 #define MOTOR_IDLE 90
+#define MOTOR_MIN  0
+#define MOTOR_MAX  180
 #define STRAIGHT_DEGREES 90
+#define MIN_DEGREES 0
+#define MAX_DEGREES 180
 #define US_MIN_RANGE 0
 #define US_MAX_RANGE 100
 #define A_MIN_RANGE 0
@@ -48,7 +52,7 @@
 #define G_MIN_RANGE 0
 #define G_MAX_RANGE 361
 #define IDS_MIN_RANGE 0
-#define IDS_MAX_RANGE 17
+#define IDS_MAX_RANGE 16
 //#####################################################################################################################
 // GLOBAL
 //#####################################################################################################################

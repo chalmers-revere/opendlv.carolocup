@@ -37,7 +37,7 @@ void serial_free(serial_state *state);
 
 bool serial_open(serial_state *state, const char *serialport, int baud);
 
-void serial_handshake(serial_state *state, uint8_t hb);
+uint8_t serial_handshake(serial_state *state, uint8_t ab, uint8_t sb);
 
 void *serial_incoming_thread_routine(void *_state);
 

@@ -40,6 +40,8 @@ void setup() {
 }
 
 void loop() {
+    sendButtonsIDLE();
+
     //encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
     //encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
     //encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
@@ -60,6 +62,10 @@ void loop() {
     //encodeAndWrite(ID_IN_STEP, axes.getStep());
 
     Serial.println(axes.getGZ());
+
+    Serial.println(axes.getGX());
+
+    Serial.println(axes.getGY());
 }
 
 void encodeAndWrite(int id, int value)
@@ -91,6 +97,12 @@ void wait(double seconds) {
   interval = seconds * 1000;
   currentMillis = millis();
   while (millis() - currentMillis <= interval);
+}
+
+void sendButtonsIDLE() {
+    encodeAndWrite(ID_IN_BUTTON_PARK, 2);
+    encodeAndWrite(ID_IN_BUTTON_LANE, 2);
+    encodeAndWrite(ID_IN_BUTTON_OVERTAKE, 2);
 }
 
 void parkInterrupt() {
