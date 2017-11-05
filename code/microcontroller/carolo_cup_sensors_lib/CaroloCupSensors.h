@@ -100,15 +100,13 @@ public:
 
 	void begin();
 
-	void readAccelerometer();
+	void readMotion();
 
 	int getAX();
 
 	int getAY();
 
 	int getAZ();
-
-	void readGyro();
 
 	int getGX();
 
