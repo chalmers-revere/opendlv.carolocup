@@ -62,9 +62,7 @@ public:
 private:
 	uint8_t _ADDRESS;
 	unsigned short _DELAY;
-	static const unsigned short DEFAULT_SRF08_ADDRESS;
-	const unsigned short MIN_PING_DELAY;
-	unsigned long currentMillis;
+	long currentMillis;
 	long interval;
 };
 
