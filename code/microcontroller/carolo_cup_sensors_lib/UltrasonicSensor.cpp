@@ -15,8 +15,12 @@ UltrasonicSensor::UltrasonicSensor()
 void UltrasonicSensor::attach(unsigned short address)
 {
 	Wire.begin();
+	Wire.setClock(CLOCK_SPEED);
 	_ADDRESS = constrain(address, FIRST_ADDRESS, LAST_ADDRESS); //allow only valid values, between 112 and 127
 	_DELAY = MIN_PING_DELAY;
+
+	setRange(RANGE);
+	setGain(GAIN);
 }
 
 /*

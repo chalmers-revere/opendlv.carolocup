@@ -38,7 +38,10 @@
 #define WHEEL_CIRCUMFERENCE 18 //change this after accurate measurement of wheel circumference
 
 #define DEFAULT_SRF08_ADDRESS 112
-#define MIN_PING_DELAY 64
+#define MIN_PING_DELAY 10
+#define CLOCK_SPEED 400000
+#define RANGE 24
+#define GAIN 10
 
 class UltrasonicSensor
 {

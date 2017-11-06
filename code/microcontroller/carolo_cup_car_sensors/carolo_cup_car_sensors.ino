@@ -7,7 +7,7 @@ unsigned long currentMillis;
 unsigned long interval;
 
 Protocol protocol;
-Axes axes;
+//Axes axes;
 Odometer odometer;
 UltrasonicSensor u_center, u_front_right, u_right_front, u_right_back, u_back;
 
@@ -18,7 +18,7 @@ volatile unsigned long bounceTimeO = 0; // variable to hold ms count to debounce
 void setup() {
     Serial.begin(BAUD);
     waitConnection();
-    axes.begin();
+//    axes.begin();
 
     //odometer.begin();
 
@@ -53,7 +53,7 @@ void loop() {
     //axes.readMotion();
     //encodeAndWrite(ID_IN_YAW, axes.getYaw());
 
-    Serial.println();
+    //Serial.println(u_back.getDistance());
 }
 
 void encodeAndWrite(int id, int value)

@@ -28,6 +28,8 @@ namespace carolocup
 		using namespace odcore::base;
 		using namespace gap;
 
+		bool debug = false;
+
 		SerialHandler::SerialHandler(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-serialhandler"),
 				  serial(),
@@ -69,6 +71,8 @@ namespace carolocup
 					KeyValueConfiguration kv = getKeyValueConfiguration();
 
 					_debug = kv.getValue<int32_t>("global.debug") == 1;
+
+					debug = _debug;
 
 					if (serialBehaviour.compare("arduino=one") == 0)
 					{
@@ -339,7 +343,7 @@ namespace carolocup
 
 		void __on_read(uint8_t b)
 		{
-			if (_debug)
+			if (debug)
 			{
 				cout << ">> read " << (int) b << endl;
 			}
@@ -347,7 +351,7 @@ namespace carolocup
 
 		void __on_write(uint8_t b)
 		{
-			if (_debug)
+			if (debug)
 			{
 				cout << "<< write " << (int) b << endl;
 			}

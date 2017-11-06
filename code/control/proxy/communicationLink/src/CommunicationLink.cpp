@@ -64,16 +64,16 @@ namespace carolocup
 				SensorsMSG sensorsMSG = sensorBoardDataContainer.getData<SensorsMSG>();
 
 				communicationLinkMSG.setMapOfSensors(sensorsMSG.getMapOfSensors());
-				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_LANE) != 2) {
-					communicationLinkMSG.setStateLaneFollower();
+				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_LANE) < 2) {
+					communicationLinkMSG.setStateLaneFollower(sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_LANE));
 				}
 
-				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_PARK) != 2) {
-					communicationLinkMSG.setStateParker();
+				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_PARK) < 2) {
+					communicationLinkMSG.setStateParker(sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_PARK));
 				}
 
-				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_OVERTAKE) != 2) {
-					communicationLinkMSG.setStateOvertaker();
+				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_OVERTAKE) < 2) {
+					communicationLinkMSG.setStateOvertaker(sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_OVERTAKE));
 				}
 			}
 			else if (c.getDataType() == OvertakerMSG::ID())
@@ -101,12 +101,12 @@ namespace carolocup
 
 				communicationLinkMSG.setStateDanger(laneFollowerMSG.getStateDanger());
 				communicationLinkMSG.setDrivingLane(laneFollowerMSG.getStateLane());
-				communicationLinkMSG.setDistanceRightLane(laneFollowerMSG.getDistanceRightLane());
+				communicationLinkMSG.setDistanceToRightLane(laneFollowerMSG.getDistanceToRightLane());
 
 			}
 			else if (c.getDataType() == LIDARMSG::ID())
 			{
-				Container lidarMSGContainer = c.getData<LIDARMSG>();
+				Container LIDARMSGContainer = c.getData<LIDARMSG>();
 				LIDARMSG lidarMSG = LIDARMSGContainer.getData<LIDARMSG>();
 
 				communicationLinkMSG.setMapOfLidarDistances(lidarMSG.getMapOfLidarDistances());
