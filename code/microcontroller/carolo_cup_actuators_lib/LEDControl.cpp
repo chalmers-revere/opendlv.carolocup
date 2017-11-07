@@ -20,21 +20,38 @@ void LEDControl::setHeadLights(unsigned int state)
 	digitalWrite(HEADLIGHTS, state);
 }
 
-void LEDControl::setBrakeLights()
+void LEDControl::setBrakeLights(unsigned int value)
 {
-	digitalWrite(BRAKE_LIGHTS, HIGH);
-	wait(300);
-	digitalWrite(BRAKE_LIGHTS, LOW);
+	if (value == 2) //flash light
+	{
+		for (int i = 0; i < 2000; ++i)
+		{
+			digitalWrite(BRAKE_LIGHTS, HIGH);
+		}
+
+		digitalWrite(BRAKE_LIGHTS, LOW);
+	}
+	else
+	{
+		value = constrain(value, LOW, HIGH);
+		digitalWrite(BRAKE_LIGHTS, value);
+	}
 }
 
-void LEDControl::setRCLight()
+void LEDControl::setRCLight(unsigned int frequency, unsigned long counter)
 {
-	digitalWrite(RC_LIGHT, HIGH);
-	wait(300);
-	digitalWrite(RC_LIGHT, LOW);
+	if (frequency)
+	{
+		if (counter % frequency == 0) digitalWrite(RC_LIGHT, HIGH);
+		else digitalWrite(RC_LIGHT, LOW);
+	}
+	else
+	{
+		digitalWrite(RC_LIGHT, LOW);
+	}
 }
 
-void LEDControl::setIndicators(unsigned int state)
+void LEDControl::setIndicators(unsigned int state, unsigned int frequency)
 {
 	switch (state)
 	{
@@ -46,7 +63,7 @@ void LEDControl::setIndicators(unsigned int state)
 				digitalWrite(INDICATOR_BACK_LEFT, HIGH);
 				digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
 
-				wait(500);
+				wait(frequency);
 
 				digitalWrite(INDICATOR_BACK_RIGHT, LOW);
 				digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
@@ -56,22 +73,22 @@ void LEDControl::setIndicators(unsigned int state)
 			break;
 		case INDICATOR_FRONT_LEFT:
 			digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
-			wait(500);
+			wait(frequency);
 			digitalWrite(INDICATOR_FRONT_LEFT, LOW);
 			break;
 		case INDICATOR_FRONT_RIGHT:
 			digitalWrite(INDICATOR_FRONT_RIGHT, HIGH);
-			wait(500);
+			wait(frequency);
 			digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
 			break;
 		case INDICATOR_BACK_LEFT:
 			digitalWrite(INDICATOR_BACK_LEFT, HIGH);
-			wait(500);
+			wait(frequency);
 			digitalWrite(INDICATOR_BACK_LEFT, LOW);
 			break;
 		case INDICATOR_BACK_RIGHT:
 			digitalWrite(INDICATOR_BACK_RIGHT, HIGH);
-			wait(500);
+			wait(frequency);
 			digitalWrite(INDICATOR_BACK_RIGHT, LOW);
 			break;
 		default:

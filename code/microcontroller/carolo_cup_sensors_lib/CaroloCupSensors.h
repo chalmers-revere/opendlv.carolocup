@@ -31,9 +31,9 @@
 #define ENCODER_A 2 //wheel encoder channel A pin
 #define ENCODER_B 3 //wheel encoder channel B pin
 
-#define BUTTON_PARK 4
-#define BUTTON_LANE 5
-#define BUTTON_OVERTAKE 6
+#define BUTTON_PARK 10
+#define BUTTON_LANE 11
+#define BUTTON_OVERTAKE 12
 
 #define WHEEL_CIRCUMFERENCE 18 //change this after accurate measurement of wheel circumference
 

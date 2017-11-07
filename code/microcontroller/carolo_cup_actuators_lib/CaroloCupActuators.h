@@ -23,8 +23,8 @@
 #define SERVO_PIN 0 //steering servo pin
 #define ESC_PIN 9 //ESC motor pin
 
-#define CH_1 2 //RC receiver channel 1 pin (steer)
-#define CH_2 3 //RC receiver channel 2 pin (drive)
+#define CH_1 A0 //RC receiver channel 1 pin (steer)
+#define CH_2 A1 //RC receiver channel 2 pin (drive)
 
 #define BRAKE_LIGHTS 4
 #define RC_LIGHT 5
@@ -34,14 +34,16 @@
 #define INDICATOR_BACK_RIGHT 10
 #define HEADLIGHTS 11
 
-#define PULSE_TIMEOUT 10000
+#define PULSE_TIMEOUT 25000 //10000
+
+#define T_OUT 5000
 
 //Signal Conditioning limits for RC controller
-#define LO 1000
+#define LO 1090
 #define MIDDLE 1500
-#define HI 2000
-#define DEAD_LOW 1430
-#define DEAD_HIGH 1570
+#define HI 1965
+#define DEAD_LOW 1450
+#define DEAD_HIGH 1550
 
 //servo 308
 #define SERVOMIN  171 // this is the 'minimum' pulse length count (out of 4096)
@@ -54,6 +56,9 @@
 #define FULL_FORWARD 180
 #define FULL_BACKWARD 0
 #define IDLE_SPEED 90
+
+#define _OFF_ 0
+#define _ON_ 1
 
 class SteeringMotor
 {
@@ -96,10 +101,10 @@ class LEDControl
 public:
 	explicit LEDControl();
 	void begin();
-	void setIndicators(unsigned int state);
-	void setBrakeLights();
+	void setIndicators(unsigned int state, unsigned int frequency);
+	void setBrakeLights(unsigned int value);
 	void setHeadLights(unsigned int state);
-	void setRCLight();
+	void setRCLight(unsigned int frequency, unsigned long counter);
 	void wait(long milliseconds);
 private:
 	unsigned long currentMillis;

@@ -93,19 +93,37 @@ services:
         working_dir: "/opt/recordings"
         command: "/opt/od4/bin/odrecorderh264 --cid=${CID}"
 
-    #Micro-service for lanedtecter scenario.
-    lanefollower:
-         build: .
-         network_mode: host
-         ipc: host
-         environment:
-             - DISPLAY=$DISPLAY
-         volumes:
-             - ./config:/opt/configuration
-         depends_on:
-             - odsupercomponent
-             - camera-proxy
-             #- communicationlink
-         restart: on-failure
-         privileged: true
-         command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
+#    #Micro-service for lanedtecter scenario.
+#    lanefollower:
+#         build: .
+#         network_mode: host
+#         ipc: host
+#         environment:
+#             - DISPLAY=$DISPLAY
+#         volumes:
+#             - ./config:/opt/configuration
+#         depends_on:
+#             - odsupercomponent
+#             - camera-proxy
+#             #- communicationlink
+#         restart: on-failure
+#         privileged: true
+#         command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
+
+    #odcockpit
+    odcockpit:
+            build: .
+            network_mode: "host"
+            environment:
+            - DISPLAY=$DISPLAY
+            volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ~/recordings:/opt/recordings
+    #        - .:/opt/opendlv.data
+            ipc: host
+            user: odv
+            depends_on:
+                - odsupercomponent
+            restart: on-failure
+            privileged: true
+            command: "/opt/od4/bin/odcockpit --cid=${CID}"

@@ -26,7 +26,10 @@ void SteeringMotor::setAngle(int degrees)
 { // receives some degrees in the scale of MAX_LEFT_ANGLE, MAX_RIGHT_ANGLE
 
 	degrees = constrain(degrees, MAX_LEFT_ANGLE, MAX_RIGHT_ANGLE);
+	Serial.println(1);
 	degrees = convertPulse(degrees, MAX_LEFT_ANGLE, MAX_RIGHT_ANGLE);
+	Serial.println(2);
 	pwm.setPWM(SERVO_PIN, 0, degrees);
+	Serial.println(3);
 }
 
