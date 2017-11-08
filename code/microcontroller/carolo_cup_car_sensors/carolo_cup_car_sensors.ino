@@ -19,130 +19,160 @@ volatile int p = 0;
 volatile int l = 0;
 volatile int o = 0;
 
-void setup() {
-  axes.begin();
+void setup()
+{
+	axes.begin();
 
-  //odometer.begin();
+	//odometer.begin();
 
-  u_center.attach(US_FRONT);
-  u_front_right.attach(US_FRONT_T);
-  u_right_front.attach(US_SIDE_FRONT);
-  u_right_back.attach(US_SIDE_BACK);
-  u_back.attach(US_BACK);
+	u_center.attach(US_FRONT);
+	u_front_right.attach(US_FRONT_T);
+	u_right_front.attach(US_SIDE_FRONT);
+	u_right_back.attach(US_SIDE_BACK);
+	u_back.attach(US_BACK);
 
-  pinMode(BUTTON_PARK, INPUT);
-  pinMode(BUTTON_LANE, INPUT);
-  pinMode(BUTTON_OVERTAKE, INPUT);
+	pinMode(BUTTON_PARK, INPUT);
+	pinMode(BUTTON_LANE, INPUT);
+	pinMode(BUTTON_OVERTAKE, INPUT);
 
-  pciSetup(BUTTON_PARK);
-  pciSetup(BUTTON_LANE);
-  pciSetup(BUTTON_OVERTAKE);
+//	pciSetup(BUTTON_PARK);
+//	pciSetup(BUTTON_LANE);
+//	pciSetup(BUTTON_OVERTAKE);
 
-  Serial.begin(BAUD);
-  waitConnection();
+	attachInterrupt(BUTTON_PARK, interruptRoutine, RISING);
+	attachInterrupt(BUTTON_LANE, interruptRoutine, RISING);
+	attachInterrupt(BUTTON_OVERTAKE, interruptRoutine, RISING);
 
-  establishContact('s');
+	Serial.begin(BAUD);
+	waitConnection();
+
+	establishContact('s');
 }
 
-void loop() {
-  //sendButtonsIDLE();
+void loop()
+{
+	//sendButtonsIDLE();
 
-  //encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
-  //encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
-  //encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
-  //encodeAndWrite(ID_IN_ULTRASONIC_SIDE_BACK, u_right_back.getDistance());
-  //encodeAndWrite(ID_IN_ULTRASONIC_BACK , u_back.getDistance());
+	//encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
+	//encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
+	//encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
+	//encodeAndWrite(ID_IN_ULTRASONIC_SIDE_BACK, u_right_back.getDistance());
+	//encodeAndWrite(ID_IN_ULTRASONIC_BACK , u_back.getDistance());
 
-  //encodeAndWrite(ID_IN_ENCODER_L, odometer.getDistance());
+	//encodeAndWrite(ID_IN_ENCODER_L, odometer.getDistance());
 
-  //axes.readMotion();
-  //encodeAndWrite(ID_IN_YAW, axes.getYaw());
+	//axes.readMotion();
+	//encodeAndWrite(ID_IN_YAW, axes.getYaw());
 
-  //Serial.println(digitalRead(9));
+	//Serial.println(digitalRead(9));
 }
 
 void encodeAndWrite(int id, int value)
 {
-  int st = protocol.encode(id, value);
+	int st = protocol.encode(id, value);
 
-  if (st)
-  {
-    Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
-  }
+	if (st)
+	{
+		Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
+	}
 }
 
-void establishContact(char toSend) {
-  while (Serial.available() <= 0) {
-    Serial.println(toSend);   // send a char
-    wait(0.5);
-  }
-  Serial.read();
-}
-
-void waitConnection() {
-  while (!Serial); // wait for serial port to connect. Needed for native USB port only
-}
-
-void wait(double seconds) {
-  interval = seconds * 1000;
-  currentMillis = millis();
-  while (millis() - currentMillis <= interval);
-}
-
-void sendButtonsIDLE() {
-  encodeAndWrite(ID_IN_BUTTON_PARK, 2);
-  encodeAndWrite(ID_IN_BUTTON_LANE, 2);
-  encodeAndWrite(ID_IN_BUTTON_OVERTAKE, 2);
-}
-
-void parkInterrupt() {
-  if (abs(millis() - bounceTimeP) > BOUNCE_DURATION)
-  {
-    Serial.println("PARK");
-    p = !p;
-    encodeAndWrite(ID_IN_BUTTON_PARK, p);
-
-    bounceTimeP = millis();  // set whatever bounce time in ms is appropriate
-  }
-}
-
-void laneInterrupt() {
-  if (abs(millis() - bounceTimeL) > BOUNCE_DURATION)
-  {
-    Serial.println("LANE");
-    l = !l;
-    encodeAndWrite(ID_IN_BUTTON_LANE, l);
-
-    bounceTimeL = millis();  // set whatever bounce time in ms is appropriate
-  }
-}
-
-void overtakeInterrupt() {
-  if (abs(millis() - bounceTimeO) > BOUNCE_DURATION)
-  {
-    Serial.println("OVER");
-    o = !o;
-    encodeAndWrite(ID_IN_BUTTON_OVERTAKE, o);
-
-    bounceTimeO = millis();  // set whatever bounce time in ms is appropriate
-  }
-}
-
-void pciSetup(byte pin)
+void establishContact(char toSend)
 {
-  *digitalPinToPCMSK(pin) |= bit (digitalPinToPCMSKbit(pin));  // enable pin
-  PCIFR  |= bit (digitalPinToPCICRbit(pin)); // clear any outstanding interrupt
-  PCICR  |= bit (digitalPinToPCICRbit(pin)); // enable interrupt for the group
+	while (Serial.available() <= 0)
+	{
+		Serial.println(toSend);   // send a char
+		wait(0.5);
+	}
+	Serial.read();
 }
 
-ISR (PCINT0_vect) // handle pin change interrupt for D8 to D13 here
+void waitConnection()
 {
-  if
-  (digitalRead(BUTTON_LANE)) {
-    laneInterrupt();
-  }else if (digitalRead(BUTTON_PARK)) {
-    parkInterrupt();
-  }else if (digitalRead(BUTTON_OVERTAKE)) {
-    overtakeInterrupt();
-  }
+	while (!Serial); // wait for serial port to connect. Needed for native USB port only
 }
+
+void wait(double seconds)
+{
+	interval = seconds * 1000;
+	currentMillis = millis();
+	while (millis() - currentMillis <= interval);
+}
+
+void sendButtonsIDLE()
+{
+	encodeAndWrite(ID_IN_BUTTON_PARK, 2);
+	encodeAndWrite(ID_IN_BUTTON_LANE, 2);
+	encodeAndWrite(ID_IN_BUTTON_OVERTAKE, 2);
+}
+
+void parkInterrupt()
+{
+	if (abs(millis() - bounceTimeP) > BOUNCE_DURATION)
+	{
+		Serial.println("PARK");
+		p = !p;
+		encodeAndWrite(ID_IN_BUTTON_PARK, p);
+
+		bounceTimeP = millis();  // set whatever bounce time in ms is appropriate
+	}
+}
+
+void laneInterrupt()
+{
+	if (abs(millis() - bounceTimeL) > BOUNCE_DURATION)
+	{
+		Serial.println("LANE");
+		l = !l;
+		encodeAndWrite(ID_IN_BUTTON_LANE, l);
+
+		bounceTimeL = millis();  // set whatever bounce time in ms is appropriate
+	}
+}
+
+void overtakeInterrupt()
+{
+	if (abs(millis() - bounceTimeO) > BOUNCE_DURATION)
+	{
+		Serial.println("OVER");
+		o = !o;
+		encodeAndWrite(ID_IN_BUTTON_OVERTAKE, o);
+
+		bounceTimeO = millis();  // set whatever bounce time in ms is appropriate
+	}
+}
+
+void interruptRoutine(void) // handle pin change interrupt for D8 to D13 here
+{
+	if (digitalRead(BUTTON_LANE))
+	{
+		laneInterrupt();
+	}
+	else if (digitalRead(BUTTON_PARK))
+	{
+		parkInterrupt();
+	}
+	else if (digitalRead(BUTTON_OVERTAKE))
+	{
+		overtakeInterrupt();
+	}
+}
+
+//void pciSetup(byte pin)
+//{
+//	*digitalPinToPCMSK(pin) |= bit(digitalPinToPCMSKbit(pin));  // enable pin
+//	PCIFR |= bit(digitalPinToPCICRbit(pin)); // clear any outstanding interrupt
+//	PCICR |= bit(digitalPinToPCICRbit(pin)); // enable interrupt for the group
+//}
+
+//ISR (PCINT0_vect) // handle pin change interrupt for D8 to D13 here
+//		{
+//				if
+//				(digitalRead(BUTTON_LANE)) {
+//					laneInterrupt();
+//				}else if (digitalRead(BUTTON_PARK)) {
+//					parkInterrupt();
+//				}else if (digitalRead(BUTTON_OVERTAKE)) {
+//					overtakeInterrupt();
+//				}
+//		}
