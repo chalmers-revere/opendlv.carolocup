@@ -12,7 +12,7 @@ Odometer::Odometer()
 
 void Odometer::begin()
 {
-	attachInterrupt(0, countRevolutionsLeftWheel, RISING);
+	attachInterrupt(ENCODER_A, countRevolutionsLeftWheel, RISING);
 	//attachInterrupt(1, countRevolutionsRightWheel, RISING);
 	digitalWrite(ENCODER_A, HIGH); //internal pull-up resistors
 	//digitalWrite(ENCODER_B, HIGH); //to make sure it works, with no need for external resistors hooked up to the circuit.

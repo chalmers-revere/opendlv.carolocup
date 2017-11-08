@@ -23,7 +23,7 @@ void setup()
 {
 	axes.begin();
 
-	//odometer.begin();
+	odometer.begin();
 
 	u_center.attach(US_FRONT);
 	u_front_right.attach(US_FRONT_T);
@@ -65,7 +65,7 @@ void loop()
 	//axes.readMotion();
 	//encodeAndWrite(ID_IN_YAW, axes.getYaw());
 
-	Serial.println(digitalRead(9));
+	Serial.println(odometer.getDistance());
 }
 
 void encodeAndWrite(int id, int value)
