@@ -1,7 +1,7 @@
 #include "CaroloCupSensors.h"
 #include "Protocol.h"
 
-#define BOUNCE_DURATION 500   // define an appropriate bounce time in ms for your switches
+#define BOUNCE_DURATION 700   // define an appropriate bounce time in ms for your switches
 
 unsigned long currentMillis;
 unsigned long interval;
@@ -46,7 +46,7 @@ void setup()
 	Serial.begin(BAUD);
 	waitConnection();
 
-	establishContact('s');
+	//establishContact('s');
 }
 
 void loop()
@@ -65,7 +65,7 @@ void loop()
 	//axes.readMotion();
 	//encodeAndWrite(ID_IN_YAW, axes.getYaw());
 
-	//Serial.println(digitalRead(9));
+	Serial.println(digitalRead(9));
 }
 
 void encodeAndWrite(int id, int value)
