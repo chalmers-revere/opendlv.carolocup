@@ -13,9 +13,9 @@ Odometer::Odometer()
 void Odometer::begin()
 {
 	attachInterrupt(0, countRevolutionsLeftWheel, RISING);
-	attachInterrupt(1, countRevolutionsRightWheel, RISING);
+	//attachInterrupt(1, countRevolutionsRightWheel, RISING);
 	digitalWrite(ENCODER_A, HIGH); //internal pull-up resistors
-	digitalWrite(ENCODER_B, HIGH); //to make sure it works, with no need for external resistors hooked up to the circuit.
+	//digitalWrite(ENCODER_B, HIGH); //to make sure it works, with no need for external resistors hooked up to the circuit.
 
 	rpmReadingLeftWheel = 0;
 	rpmReadingRightWheel = 0;
@@ -27,14 +27,14 @@ int Odometer::getDistance()
 {
 	unsigned long left = wheelCircumference * (halfRevolutionsLeftWheel * 2);
 
-	unsigned long right = wheelCircumference * (halfRevolutionsRightWheel * 2);
+	//unsigned long right = wheelCircumference * (halfRevolutionsRightWheel * 2);
 
-	unsigned long t = (left + right) / 2;
+	//unsigned long t = (left + right) / 2;
 
 	halfRevolutionsLeftWheel = 0;
 	halfRevolutionsRightWheel = 0;
 
-	return t;
+	return left;
 }
 
 float Odometer::getSpeed()

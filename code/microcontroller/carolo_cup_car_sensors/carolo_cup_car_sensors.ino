@@ -45,18 +45,18 @@ void setup() {
 }
 
 void loop() {
-  sendButtonsIDLE();
+  //sendButtonsIDLE();
 
-  encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
-  encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
-  encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
-  encodeAndWrite(ID_IN_ULTRASONIC_SIDE_BACK, u_right_back.getDistance());
-  encodeAndWrite(ID_IN_ULTRASONIC_BACK , u_back.getDistance());
+  //encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
+  //encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
+  //encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
+  //encodeAndWrite(ID_IN_ULTRASONIC_SIDE_BACK, u_right_back.getDistance());
+  //encodeAndWrite(ID_IN_ULTRASONIC_BACK , u_back.getDistance());
 
   //encodeAndWrite(ID_IN_ENCODER_L, odometer.getDistance());
 
-  axes.readMotion();
-  encodeAndWrite(ID_IN_YAW, axes.getYaw());
+  //axes.readMotion();
+  //encodeAndWrite(ID_IN_YAW, axes.getYaw());
 
   //Serial.println(digitalRead(9));
 }
@@ -98,7 +98,7 @@ void sendButtonsIDLE() {
 void parkInterrupt() {
   if (abs(millis() - bounceTimeP) > BOUNCE_DURATION)
   {
-    //Serial.println("PARK");
+    Serial.println("PARK");
     p = !p;
     encodeAndWrite(ID_IN_BUTTON_PARK, p);
 
@@ -109,7 +109,7 @@ void parkInterrupt() {
 void laneInterrupt() {
   if (abs(millis() - bounceTimeL) > BOUNCE_DURATION)
   {
-    //Serial.println("LANE");
+    Serial.println("LANE");
     l = !l;
     encodeAndWrite(ID_IN_BUTTON_LANE, l);
 
@@ -120,7 +120,7 @@ void laneInterrupt() {
 void overtakeInterrupt() {
   if (abs(millis() - bounceTimeO) > BOUNCE_DURATION)
   {
-    //Serial.println("OVER");
+    Serial.println("OVER");
     o = !o;
     encodeAndWrite(ID_IN_BUTTON_OVERTAKE, o);
 

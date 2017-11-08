@@ -69,6 +69,8 @@ void LEDControl::setIndicators(unsigned int state, unsigned int frequency)
 				digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
 				digitalWrite(INDICATOR_BACK_LEFT, LOW);
 				digitalWrite(INDICATOR_FRONT_LEFT, LOW);
+
+				wait(frequency);
 			}
 			break;
 		case INDICATOR_FRONT_LEFT:

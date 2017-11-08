@@ -21,9 +21,10 @@
 #define ID_OUT_INDICATOR_RB         10
 
 #define SERVO_PIN 0 //steering servo pin
+#define _SERVO_PIN 11 //steering servo pin
 #define ESC_PIN 9 //ESC motor pin
 
-#define CH_1 A0 //RC receiver channel 1 pin (steer)
+#define CH_1 2 //A0 //RC receiver channel 1 pin (steer)
 #define CH_2 A1 //RC receiver channel 2 pin (drive)
 
 #define BRAKE_LIGHTS 4
@@ -32,7 +33,7 @@
 #define INDICATOR_FRONT_RIGHT 7
 #define INDICATOR_BACK_LEFT 8
 #define INDICATOR_BACK_RIGHT 10
-#define HEADLIGHTS 11
+#define HEADLIGHTS 12
 
 #define PULSE_TIMEOUT 25000 //10000
 
@@ -46,8 +47,8 @@
 #define DEAD_HIGH 1550
 
 //servo 308
-#define SERVOMIN  171 // this is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  530 // this is the 'maximum' pulse length count (out of 4096)
+#define SERVOMIN  169//171 // this is the 'minimum' pulse length count (out of 4096)
+#define SERVOMAX  500//530 // this is the 'maximum' pulse length count (out of 4096)
 #define MAX_RIGHT_ANGLE 180
 #define MAX_LEFT_ANGLE 0
 #define STRAIGHT_DEGREES 90
@@ -60,21 +61,25 @@
 #define _OFF_ 0
 #define _ON_ 1
 
-class SteeringMotor
+class SteeringMotor : public Servo
 {
 public:
 	explicit SteeringMotor();
 
-	void begin();
+	void begin(unsigned int min, unsigned int max);
+
+	void init();
 
 	int convertPulse(int in, int min, int max);
 
 	void setAngle(int angle);
 
+	void setDegrees(int angle);
+
 private:
 	Adafruit_PWMServoDriver pwm;
 
-	unsigned int _angle;
+	unsigned int _angle, _min_pulse, _max_pulse;
 };
 
 class ESCMotor : public Servo
