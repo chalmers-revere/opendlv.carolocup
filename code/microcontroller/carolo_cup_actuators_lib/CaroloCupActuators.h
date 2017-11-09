@@ -67,8 +67,6 @@ public:
 
     void init();
 
-    int convertPulse(int in, int min, int max);
-
     void setAngle(int angle);
 
 
