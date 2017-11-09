@@ -7,7 +7,7 @@ unsigned long currentMillis;
 unsigned long interval;
 
 Protocol protocol;
-Axes axes;
+//Axes axes;
 Odometer odometer;
 UltrasonicSensor u_center, u_front_right, u_right_front, u_right_back, u_back;
 
@@ -21,7 +21,7 @@ volatile int o = 0;
 
 void setup()
 {
-	axes.begin();
+	//axes.begin();
 
 	odometer.begin();
 

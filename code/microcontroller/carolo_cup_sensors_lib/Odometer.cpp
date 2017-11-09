@@ -25,11 +25,13 @@ void Odometer::begin()
 
 int Odometer::getDistance()
 {
-	unsigned long left = wheelCircumference * (halfRevolutionsLeftWheel * 2);
+	//unsigned long left = wheelCircumference * (halfRevolutionsLeftWheel * 2);
 
 	//unsigned long right = wheelCircumference * (halfRevolutionsRightWheel * 2);
 
 	//unsigned long t = (left + right) / 2;
+
+	unsigned long left = halfRevolutionsLeftWheel/(180/100.0);
 
 	halfRevolutionsLeftWheel = 0;
 	halfRevolutionsRightWheel = 0;
