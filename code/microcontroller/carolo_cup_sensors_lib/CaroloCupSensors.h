@@ -40,10 +40,10 @@
 #define DEFAULT_SRF08_ADDRESS 112
 #define MIN_PING_DELAY 10
 
-#ifdef CLOCK_SPEED
-#undef CLOCK_SPEED
-#endif
-#define CLOCK_SPEED 400000
+//#ifdef CLOCK_SPEED
+//#undef CLOCK_SPEED
+//#endif
+//#define CLOCK_SPEED 400000
 
 #define RANGE 24
 #define GAIN 10
