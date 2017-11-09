@@ -8,7 +8,6 @@
 CaroloCupSensors	KEYWORD1
 Odometer	KEYWORD1
 UltrasonicSensor	KEYWORD1
-Axes	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -25,13 +24,6 @@ waitConnection	KEYWORD2
 getSpeed	KEYWORD2
 resetWheelCounters	KEYWORD2
 getStep	KEYWORD2
-readMotion	KEYWORD2
-getAX	KEYWORD2
-getAY	KEYWORD2
-getAZ	KEYWORD2
-getGX	KEYWORD2
-getGY	KEYWORD2
-getGZ	KEYWORD2
 wait	KEYWORD2
 
 ######################################
@@ -49,9 +41,4 @@ ID_IN_ENCODER_R	LITERAL1
 ID_IN_BUTTON_LANE	LITERAL1
 ID_IN_BUTTON_PARK	LITERAL1
 ID_IN_BUTTON_OVERTAKE	LITERAL1
-ID_IN_GX	LITERAL1
-ID_IN_GY	LITERAL1
-ID_IN_GZ	LITERAL1
-ID_IN_AX	LITERAL1
-ID_IN_AY	LITERAL1
-ID_IN_AZ	LITERAL1
+

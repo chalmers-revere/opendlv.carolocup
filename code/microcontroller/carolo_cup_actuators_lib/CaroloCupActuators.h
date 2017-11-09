@@ -1,12 +1,11 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "CannotResolve"
 #ifndef CAROLO_CUP_ACTUATORS_LIBRARY_H
 #define CAROLO_CUP_ACTUATORS_LIBRARY_H
 
 #include <Arduino.h>
 #include <Wire.h>
 #include <Servo.h>
-#include <Adafruit_PWMServoDriver.h>
+#include "CurieIMU.h"
+#include "MadgwickAHRS.h"
 
 #define BAUD 115200
 
@@ -19,6 +18,10 @@
 #define ID_OUT_INDICATOR_RF         7
 #define ID_OUT_INDICATOR_LB         8
 #define ID_OUT_INDICATOR_RB         10
+
+#define ID_IN_YAW                   11
+#define ID_IN_ROLL                  12
+#define ID_IN_PITCH                 13
 
 #define SERVO_PIN 0 //steering servo pin
 #define _SERVO_PIN 11 //steering servo pin
@@ -46,9 +49,6 @@
 #define DEAD_LOW 1450
 #define DEAD_HIGH 1550
 
-//servo 308
-#define SERVOMIN  169//171 // this is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  500//530 // this is the 'maximum' pulse length count (out of 4096)
 #define MAX_RIGHT_ANGLE 180
 #define MAX_LEFT_ANGLE 0
 #define STRAIGHT_DEGREES 90
@@ -66,20 +66,15 @@ class SteeringMotor : public Servo
 public:
 	explicit SteeringMotor();
 
-	void begin(unsigned int min, unsigned int max);
-
 	void init();
 
 	int convertPulse(int in, int min, int max);
 
 	void setAngle(int angle);
 
-	void setDegrees(int angle);
 
 private:
-	Adafruit_PWMServoDriver pwm;
-
-	unsigned int _angle, _min_pulse, _max_pulse;
+	unsigned int _angle;
 };
 
 class ESCMotor : public Servo
@@ -134,5 +129,38 @@ private:
 	int ch2;
 };
 
-#endif
-#pragma clang diagnostic pop
+class Axes
+{
+public:
+	explicit Axes();
+
+	void begin();
+
+	void readMotion();
+
+	int getYaw();
+
+	int getPitch(); // if necessary protocol has to be modified to accept negative numbers
+
+	int getRoll(); // if necessary protocol has to be modified to accept negative numbers
+
+	float convertRawAcceleration(int aRaw);
+
+	float convertRawGyro(int gRaw);
+
+private:
+	int ax, ay, az;   //scaled accelerometer values
+
+	int gx, gy, gz; //scaled Gyro values
+
+	Madgwick filter;
+
+	int yaw;
+	int pitch;
+	int roll;
+
+	int factor; // variable by which to divide gyroscope values, used to control sensitivity
+
+	unsigned long microsPerReading, microsPrevious;
+	float accelScale, gyroScale;
+};

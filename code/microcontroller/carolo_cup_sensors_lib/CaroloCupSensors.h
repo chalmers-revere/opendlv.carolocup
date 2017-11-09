@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "CurieIMU.h"
-#include "MadgwickAHRS.h"
 
 #define BAUD 115200
 
@@ -18,9 +16,7 @@
 #define ID_IN_BUTTON_LANE           8
 #define ID_IN_BUTTON_PARK           9
 #define ID_IN_BUTTON_OVERTAKE       10
-#define ID_IN_YAW                   11
-#define ID_IN_ROLL                  12
-#define ID_IN_PITCH                 13
+
 
 #define US_FRONT 0x71 //front ultrasonic pin
 #define US_FRONT_T 0x72 //front tilted right ultrasonic
@@ -40,9 +36,6 @@
 #define DEFAULT_SRF08_ADDRESS 112
 #define MIN_PING_DELAY 10
 
-#ifdef CLOCK_SPEED
-#undef CLOCK_SPEED
-#endif
 #define CLOCK_SPEED 400000
 
 #define RANGE 24
@@ -96,42 +89,6 @@ private:
 	unsigned long rpmReadingRightWheel;
 	unsigned long timeOld;
 	unsigned long wheelCircumference;
-};
-
-class Axes
-{
-public:
-	explicit Axes();
-
-	void begin();
-
-	void readMotion();
-
-	int getYaw();
-
-	int getPitch(); // if necessary protocol has to be modified to accept negative numbers
-
-	int getRoll(); // if necessary protocol has to be modified to accept negative numbers
-
-	float convertRawAcceleration(int aRaw);
-
-	float convertRawGyro(int gRaw);
-
-private:
-	int ax, ay, az;   //scaled accelerometer values
-
-	int gx, gy, gz; //scaled Gyro values
-
-	Madgwick filter;
-
-	int yaw;
-	int pitch;
-	int roll;
-
-	int factor; // variable by which to divide gyroscope values, used to control sensitivity
-
-	unsigned long microsPerReading, microsPrevious;
-	float accelScale, gyroScale;
 };
 
 #endif
