@@ -28,7 +28,7 @@
 #define ESC_PIN 9 //ESC motor pin
 
 #define CH_1 2 //A0 //RC receiver channel 1 pin (steer)
-#define CH_2 A1 //RC receiver channel 2 pin (drive)
+#define CH_2 3 //RC receiver channel 2 pin (drive)
 
 #define BRAKE_LIGHTS 4
 #define RC_LIGHT 5
@@ -67,7 +67,7 @@ public:
 
     void init();
 
-    void setAngle(int angle);
+    void setAngle(unsigned int angle);
 
 
 private:
@@ -110,7 +110,7 @@ public:
 
 private:
     unsigned long currentMillis;
-    long interval;
+    unsigned long interval;
 };
 
 class RCReceiver {

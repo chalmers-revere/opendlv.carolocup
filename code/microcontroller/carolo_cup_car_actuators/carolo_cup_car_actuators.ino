@@ -1,6 +1,8 @@
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
 
+#define DEBUG
+
 Protocol protocol;
 SteeringMotor servo;
 ESCMotor esc;
@@ -27,7 +29,7 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
-    attachInterrupt(0, interruptRoutine, CHANGE);
+    attachInterrupt(2, interruptRoutine, CHANGE);
 
     Serial.begin(BAUD);
     ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 250); //blink 4 indicators to aware car is on
@@ -84,6 +86,10 @@ void loop() {
     }
 
     axes.readMotion();
+#ifdef DEBUG
+    Serial.print("YAW ");
+    Serial.println(receiver.filter(axes.getYaw()));
+#endif
     encodeAndWrite(ID_IN_YAW, axes.getYaw());
 }
 
@@ -120,12 +126,10 @@ void timeout() {
     }
 }
 
-void encodeAndWrite(int id, int value)
-{
+void encodeAndWrite(int id, int value) {
     int st = protocol.encode(id, value);
 
-    if (st)
-    {
+    if (st) {
         Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
     }
 }

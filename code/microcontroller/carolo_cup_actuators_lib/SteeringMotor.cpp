@@ -10,7 +10,7 @@ void SteeringMotor::init()
 	attach(_SERVO_PIN); //attach the servo to its pin
 }
 
-void SteeringMotor::setAngle(int degrees)
+void SteeringMotor::setAngle(unsigned int degrees)
 { // receives some degrees in the scale of MAX_LEFT_ANGLE, MAX_RIGHT_ANGLE
 
 	degrees = constrain(degrees, MAX_LEFT_ANGLE,MAX_RIGHT_ANGLE);
