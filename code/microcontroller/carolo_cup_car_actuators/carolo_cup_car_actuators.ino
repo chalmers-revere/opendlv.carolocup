@@ -33,7 +33,7 @@ void setup() {
 
     Serial.begin(BAUD);
     ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 250); //blink 4 indicators to aware car is on
-    waitConnection();
+    //waitConnection();
 
     //establishContact('a');
 }
@@ -45,7 +45,7 @@ void loop() {
     if (noData && (oldNoData != noData) && !interrupt) {
         //servo.setAngle(STRAIGHT_DEGREES);
         esc.brake();
-        ledControl.setBrakeLights(1);
+        ledControl.setBrakeLights(_ON_);
         Serial.println("OUT");
     }
 
@@ -88,7 +88,9 @@ void loop() {
     axes.readMotion();
 #ifdef DEBUG
     Serial.print("YAW ");
-    Serial.println(receiver.filter(axes.getYaw()));
+    Serial.println(axes.getYaw());
+    Serial.println(receiver.readChannel1());
+    Serial.println(receiver.readChannel2());
 #endif
     encodeAndWrite(ID_IN_YAW, axes.getYaw());
 }
