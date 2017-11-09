@@ -61,106 +61,110 @@
 #define _OFF_ 0
 #define _ON_ 1
 
-class SteeringMotor : public Servo
-{
+class SteeringMotor : public Servo {
 public:
-	explicit SteeringMotor();
+    explicit SteeringMotor();
 
-	void init();
+    void init();
 
-	int convertPulse(int in, int min, int max);
+    int convertPulse(int in, int min, int max);
 
-	void setAngle(int angle);
+    void setAngle(int angle);
 
 
 private:
-	unsigned int _angle;
+    unsigned int _angle;
 };
 
-class ESCMotor : public Servo
-{
+class ESCMotor : public Servo {
 public:
-	explicit ESCMotor();
+    explicit ESCMotor();
 
-	void init();
+    void init();
 
-	void setSpeed(int speed);
+    void setSpeed(int speed);
 
-	void brake();
+    void brake();
 
-	void arm();
+    void arm();
 
 private:
-	unsigned short _pin; //the pin the ESC is attached to
+    unsigned short _pin; //the pin the ESC is attached to
 
-	int _speed;
+    int _speed;
 };
 
-class LEDControl
-{
+class LEDControl {
 public:
-	explicit LEDControl();
-	void begin();
-	void setIndicators(unsigned int state, unsigned int frequency);
-	void setBrakeLights(unsigned int value);
-	void setHeadLights(unsigned int state);
-	void setRCLight(unsigned int frequency, unsigned long counter);
-	void wait(long milliseconds);
-private:
-	unsigned long currentMillis;
-	long interval;
-};
+    explicit LEDControl();
 
-class RCReceiver
-{
-public:
-	explicit RCReceiver();
+    void begin();
 
-	void begin();
+    void setIndicators(unsigned int state, unsigned int frequency);
 
-	int readChannel1();
+    void setBrakeLights(unsigned int value);
 
-	int readChannel2();
+    void setHeadLights(unsigned int state);
 
-	int filter(int val);
+    void setRCLight(unsigned int frequency, unsigned long counter);
+
+    void wait(long milliseconds);
 
 private:
-	int ch1;
-	int ch2;
+    unsigned long currentMillis;
+    long interval;
 };
 
-class Axes
-{
+class RCReceiver {
 public:
-	explicit Axes();
+    explicit RCReceiver();
 
-	void begin();
+    void begin();
 
-	void readMotion();
+    int readChannel1();
 
-	int getYaw();
+    int readChannel2();
 
-	int getPitch(); // if necessary protocol has to be modified to accept negative numbers
-
-	int getRoll(); // if necessary protocol has to be modified to accept negative numbers
-
-	float convertRawAcceleration(int aRaw);
-
-	float convertRawGyro(int gRaw);
+    int filter(int val);
 
 private:
-	int ax, ay, az;   //scaled accelerometer values
-
-	int gx, gy, gz; //scaled Gyro values
-
-	Madgwick filter;
-
-	int yaw;
-	int pitch;
-	int roll;
-
-	int factor; // variable by which to divide gyroscope values, used to control sensitivity
-
-	unsigned long microsPerReading, microsPrevious;
-	float accelScale, gyroScale;
+    int ch1;
+    int ch2;
 };
+
+class Axes {
+public:
+    explicit Axes();
+
+    void begin();
+
+    void readMotion();
+
+    int getYaw();
+
+    int getPitch(); // if necessary protocol has to be modified to accept negative numbers
+
+    int getRoll(); // if necessary protocol has to be modified to accept negative numbers
+
+    float convertRawAcceleration(int aRaw);
+
+    float convertRawGyro(int gRaw);
+
+private:
+    int ax, ay, az;   //scaled accelerometer values
+
+    int gx, gy, gz; //scaled Gyro values
+
+    Madgwick filter;
+
+    int yaw;
+    int pitch;
+    int roll;
+
+    int factor; // variable by which to divide gyroscope values, used to control sensitivity
+
+    unsigned long microsPerReading, microsPrevious;
+    float accelScale, gyroScale;
+};
+
+#endif
