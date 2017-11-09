@@ -74,7 +74,7 @@ void loop() {
         interrupt = 1;
 
         ledControl.setBrakeLights(_OFF_);
-        servo.setDegrees(receiver.filter(angle));
+        servo.setAngle(receiver.filter(angle));
         esc.setSpeed(receiver.filter(receiver.readChannel2()));
 
         Serial.print("steer ");
@@ -117,6 +117,16 @@ void timeout() {
             noData = 1;
             break;
         }
+    }
+}
+
+void encodeAndWrite(int id, int value)
+{
+    int st = protocol.encode(id, value);
+
+    if (st)
+    {
+        Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
     }
 }
 
