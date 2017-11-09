@@ -106,7 +106,7 @@ public:
 
     void setRCLight(unsigned int frequency, unsigned long counter);
 
-    void wait(long milliseconds);
+    void wait(unsigned long milliseconds);
 
 private:
     unsigned long currentMillis;

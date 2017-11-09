@@ -13,10 +13,10 @@ void SteeringMotor::init()
 void SteeringMotor::setAngle(int degrees)
 { // receives some degrees in the scale of MAX_LEFT_ANGLE, MAX_RIGHT_ANGLE
 
-	angle = constrain(angle, MAX_LEFT_ANGLE,MAX_RIGHT_ANGLE);
-	if (angle != _angle)
+	degrees = constrain(degrees, MAX_LEFT_ANGLE,MAX_RIGHT_ANGLE);
+	if (degrees != _angle)
 	{
-		_angle = angle;
+		_angle = degrees;
 		write(_angle); //write the appropriate pwm signal to the servo
 	}
 }

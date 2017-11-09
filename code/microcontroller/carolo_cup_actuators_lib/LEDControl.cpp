@@ -98,7 +98,7 @@ void LEDControl::setIndicators(unsigned int state, unsigned int frequency)
 	}
 }
 
-void LEDControl::wait(long milliseconds)
+void LEDControl::wait(unsigned long milliseconds)
 {
 	interval = milliseconds;
 	currentMillis = millis();
