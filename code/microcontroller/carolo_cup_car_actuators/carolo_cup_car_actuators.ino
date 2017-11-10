@@ -31,7 +31,6 @@ void setup() {
     ledControl.begin();
 
     //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
-    pciSetup(CH_1);
     Serial.begin(BAUD);
     ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
 
@@ -208,15 +207,4 @@ void interruptRoutine() {
     }
 }
 
-void pciSetup(byte pin)
-{
-    *digitalPinToPCMSK(pin) |= bit (digitalPinToPCMSKbit(pin));  // enable pin
-    PCIFR  |= bit (digitalPinToPCICRbit(pin)); // clear any outstanding interrupt
-    PCICR  |= bit (digitalPinToPCICRbit(pin)); // enable interrupt for the group
-}
-
-ISR (PCINT2_vect) // handle pin change interrupt for D0 to D7 here
-        {
-                interruptRoutine();
-        }
 
