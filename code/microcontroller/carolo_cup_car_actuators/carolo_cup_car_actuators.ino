@@ -50,6 +50,7 @@ void loop() {
     if (noData && (oldNoData != noData) && !interrupt) {
         servo.setAngle(STRAIGHT_DEGREES);
         esc.brake();
+        esc.arm();
         ledControl.setBrakeLights(_ON_);
 #ifdef DEBUG
         Serial.println("OUT");
@@ -67,8 +68,9 @@ void loop() {
 
         if (!interrupt) {
             esc.brake();
+            esc.arm();
             ledControl.setBrakeLights(_ON_);
-            wait(1);
+            wait(2);
         }
 
         interrupt = 1;
@@ -196,6 +198,7 @@ void interruptRoutine() {
     } else {
         if (interrupt) {
             esc.brake();
+            esc.arm();
             ledControl.setBrakeLights(_ON_);
         }
         interrupt = 0;
@@ -207,6 +210,7 @@ void interruptRoutine() {
         Serial.println("ISR");
 #endif
         esc.brake();
+        esc.arm();
         ledControl.setBrakeLights(_ON_);
         detachInterrupt(digitalPinToInterrupt(CH_1));
     }
