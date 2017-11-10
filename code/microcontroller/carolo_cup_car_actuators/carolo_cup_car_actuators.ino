@@ -7,7 +7,7 @@
 Protocol protocol;
 SteeringMotor servo;
 ESCMotor esc;
-//RCReceiver receiver;
+RCReceiver receiver;
 LEDControl ledControl;
 Axes axes;
 
@@ -27,13 +27,13 @@ void setup() {
     axes.begin();
     servo.init();
     esc.init();
-    //receiver.begin();
+    receiver.begin();
     ledControl.begin();
 
-    //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
 
     Serial.begin(BAUD);
-    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 300); //blink 4 indicators to aware car is on
+    ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
 
 #ifdef RUN
     waitConnection();
@@ -59,38 +59,38 @@ void loop() {
 
     if (!interrupt) timeout();
 
-//    if (rcControllerFlag >= 3) {
-//        int angle = receiver.readChannel1();
-//        int speed = receiver.readChannel2();
-//        ledControl.setRCLight(45, _blink);
-//
-//        if (angle == 0) {
-//            if (interrupt) {
-//                esc.brake();
-//                ledControl.setBrakeLights(_ON_);
-//            }
-//            interrupt = 0;
-//            rcControllerFlag = 0;
-//
-//            //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
-//        }
-//
-//        if (!interrupt) {
-//            esc.brake();
-//            ledControl.setBrakeLights(_ON_);
-//        }
-//        interrupt = 1;
-//
-//        ledControl.setBrakeLights(_OFF_);
-//        servo.setAngle(receiver.filter(angle));
-//        esc.setSpeed(receiver.filter(speed));
-//#ifdef DEBUG
-//        Serial.print("steer ");
-//        Serial.println(receiver.filter(angle));
-//        Serial.print("speed ");
-//        Serial.println(receiver.filter(speed));
-//#endif
-//    }
+    if (rcControllerFlag >= 3) {
+        int angle = receiver.readChannel1();
+        int speed = receiver.readChannel2();
+        ledControl.setRCLight(45, _blink);
+
+        if (angle == 0) {
+            if (interrupt) {
+                esc.brake();
+                ledControl.setBrakeLights(_ON_);
+            }
+            interrupt = 0;
+            rcControllerFlag = 0;
+
+            //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+        }
+
+        if (!interrupt) {
+            esc.brake();
+            ledControl.setBrakeLights(_ON_);
+        }
+        interrupt = 1;
+
+        ledControl.setBrakeLights(_OFF_);
+        servo.setAngle(receiver.filter(angle));
+        esc.setSpeed(receiver.filter(speed));
+#ifdef DEBUG
+        Serial.print("steer ");
+        Serial.println(receiver.filter(angle));
+        Serial.print("speed ");
+        Serial.println(receiver.filter(speed));
+#endif
+    }
 
     axes.readMotion();
 #ifdef DEBUG
@@ -112,7 +112,7 @@ void establishContact(char toSend) {
     Serial.read();
     wait(5);
     esc.arm();
-    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 300); //blink 4 indicators to aware car is on
+    ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
     //ledControl.setHeadLights(_ON_);
 }
 
@@ -176,31 +176,31 @@ void serialEvent() {
     }
 }
 
-//void interruptRoutine() {
-//    int a = receiver.readChannel1();
-//
-//#ifdef DEBUG
-//    Serial.print("interrupt ch1 ");
-//    Serial.println(a);
-//#endif
-//
-//    if (a >= DEAD_LOW && a <= DEAD_HIGH) {
-//        rcControllerFlag++;
-//    } else if (a == 0) {
-//        if (interrupt) {
-//            esc.brake();
-//            ledControl.setBrakeLights(_ON_);
-//        }
-//        interrupt = 0;
-//        rcControllerFlag = 0;
-//    }
-//
-//    if (rcControllerFlag >= 3) {
-//#ifdef DEBUG
-//        Serial.println("ISR");
-//#endif
-//        esc.brake();
-//        ledControl.setBrakeLights(_ON_);
-//        detachInterrupt(digitalPinToInterrupt(CH_1));
-//    }
-//}
+void interruptRoutine() {
+    int a = receiver.readChannel1();
+
+#ifdef DEBUG
+    Serial.print("interrupt ch1 ");
+    Serial.println(a);
+#endif
+
+    if (a >= DEAD_LOW && a <= DEAD_HIGH) {
+        rcControllerFlag++;
+    } else if (a == 0) {
+        if (interrupt) {
+            esc.brake();
+            ledControl.setBrakeLights(_ON_);
+        }
+        interrupt = 0;
+        rcControllerFlag = 0;
+    }
+
+    if (rcControllerFlag >= 3) {
+#ifdef DEBUG
+        Serial.println("ISR");
+#endif
+        esc.brake();
+        ledControl.setBrakeLights(_ON_);
+        detachInterrupt(digitalPinToInterrupt(CH_1));
+    }
+}

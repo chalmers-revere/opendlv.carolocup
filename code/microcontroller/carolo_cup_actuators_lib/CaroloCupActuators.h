@@ -23,11 +23,13 @@
 #define ID_IN_ROLL                  12
 #define ID_IN_PITCH                 13
 
+#define LED_SIGNAL 5
+
 #define SERVO_PIN 0 //steering servo pin
 #define _SERVO_PIN 11 //steering servo pin
 #define ESC_PIN 9 //ESC motor pin
 
-#define CH_1 2 //A0 //RC receiver channel 1 pin (steer)
+#define CH_1 A0 //A0 //RC receiver channel 1 pin (steer)
 #define CH_2 3 //RC receiver channel 2 pin (drive)
 
 #define BRAKE_LIGHTS 4
