@@ -30,7 +30,7 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
-    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
 
     Serial.begin(BAUD);
     ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
@@ -74,7 +74,7 @@ void loop() {
             interrupt = 0;
             rcControllerFlag = 0;
 
-            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
         }
 
         if (!interrupt) {
@@ -96,8 +96,8 @@ void loop() {
 
     axes.readMotion();
 #ifdef DEBUG
-    Serial.print("YAW ");
-    Serial.println(axes.getYaw());
+    //Serial.print("YAW ");
+    //Serial.println(axes.getYaw());
     //Serial.println(receiver.readChannel1());
     //Serial.println(receiver.readChannel2());
 #endif

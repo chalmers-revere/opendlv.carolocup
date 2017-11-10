@@ -29,7 +29,7 @@
 #define _SERVO_PIN 11 //steering servo pin
 #define ESC_PIN 9 //ESC motor pin
 
-#define CH_1 12 //A0 //RC receiver channel 1 pin (steer)
+#define CH_1 2 //RC receiver channel 1 pin (steer)
 #define CH_2 3 //RC receiver channel 2 pin (drive)
 
 #define BRAKE_LIGHTS 4
