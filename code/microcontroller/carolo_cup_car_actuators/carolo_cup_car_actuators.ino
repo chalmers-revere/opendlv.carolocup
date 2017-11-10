@@ -30,7 +30,7 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
-    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, ); //blink all leds to aware car is on
+    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 0.5); //blink all leds to aware car is on
 
     attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
 
@@ -119,7 +119,7 @@ void establishContact(char toSend) {
     Serial.read();
     wait(5);
     esc.arm();
-    ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
+    ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
     //ledControl.setHeadLights(_ON_);
 }
 
@@ -172,7 +172,7 @@ void serialEvent() {
                     servo.setAngle(value);
                     break;
                 case ID_OUT_INDICATORS:
-                    ledControl.setIndicators(value, 300);
+                    ledControl.setIndicators(value, 0.5);
                     break;
                 default:
                     break;
