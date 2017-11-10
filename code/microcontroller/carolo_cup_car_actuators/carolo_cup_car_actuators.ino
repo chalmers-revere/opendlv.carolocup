@@ -57,7 +57,9 @@ void loop() {
 
     oldNoData = noData;
 
+#ifdef RUN
     if (!interrupt) timeout();
+#endif
 
     if (rcControllerFlag >= 3) {
         int angle = receiver.readChannel1();
@@ -72,7 +74,7 @@ void loop() {
             interrupt = 0;
             rcControllerFlag = 0;
 
-            //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
         }
 
         if (!interrupt) {
