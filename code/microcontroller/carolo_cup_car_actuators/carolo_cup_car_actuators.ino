@@ -61,6 +61,7 @@ void loop() {
 #endif
 
     if (rcControllerFlag >= 3) {
+        wait(1);
         int angle = receiver.readChannel1();
         int speed = receiver.readChannel2();
         ledControl.setRCLight(45, _blink);
@@ -95,8 +96,8 @@ void loop() {
 
     axes.readMotion();
 #ifdef DEBUG
-    //Serial.print("YAW ");
-    //Serial.println(axes.getYaw());
+    Serial.print("YAW ");
+    Serial.println(axes.getYaw());
     //Serial.println(receiver.readChannel1());
     //Serial.println(receiver.readChannel2());
 #endif
@@ -183,12 +184,11 @@ void interruptRoutine() {
 #ifdef DEBUG
     Serial.print("interrupt ch1 ");
     Serial.println(a);
-    Serial.println(micros());
 #endif
 
     if (a >= DEAD_LOW && a <= DEAD_HIGH) {
         rcControllerFlag++;
-    } else if (a == 0) {
+    } else {
         if (interrupt) {
             esc.brake();
             ledControl.setBrakeLights(_ON_);
@@ -205,6 +205,30 @@ void interruptRoutine() {
         ledControl.setBrakeLights(_ON_);
         detachInterrupt(digitalPinToInterrupt(CH_1));
     }
+}
+
+unsigned long pulseMeasure(uint8_t pin) {
+
+    uint8_t state = HIGH;
+    unsigned long pulseWidth = 0;
+    unsigned long loopCount = 0;
+    unsigned long loopMax = 5000000;
+
+    // While the pin is *not* in the target state we make sure the timeout hasn't been reached.
+    while ((digitalRead(pin)) != state) {
+        if (loopCount++ == loopMax) {
+            return 0;
+        }
+    }
+    // When the pin *is* in the target state we bump the counter while still keeping track of the timeout.
+    while ((digitalRead(pin)) == state) {
+        if (loopCount++ == loopMax) {
+            return 0;
+        }
+        pulseWidth++;
+    }
+    // Return the pulse time in microsecond!
+    return pulseWidth * 1.45; // Calculated the pulseWidth++ loop to be about 1.50uS in length.
 }
 
 
