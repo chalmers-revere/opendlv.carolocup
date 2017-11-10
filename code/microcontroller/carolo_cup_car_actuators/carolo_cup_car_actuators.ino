@@ -61,10 +61,17 @@ void loop() {
 #endif
 
     if (rcControllerFlag >= 3) {
-        wait(1);
+        ledControl.setRCLight(45, _blink);
+
+        if (!interrupt) {
+            esc.brake();
+            ledControl.setBrakeLights(_ON_);
+            wait(1);
+        }
+        interrupt = 1;
+
         int angle = receiver.readChannel1();
         int speed = receiver.readChannel2();
-        ledControl.setRCLight(45, _blink);
 
         if (angle == 0) {
             if (interrupt) {
@@ -76,12 +83,6 @@ void loop() {
 
             attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
         }
-
-        if (!interrupt) {
-            esc.brake();
-            ledControl.setBrakeLights(_ON_);
-        }
-        interrupt = 1;
 
         ledControl.setBrakeLights(_OFF_);
         servo.setAngle(receiver.filter(angle));
@@ -179,7 +180,7 @@ void serialEvent() {
 }
 
 void interruptRoutine() {
-    int a = receiver.readChannel1();
+    int a = pulseMeasure(CH_1);
 
 #ifdef DEBUG
     Serial.print("interrupt ch1 ");
