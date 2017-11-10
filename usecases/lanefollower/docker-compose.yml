@@ -95,14 +95,14 @@ services:
          command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
 
              #Micro-service for communication link
-        communicationlink:
-          build: .
-          network_mode: host
-          ipc: host
-          volumes:
-              - ./config:/opt/configuration
-          depends_on:
-              - odsupercomponent
-          restart: on-failure
-          privileged: true
-          command: "/opt/opendlv.carolocup/bin/carolocup-control-communicationlink --verbose=1  --cid=${CID} --freq=20"
+    communicationlink:
+         build: .
+         network_mode: host
+         ipc: host
+         volumes:
+             - ./config:/opt/configuration
+         depends_on:
+             - odsupercomponent
+         restart: on-failure
+         privileged: true
+         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
