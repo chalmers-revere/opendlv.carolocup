@@ -32,7 +32,7 @@ void setup() {
 
     attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
     Serial.begin(BAUD);
-    ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
+    ledControl.setIndicators(LED_SIGNAL, 500); //blink all leds to aware car is on
 
 #ifdef RUN
     waitConnection();
@@ -47,7 +47,6 @@ void loop() {
 
     if (noData && (oldNoData != noData) && !interrupt) {
         servo.setAngle(STRAIGHT_DEGREES);
-        Serial.println("out brake ");
         esc.brake();
         ledControl.setBrakeLights(_ON_);
 #ifdef DEBUG
@@ -65,7 +64,6 @@ void loop() {
         ledControl.setRCLight(45, _blink);
 
         if (!interrupt) {
-            Serial.println("em 1 brake ");
             esc.brake();
             ledControl.setBrakeLights(_ON_);
             wait(1);
@@ -77,11 +75,9 @@ void loop() {
         int speed = receiver.readChannel2();
 
         if (angle == 0) {
-            if (interrupt) {
-                Serial.println("EM brake ");
-                esc.brake();
-                ledControl.setBrakeLights(_ON_);
-            }
+
+            esc.brake();
+            ledControl.setBrakeLights(_ON_);
 
             interrupt = 0;
             rcControllerFlag = 0;
@@ -92,7 +88,6 @@ void loop() {
 
         ledControl.setBrakeLights(_OFF_);
         servo.setAngle(receiver.filter(angle));
-        Serial.println("EM esc ");
         esc.setSpeed(receiver.filter(speed));
 #ifdef DEBUG
         Serial.print("steer ");
@@ -164,13 +159,11 @@ void serialEvent() {
             int value = protocol.getValue();
             switch (protocol.getId()) {
                 case ID_OUT_BRAKE:
-                    Serial.println("Serial brake ");
                     esc.brake();
                     ledControl.setBrakeLights(_ON_);
                     break;
                 case ID_OUT_MOTOR:
                     ledControl.setBrakeLights(_OFF_);
-                    Serial.println("serial speed ");
                     esc.setSpeed(value);
                     break;
                 case ID_OUT_SERVO:
@@ -200,7 +193,6 @@ void interruptRoutine() {
         rcControllerFlag++;
     } else {
         if (interrupt) {
-            Serial.println("interrupt BRA ");
             esc.brake();
             ledControl.setBrakeLights(_ON_);
         }
@@ -212,7 +204,6 @@ void interruptRoutine() {
 #ifdef DEBUG
         Serial.println("ISR");
 #endif
-        Serial.println("interrupt ISR ");
         esc.brake();
         ledControl.setBrakeLights(_ON_);
         detachInterrupt(digitalPinToInterrupt(CH_1));
