@@ -18,6 +18,8 @@ void ESCMotor::setSpeed(int speed) { //receives a speed in the scale of 0 to 180
     speed = constrain(speed, FULL_BACKWARD, FULL_FORWARD);
     if (speed != _speed) {
         _speed = speed;
+        Serial.print("esc ");
+        Serial.println(_speed);
         write(_speed); //write the appropriate pwm signal to the servo
     }
 }

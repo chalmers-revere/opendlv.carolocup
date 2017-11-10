@@ -1,7 +1,7 @@
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
 
-#define DEBUG
+//#define DEBUG
 //#define RUN
 
 Protocol protocol;
@@ -32,7 +32,7 @@ void setup() {
 
     attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
     Serial.begin(BAUD);
-    ledControl.setIndicators(LED_SIGNAL, 500); //blink all leds to aware car is on
+    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 500); //blink all leds to aware car is on
 
 #ifdef RUN
     waitConnection();
