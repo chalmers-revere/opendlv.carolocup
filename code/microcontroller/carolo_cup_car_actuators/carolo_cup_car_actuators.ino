@@ -30,7 +30,7 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
-    //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
+    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
     Serial.begin(BAUD);
     ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
 
@@ -73,7 +73,7 @@ void loop() {
             interrupt = 0;
             rcControllerFlag = 0;
 
-            //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
+            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
         }
 
         if (!interrupt) {
@@ -203,7 +203,7 @@ void interruptRoutine() {
 #endif
         esc.brake();
         ledControl.setBrakeLights(_ON_);
-        //detachInterrupt(digitalPinToInterrupt(CH_1));
+        detachInterrupt(digitalPinToInterrupt(CH_1));
     }
 }
 
