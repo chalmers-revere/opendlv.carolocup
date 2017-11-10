@@ -30,8 +30,8 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
-    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
-
+    //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
+    pciSetup(CH_1);
     Serial.begin(BAUD);
     ledControl.setIndicators(LED_SIGNAL, 300); //blink all leds to aware car is on
 
@@ -74,7 +74,7 @@ void loop() {
             interrupt = 0;
             rcControllerFlag = 0;
 
-            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
+            //attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
         }
 
         if (!interrupt) {
@@ -184,6 +184,7 @@ void interruptRoutine() {
 #ifdef DEBUG
     Serial.print("interrupt ch1 ");
     Serial.println(a);
+    Serial.println(micros());
 #endif
 
     if (a >= DEAD_LOW && a <= DEAD_HIGH) {
@@ -203,6 +204,19 @@ void interruptRoutine() {
 #endif
         esc.brake();
         ledControl.setBrakeLights(_ON_);
-        detachInterrupt(digitalPinToInterrupt(CH_1));
+        //detachInterrupt(digitalPinToInterrupt(CH_1));
     }
 }
+
+void pciSetup(byte pin)
+{
+    *digitalPinToPCMSK(pin) |= bit (digitalPinToPCMSKbit(pin));  // enable pin
+    PCIFR  |= bit (digitalPinToPCICRbit(pin)); // clear any outstanding interrupt
+    PCICR  |= bit (digitalPinToPCICRbit(pin)); // enable interrupt for the group
+}
+
+ISR (PCINT2_vect) // handle pin change interrupt for D0 to D7 here
+        {
+                interruptRoutine();
+        }
+
