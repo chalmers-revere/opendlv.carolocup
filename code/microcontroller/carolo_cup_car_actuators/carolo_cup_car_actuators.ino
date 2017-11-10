@@ -29,13 +29,16 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
-    attachInterrupt(2, interruptRoutine, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
 
     Serial.begin(BAUD);
-    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 250); //blink 4 indicators to aware car is on
-    //waitConnection();
+    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 300); //blink 4 indicators to aware car is on
 
-    //establishContact('a');
+#ifdef RUN
+    waitConnection();
+
+    establishContact('a');
+#endif
 }
 
 void loop() {
@@ -43,19 +46,21 @@ void loop() {
     if (_blink > 2147483647) _blink = 0;
 
     if (noData && (oldNoData != noData) && !interrupt) {
-        //servo.setAngle(STRAIGHT_DEGREES);
+        servo.setAngle(STRAIGHT_DEGREES);
         esc.brake();
         ledControl.setBrakeLights(_ON_);
+#ifdef DEBUG
         Serial.println("OUT");
+#endif
     }
 
     oldNoData = noData;
 
     if (!interrupt) timeout();
 
-
     if (rcControllerFlag >= 3) {
         int angle = receiver.readChannel1();
+        int speed = receiver.readChannel2();
         ledControl.setRCLight(45, _blink);
 
         if (angle == 0) {
@@ -66,7 +71,7 @@ void loop() {
             interrupt = 0;
             rcControllerFlag = 0;
 
-            attachInterrupt(2, interruptRoutine, CHANGE);
+            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
         }
 
         if (!interrupt) {
@@ -77,22 +82,25 @@ void loop() {
 
         ledControl.setBrakeLights(_OFF_);
         servo.setAngle(receiver.filter(angle));
-        esc.setSpeed(receiver.filter(receiver.readChannel2()));
-
+        esc.setSpeed(receiver.filter(speed));
+#ifdef DEBUG
         Serial.print("steer ");
         Serial.println(receiver.filter(angle));
         Serial.print("speed ");
-        Serial.println(receiver.filter(receiver.readChannel2()));
+        Serial.println(receiver.filter(speed));
+#endif
     }
 
     axes.readMotion();
 #ifdef DEBUG
     Serial.print("YAW ");
     Serial.println(axes.getYaw());
-    Serial.println(receiver.readChannel1());
-    Serial.println(receiver.readChannel2());
+    //Serial.println(receiver.readChannel1());
+    //Serial.println(receiver.readChannel2());
 #endif
+#ifdef RUN
     encodeAndWrite(ID_IN_YAW, axes.getYaw());
+#endif
 }
 
 void establishContact(char toSend) {
@@ -103,7 +111,7 @@ void establishContact(char toSend) {
     Serial.read();
     wait(5);
     esc.arm();
-    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 500); //blink 4 indicators to aware car is on
+    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 300); //blink 4 indicators to aware car is on
     //ledControl.setHeadLights(_ON_);
 }
 
@@ -156,7 +164,7 @@ void serialEvent() {
                     servo.setAngle(value);
                     break;
                 case ID_OUT_INDICATORS:
-                    ledControl.setIndicators(value, 500);
+                    ledControl.setIndicators(value, 300);
                     break;
                 default:
                     break;
@@ -170,6 +178,11 @@ void serialEvent() {
 void interruptRoutine() {
     int a = receiver.readChannel1();
 
+#ifdef DEBUG
+    Serial.print("interrupt ch1 ");
+    Serial.println(a);
+#endif
+
     if (a >= DEAD_LOW && a <= DEAD_HIGH) {
         rcControllerFlag++;
     } else if (a == 0) {
@@ -182,10 +195,11 @@ void interruptRoutine() {
     }
 
     if (rcControllerFlag >= 3) {
+#ifdef DEBUG
         Serial.println("ISR");
-
+#endif
         esc.brake();
         ledControl.setBrakeLights(_ON_);
-        detachInterrupt(2);
+        detachInterrupt(digitalPinToInterrupt(CH_1));
     }
 }
