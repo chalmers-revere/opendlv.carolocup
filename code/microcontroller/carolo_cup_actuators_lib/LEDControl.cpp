@@ -40,7 +40,7 @@ void LEDControl::setRCLight(unsigned int frequency, unsigned long counter) {
     }
 }
 
-void LEDControl::setIndicators(unsigned int state, unsigned int frequency) {
+void LEDControl::setIndicators(unsigned int state, double seconds) {
     switch (state) {
         case ID_OUT_LIGHTS_EFFECT:
             for (int i = 0; i < 3; ++i) {
@@ -49,14 +49,14 @@ void LEDControl::setIndicators(unsigned int state, unsigned int frequency) {
                 digitalWrite(INDICATOR_BACK_LEFT, HIGH);
                 digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
 
-                wait(frequency);
+                wait(seconds);
 
                 digitalWrite(INDICATOR_BACK_RIGHT, LOW);
                 digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
                 digitalWrite(INDICATOR_BACK_LEFT, LOW);
                 digitalWrite(INDICATOR_FRONT_LEFT, LOW);
 
-                wait(frequency);
+                wait(seconds);
             }
             break;
         case LED_SIGNAL:
@@ -68,7 +68,7 @@ void LEDControl::setIndicators(unsigned int state, unsigned int frequency) {
                 digitalWrite(RC_LIGHT, HIGH);
                 digitalWrite(BRAKE_LIGHTS, HIGH);
 
-                wait(frequency);
+                wait(seconds);
 
                 digitalWrite(INDICATOR_BACK_RIGHT, LOW);
                 digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
@@ -77,27 +77,27 @@ void LEDControl::setIndicators(unsigned int state, unsigned int frequency) {
                 digitalWrite(RC_LIGHT, LOW);
                 digitalWrite(BRAKE_LIGHTS, LOW);
 
-                wait(frequency);
+                wait(seconds);
             }
             break;
         case INDICATOR_FRONT_LEFT:
             digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
-            wait(frequency);
+            wait(seconds);
             digitalWrite(INDICATOR_FRONT_LEFT, LOW);
             break;
         case INDICATOR_FRONT_RIGHT:
             digitalWrite(INDICATOR_FRONT_RIGHT, HIGH);
-            wait(frequency);
+            wait(seconds);
             digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
             break;
         case INDICATOR_BACK_LEFT:
             digitalWrite(INDICATOR_BACK_LEFT, HIGH);
-            wait(frequency);
+            wait(seconds);
             digitalWrite(INDICATOR_BACK_LEFT, LOW);
             break;
         case INDICATOR_BACK_RIGHT:
             digitalWrite(INDICATOR_BACK_RIGHT, HIGH);
-            wait(frequency);
+            wait(seconds);
             digitalWrite(INDICATOR_BACK_RIGHT, LOW);
             break;
         default:
@@ -105,8 +105,8 @@ void LEDControl::setIndicators(unsigned int state, unsigned int frequency) {
     }
 }
 
-void LEDControl::wait(unsigned long milliseconds) {
-    interval = milliseconds;
-    currentMillis = millis();
-    while (millis() - currentMillis <= interval);
+void LEDControl::wait(double seconds) {
+    interval = seconds * 1000000;
+    currentMillis = micros();
+    while (micros() - currentMillis <= interval);
 }

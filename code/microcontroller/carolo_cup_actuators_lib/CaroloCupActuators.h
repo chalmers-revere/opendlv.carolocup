@@ -42,7 +42,7 @@
 
 #define PULSE_TIMEOUT 25000 //10000
 
-#define T_OUT 5000
+#define T_OUT 5000000
 
 //Signal Conditioning limits for RC controller
 #define LO 1090
@@ -100,7 +100,7 @@ public:
 
     void begin();
 
-    void setIndicators(unsigned int state, unsigned int frequency);
+    void setIndicators(unsigned int state, double seconds);
 
     void setBrakeLights(unsigned int value);
 
@@ -108,7 +108,7 @@ public:
 
     void setRCLight(unsigned int frequency, unsigned long counter);
 
-    void wait(unsigned long milliseconds);
+    void wait(double seconds);
 
 private:
     unsigned long currentMillis;

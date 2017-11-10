@@ -19,7 +19,7 @@ unsigned long _blink = 0;
 volatile int interrupt = 0;
 volatile int rcControllerFlag = 0;
 
-long oldMillis;
+unsigned long oldMillis;
 int noData = 0;
 int oldNoData = 0;
 
@@ -30,9 +30,11 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
+    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, ); //blink all leds to aware car is on
+
     attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+
     Serial.begin(BAUD);
-    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 500); //blink all leds to aware car is on
 
 #ifdef RUN
     waitConnection();
@@ -126,16 +128,16 @@ void waitConnection() {
 }
 
 void wait(double seconds) {
-    interval = seconds * 1000;
-    currentMillis = millis();
-    while (millis() - currentMillis <= interval);
+    interval = seconds * 1000000;
+    currentMillis = micros();
+    while (micros() - currentMillis <= interval);
 }
 
 void timeout() {
-    oldMillis = millis();
+    oldMillis = micros();
     while (!Serial.available()) {
 
-        if ((millis() - oldMillis) > T_OUT) {
+        if ((micros() - oldMillis) > T_OUT) {
             noData = 1;
             break;
         }
