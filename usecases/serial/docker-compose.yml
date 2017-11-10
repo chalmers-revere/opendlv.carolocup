@@ -61,7 +61,7 @@ services:
             - "/dev/ttyUSB0:/dev/ttyUSB0"
         restart: on-failure
         privileged: true
-        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=in"
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=one"
 
     # carolocup-control-proxy-serialouthandler
 #    carolocup-control-proxy-serialouthandler:

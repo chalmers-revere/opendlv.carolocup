@@ -95,13 +95,13 @@ namespace carolocup
 					const char *_port = _S_PORT.c_str();
 					serial_open(this->serial, _port, BAUD_RATE);
 
-					uint8_t rb = serial_handshake(this->serial, 'a', 's');
+					//uint8_t rb = serial_handshake(this->serial, 'a', 's');
 
-					if (rb == 'a') {
+					//if (rb == 'a') {
 						serialBehaviour = "arduino=out";
-					} else if (rb == 's') {
-						serialBehaviour = "arduino=in";
-					}
+					//} else if (rb == 's') {
+						//serialBehaviour = "arduino=in";
+					//}
 
 					odcore::base::Thread::usleepFor(5 * ONE_SECOND);
 

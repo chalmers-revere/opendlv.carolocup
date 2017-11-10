@@ -1,7 +1,7 @@
 #include "CaroloCupSensors.h"
 #include "Protocol.h"
 
-//#define RUN // uncomment this for normal executation and comment DEBUG
+#define RUN // uncomment this for normal executation and comment DEBUG
 //#define DEBUG //uncomment this for debugging and comment RUN
 #define BOUNCE_DURATION 700   // define an appropriate bounce time in ms for your switches
 
@@ -43,16 +43,16 @@ void setup()
   //	attachInterrupt(BUTTON_OVERTAKE, interruptRoutine, RISING);
 
   Serial.begin(BAUD);
-  #ifdef RUN
+#ifdef RUN
   waitConnection();
 
   establishContact('s');
-  #endif
+#endif
 }
 
 void loop()
 {
-  #ifdef RUN
+#ifdef RUN
   sendButtonsIDLE();
 
   encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
@@ -62,16 +62,16 @@ void loop()
   encodeAndWrite(ID_IN_ULTRASONIC_BACK , u_back.getDistance());
 
   encodeAndWrite(ID_IN_ENCODER_L, odometer.getDistance());
-  #endif
+#endif
 
-  #ifdef DEBUG
-//  u_center.getDistance();
-//  u_front_right.getDistance();
-//  u_right_front.getDistance();
-//  u_right_back.getDistance();
-//  Serial.println(u_back.getDistance());
-  Serial.println(odometer.getDistance());
-  #endif
+#ifdef DEBUG
+  //Serial.println(u_center.getDistance());
+      Serial.println(u_front_right.getDistance());
+  //    Serial.println(u_right_front.getDistance());
+  //    Serial.println(u_right_back.getDistance());
+  //    Serial.println(u_back.getDistance());
+  //  Serial.println(odometer.getDistance());
+#endif
 }
 
 void encodeAndWrite(int id, int value)
@@ -88,7 +88,7 @@ void establishContact(char toSend)
 {
   while (Serial.available() <= 0)
   {
-    Serial.println(toSend);   // send a char
+    Serial.write(toSend);   // send a char
     wait(0.5);
   }
   Serial.read();
@@ -117,9 +117,9 @@ void parkInterrupt()
 {
   if (abs(millis() - bounceTimeP) > BOUNCE_DURATION)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.println("PARK");
-    #endif
+#endif
     p = !p;
     encodeAndWrite(ID_IN_BUTTON_PARK, p);
 
@@ -131,9 +131,9 @@ void laneInterrupt()
 {
   if (abs(millis() - bounceTimeL) > BOUNCE_DURATION)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.println("LANE");
-    #endif
+#endif
     l = !l;
     encodeAndWrite(ID_IN_BUTTON_LANE, l);
 
@@ -145,9 +145,9 @@ void overtakeInterrupt()
 {
   if (abs(millis() - bounceTimeO) > BOUNCE_DURATION)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.println("OVER");
-    #endif
+#endif
     o = !o;
     encodeAndWrite(ID_IN_BUTTON_OVERTAKE, o);
 

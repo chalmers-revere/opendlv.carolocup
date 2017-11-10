@@ -2,7 +2,7 @@
 #include "Protocol.h"
 
 //#define DEBUG
-//#define RUN
+#define RUN
 
 Protocol protocol;
 SteeringMotor servo;
@@ -32,7 +32,7 @@ void setup() {
 
     ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 0.5); //blink all leds to aware car is on
 
-    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
 
     Serial.begin(BAUD);
 
@@ -86,7 +86,7 @@ void loop() {
             interrupt = 0;
             rcControllerFlag = 0;
 
-            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, CHANGE);
+            attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
             return;
         }
 
