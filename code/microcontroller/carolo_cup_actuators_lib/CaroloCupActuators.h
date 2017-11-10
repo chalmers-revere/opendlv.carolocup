@@ -27,7 +27,7 @@
 
 #define SERVO_PIN 0 //steering servo pin
 #define _SERVO_PIN 11 //steering servo pin
-#define ESC_PIN 9 //ESC motor pin
+#define ESC_PIN 12 //ESC motor pin
 
 #define CH_1 2 //RC receiver channel 1 pin (steer)
 #define CH_2 3 //RC receiver channel 2 pin (drive)
@@ -38,7 +38,7 @@
 #define INDICATOR_FRONT_RIGHT 7
 #define INDICATOR_BACK_LEFT 8
 #define INDICATOR_BACK_RIGHT 10
-#define HEADLIGHTS 12
+#define HEADLIGHTS 13
 
 #define PULSE_TIMEOUT 25000 //10000
 

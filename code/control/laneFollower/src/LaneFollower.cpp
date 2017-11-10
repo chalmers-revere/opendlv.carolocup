@@ -170,7 +170,7 @@ namespace carolocup
 							else
 							{
 								m_vehicleControl.setBrakeLights(false);
-								m_vehicleControl.setSpeed(96);
+								m_vehicleControl.setSpeed(99);
 								prevState = "moving";
 								state = "moving";
 							}
@@ -237,7 +237,7 @@ namespace carolocup
 							if (stopCounter < 45.9999)
 							{
 								stopCounter += 0.5;
-								m_vehicleControl.setSpeed(96);
+								m_vehicleControl.setSpeed(99);
 								m_vehicleControl.setSteeringWheelAngle(0.24);
 
 							}
@@ -245,7 +245,7 @@ namespace carolocup
 							{
 								state = "moving";
 								// m_vehicleControl.setBrakeLights(false);
-								m_vehicleControl.setSpeed(96);
+								m_vehicleControl.setSpeed(99);
 							}
 						}
 					}
@@ -257,7 +257,7 @@ namespace carolocup
 						{
 							//TODO laneFollowerMSG.setDanger(0);
 							m_vehicleControl.setBrakeLights(false);
-							m_vehicleControl.setSpeed(96);
+							m_vehicleControl.setSpeed(99);
 							m_vehicleControl.setSteeringWheelAngle(0);
 						}
 						// If the previous state is moving, lane markings were not found in image processing and car applies brake

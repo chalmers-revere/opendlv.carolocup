@@ -39,7 +39,7 @@ void setup() {
 #ifdef RUN
     waitConnection();
 
-    establishContact('a');
+    //establishContact('a');
 #endif
 }
 
