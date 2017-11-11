@@ -30,7 +30,7 @@ void setup() {
     receiver.begin();
     ledControl.begin();
 
-    ledControl.setIndicators(ID_OUT_LIGHTS_EFFECT, 0.5); //blink all leds to aware car is on
+    ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
 
     attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
 
@@ -48,7 +48,7 @@ void loop() {
     if (_blink > 2147483647) _blink = 0;
 
     if (noData && (oldNoData != noData) && !interrupt) {
-        servo.setAngle(STRAIGHT_DEGREES);
+        servo.setAngle(STRAIGHT_DEGREES, NO_REVERSE);
         esc.brake();
         esc.arm();
         ledControl.setBrakeLights(_ON_);
@@ -91,7 +91,7 @@ void loop() {
         }
 
         ledControl.setBrakeLights(_OFF_);
-        servo.setAngle(receiver.filter(angle));
+        servo.setAngle(receiver.filter(angle), NOT_REVERSE);
         esc.setSpeed(receiver.filter(speed));
 #ifdef DEBUG
         Serial.print("steer ");
@@ -103,8 +103,8 @@ void loop() {
 
     axes.readMotion();
 #ifdef DEBUG
-    Serial.print("YAW ");
-    Serial.println(axes.getYaw());
+    //Serial.print("YAW ");
+    //Serial.println(axes.getYaw());
     //Serial.println(receiver.readChannel1());
     //Serial.println(receiver.readChannel2());
 #endif
@@ -171,7 +171,7 @@ void serialEvent() {
                     esc.setSpeed(value);
                     break;
                 case ID_OUT_SERVO:
-                    servo.setAngle(value);
+                    servo.setAngle(value, REVERSE);
                     break;
                 case ID_OUT_INDICATORS:
                     ledControl.setIndicators(value, 0.5);
@@ -189,8 +189,8 @@ void interruptRoutine() {
     int a = pulseMeasure(CH_1);
 
 #ifdef DEBUG
-    Serial.print("interrupt ch1 ");
-    Serial.println(a);
+    //Serial.print("interrupt ch1 ");
+    //Serial.println(a);
 #endif
 
     if (a >= DEAD_LOW && a <= DEAD_HIGH) {

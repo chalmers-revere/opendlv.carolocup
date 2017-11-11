@@ -63,13 +63,16 @@
 #define _OFF_ 0
 #define _ON_ 1
 
+#define REVERSE 1
+#define NOT_REVERSE 0
+
 class SteeringMotor : public Servo {
 public:
     explicit SteeringMotor();
 
     void init();
 
-    void setAngle(unsigned int angle);
+    void setAngle(unsigned int angle, bool reverse);
 
 
 private:
