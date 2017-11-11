@@ -1,8 +1,8 @@
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
 
-//#define DEBUG
-#define RUN
+#define DEBUG
+//#define RUN
 
 Protocol protocol;
 SteeringMotor servo;
