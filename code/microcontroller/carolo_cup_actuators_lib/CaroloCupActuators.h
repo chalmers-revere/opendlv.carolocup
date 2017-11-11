@@ -105,7 +105,7 @@ public:
 
     void setHeadLights(unsigned int state);
 
-    void setRCLight(double seconds);
+    void setRCLight(unsigned int frequency, unsigned long counter);
 
     void wait(double seconds);
 

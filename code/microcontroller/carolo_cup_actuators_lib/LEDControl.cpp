@@ -31,10 +31,13 @@ void LEDControl::setBrakeLights(unsigned int value) {
     }
 }
 
-void LEDControl::setRCLight(double seconds) {
-    digitalWrite(RC_LIGHT, HIGH);
-    wait(seconds);
-    digitalWrite(RC_LIGHT, LOW);
+void LEDControl::setRCLight(unsigned int frequency, unsigned long counter) {
+    if (frequency) {
+        if (counter % frequency == 0) digitalWrite(RC_LIGHT, LOW);
+        else digitalWrite(RC_LIGHT, HIGH);
+    } else {
+        digitalWrite(RC_LIGHT, LOW);
+    }
 }
 
 void LEDControl::setIndicators(unsigned int state, double seconds) {

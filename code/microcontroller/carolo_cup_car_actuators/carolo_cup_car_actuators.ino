@@ -14,7 +14,7 @@ Axes axes;
 unsigned long currentMillis;
 unsigned long interval;
 
-//unsigned long _blink = 0;
+unsigned long _blink = 0;
 
 volatile int interrupt = 0;
 volatile int rcControllerFlag = 0;
@@ -44,8 +44,8 @@ void setup() {
 }
 
 void loop() {
-    //_blink++;
-    //if (_blink > 2147483647) _blink = 0;
+    _blink++;
+    if (_blink > 1000000) _blink = 0;
 
     if (noData && (oldNoData != noData) && !interrupt) {
         servo.setAngle(STRAIGHT_DEGREES);
@@ -64,7 +64,7 @@ void loop() {
 #endif
 
     if (rcControllerFlag >= 3) {
-        ledControl.setRCLight(1);
+        ledControl.setRCLight(35, _blink);
 
         if (!interrupt) {
             esc.brake();
