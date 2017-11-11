@@ -31,9 +31,9 @@ void LEDControl::setBrakeLights(unsigned int value) {
     }
 }
 
-void LEDControl::setRCLight(double wait) {
+void LEDControl::setRCLight(double seconds) {
     digitalWrite(RC_LIGHT, HIGH);
-    wait(wait);
+    wait(seconds);
     digitalWrite(RC_LIGHT, LOW);
 }
 
