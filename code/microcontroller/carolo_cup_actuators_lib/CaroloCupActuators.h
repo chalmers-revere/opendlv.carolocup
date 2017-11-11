@@ -47,8 +47,8 @@
 #define LO 1090
 #define MIDDLE 1500
 #define HI 1965
-#define DEAD_LOW 1450
-#define DEAD_HIGH 1550
+#define DEAD_LOW 1430
+#define DEAD_HIGH 1580
 
 #define MAX_RIGHT_ANGLE 180
 #define MAX_LEFT_ANGLE 0
@@ -62,16 +62,13 @@
 #define _OFF_ 0
 #define _ON_ 1
 
-#define REVERSE 1
-#define NOT_REVERSE 0
-
 class SteeringMotor : public Servo {
 public:
     explicit SteeringMotor();
 
     void init();
 
-    void setAngle(unsigned int angle, bool reverse);
+    void setAngle(unsigned int angle);
 
 
 private:
@@ -108,7 +105,7 @@ public:
 
     void setHeadLights(unsigned int state);
 
-    void setRCLight(unsigned int frequency, unsigned long counter);
+    void setRCLight(double wait);
 
     void wait(double seconds);
 

@@ -31,16 +31,13 @@ void LEDControl::setBrakeLights(unsigned int value) {
     }
 }
 
-void LEDControl::setRCLight(unsigned int frequency, unsigned long counter) {
-    if (frequency) {
-        if (counter % frequency == 0) digitalWrite(RC_LIGHT, HIGH);
-        else digitalWrite(RC_LIGHT, LOW);
-    } else {
-        digitalWrite(RC_LIGHT, LOW);
-    }
+void LEDControl::setRCLight(double wait) {
+    digitalWrite(RC_LIGHT, HIGH);
+    wait(1);
+    digitalWrite(RC_LIGHT, LOW);
 }
 
-void LEDControl::setIndicators(unsigned int state, double seconds) {
+void LEDControl::setIndicators(unsigned int state, unsigned int seconds) {
     switch (state) {
         case ID_OUT_LIGHTS_EFFECT:
             for (int i = 0; i < 3; ++i) {
@@ -105,7 +102,7 @@ void LEDControl::setIndicators(unsigned int state, double seconds) {
     }
 }
 
-void LEDControl::wait(double seconds) {
+void LEDControl::wait(unsigned long seconds) {
     interval = seconds * 1000000;
     currentMillis = micros();
     while (micros() - currentMillis <= interval);

@@ -14,7 +14,7 @@ Axes axes;
 unsigned long currentMillis;
 unsigned long interval;
 
-unsigned long _blink = 0;
+//unsigned long _blink = 0;
 
 volatile int interrupt = 0;
 volatile int rcControllerFlag = 0;
@@ -44,11 +44,11 @@ void setup() {
 }
 
 void loop() {
-    _blink++;
-    if (_blink > 2147483647) _blink = 0;
+    //_blink++;
+    //if (_blink > 2147483647) _blink = 0;
 
     if (noData && (oldNoData != noData) && !interrupt) {
-        servo.setAngle(STRAIGHT_DEGREES, NOT_REVERSE);
+        servo.setAngle(STRAIGHT_DEGREES);
         esc.brake();
         esc.arm();
         ledControl.setBrakeLights(_ON_);
@@ -64,7 +64,7 @@ void loop() {
 #endif
 
     if (rcControllerFlag >= 3) {
-        ledControl.setRCLight(45, _blink);
+        ledControl.setRCLight(1);
 
         if (!interrupt) {
             esc.brake();
@@ -72,12 +72,16 @@ void loop() {
             ledControl.setBrakeLights(_ON_);
             wait(2);
         }
-
+#ifdef DEBUG
+        Serial.println("4");
+#endif
         interrupt = 1;
 
         int angle = receiver.readChannel1();
         int speed = receiver.readChannel2();
-
+#ifdef DEBUG
+        Serial.println("5");
+#endif
         if (angle == 0) {
 
             esc.brake();
@@ -89,9 +93,11 @@ void loop() {
             attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
             return;
         }
-
+#ifdef DEBUG
+        Serial.println("6");
+#endif
         ledControl.setBrakeLights(_OFF_);
-        servo.setAngle(receiver.filter(angle), NOT_REVERSE);
+        servo.setAngle(receiver.filter(angle));
         esc.setSpeed(receiver.filter(speed));
 #ifdef DEBUG
         Serial.print("steer ");
@@ -171,7 +177,7 @@ void serialEvent() {
                     esc.setSpeed(value);
                     break;
                 case ID_OUT_SERVO:
-                    servo.setAngle(value, REVERSE);
+                    servo.setAngle(value);
                     break;
                 case ID_OUT_INDICATORS:
                     ledControl.setIndicators(value, 0.5);
@@ -210,8 +216,17 @@ void interruptRoutine() {
         Serial.println("ISR");
 #endif
         esc.brake();
+#ifdef DEBUG
+        Serial.println("1");
+#endif
         esc.arm();
+#ifdef DEBUG
+        Serial.println("2");
+#endif
         ledControl.setBrakeLights(_ON_);
+#ifdef DEBUG
+        Serial.println("3");
+#endif
         detachInterrupt(digitalPinToInterrupt(CH_1));
     }
 }
