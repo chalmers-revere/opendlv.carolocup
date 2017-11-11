@@ -48,7 +48,7 @@ void loop() {
     if (_blink > 2147483647) _blink = 0;
 
     if (noData && (oldNoData != noData) && !interrupt) {
-        servo.setAngle(STRAIGHT_DEGREES, NO_REVERSE);
+        servo.setAngle(STRAIGHT_DEGREES, NOT_REVERSE);
         esc.brake();
         esc.arm();
         ledControl.setBrakeLights(_ON_);

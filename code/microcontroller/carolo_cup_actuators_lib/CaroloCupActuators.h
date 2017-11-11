@@ -25,20 +25,19 @@
 
 #define LED_SIGNAL 5
 
-#define SERVO_PIN 0 //steering servo pin
-#define _SERVO_PIN 11 //steering servo pin
-#define ESC_PIN 12 //ESC motor pin
+#define _SERVO_PIN 6 //steering servo pin
+#define ESC_PIN 5 //ESC motor pin
 
 #define CH_1 2 //RC receiver channel 1 pin (steer)
 #define CH_2 3 //RC receiver channel 2 pin (drive)
 
-#define BRAKE_LIGHTS 4
-#define RC_LIGHT 5
-#define INDICATOR_FRONT_LEFT 6
+#define BRAKE_LIGHTS 12
+#define RC_LIGHT 13
+#define INDICATOR_FRONT_LEFT 4
 #define INDICATOR_FRONT_RIGHT 7
 #define INDICATOR_BACK_LEFT 8
 #define INDICATOR_BACK_RIGHT 10
-#define HEADLIGHTS 13
+#define HEADLIGHTS 14
 
 #define PULSE_TIMEOUT 25000 //10000
 
