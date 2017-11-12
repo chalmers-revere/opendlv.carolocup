@@ -32,23 +32,43 @@
 #include <algorithm>
 #include <stdlib.h>
 
+#include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
+
+#include <opendavinci/odcore/data/Container.h>
+#include <opendavinci/odcore/data/TimeStamp.h>
+#include "odvdcarolocupdatamodel/generated/gap/LIDARMSG.h"
+#include <opendavinci/odcore/base/Service.h>
+#include <opendavinci/odcore/base/KeyValueConfiguration.h>
+#include <opendavinci/odcore/wrapper/SharedMemory.h>
+#include <opendavinci/odcore/wrapper/SharedMemoryFactory.h>
+
+#include "opendavinci/generated/odcore/data/SharedPointCloud.h"
+#include "opendavinci/odcore/base/Lock.h"
+
+#include <opendavinci/odcore/base/Thread.h>
+
+#include "../../../defines/defines.h"
+
 #define PORT "/dev/ttyUSB0"
 #define MAX_DIS 301
-#define MIN_DIS 2
+#define MIN_DIS 5
 
-namespace carolocup
-{
-    namespace control
-    {
+namespace carolocup {
+    namespace control {
 
         using namespace std;
+        using namespace odcore;
+		using namespace odcore::base;
+        using namespace odcore::base::module;
+        using namespace odcore::data;
+        using namespace odcore::wrapper;
         using namespace sweep;
+        using namespace gap;
 
 /**
  * Time-triggered LIDARHandler.
  */
-        class LIDARHandler : public odcore::base::module::TimeTriggeredConferenceClientModule
-        {
+        class LIDARHandler : public odcore::base::module::TimeTriggeredConferenceClientModule {
         private:
             LIDARHandler(const LIDARHandler & /*obj*/) = delete;
 
@@ -76,10 +96,22 @@ namespace carolocup
 
             void stopDevice();
 
+            void sendLIDARData(map<uint32_t, double> LIDAR_data);
+
             sweep::sweep device;
             map <uint32_t, vector<int>> lidar;
-            map<uint32_t, int> lidar_data;
+            map <uint32_t, vector<int>> strength;
+            map<uint32_t, double> lidar_data;
             int count;
+
+			double m_start_azimuth;
+			double m_end_azimuth;
+
+			string d;
+
+			CompactPointCloud cpc;
+
+            LIDARMSG lidarMSG;
         };
     }
 } // carolocup::control
