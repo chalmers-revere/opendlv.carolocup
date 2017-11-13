@@ -55,8 +55,77 @@ void setup()
 
 void loop()
 {
+	if (!interrupt)
+	{
+		int a = receiver.readChannel1();
+
+#ifdef DEBUG
+		Serial.print("interrupt ch1 ");
+		Serial.println(a);
+#endif
+
+		if (a >= DEAD_LOW && a <= DEAD_HIGH)
+		{
+			rcControllerFlag++;
+		}
+		else
+		{
+			rcControllerFlag = 0;
+		}
+
+		if (rcControllerFlag >= 3)
+		{
+			esc.brake();
+			esc.arm();
+			ledControl.setBrakeLights(_ON_);
+		}
+	}
+
 	_blink++;
 	if (_blink > 1000000) _blink = 0;
+
+	if (rcControllerFlag >= 3)
+	{
+		ledControl.setRCLight(35, _blink);
+
+		if (!interrupt)
+		{
+			esc.arm();
+			wait(2);
+		}
+#ifdef DEBUG
+		Serial.println("4");
+#endif
+		interrupt = 1;
+
+		int angle = receiver.readChannel1();
+		int speed = receiver.readChannel2();
+#ifdef DEBUG
+		Serial.println("5");
+#endif
+		if (angle == 0)
+		{
+			esc.brake();
+			ledControl.setBrakeLights(_ON_);
+
+			rcControllerFlag = 0;
+			ledControl.setRCLight(0, _blink);
+			interrupt = 0;
+			return;
+		}
+#ifdef DEBUG
+		Serial.println("6");
+#endif
+		ledControl.setBrakeLights(_OFF_);
+		servo.setAngle(receiver.filter(angle));
+		esc.setSpeed(receiver.filter(speed));
+#ifdef DEBUG
+		Serial.print("steer ");
+		Serial.println(receiver.filter(angle));
+		Serial.print("speed ");
+		Serial.println(receiver.filter(speed));
+#endif
+	}
 
 	if (noData && (oldNoData != noData) && !interrupt)
 	{
@@ -76,53 +145,6 @@ void loop()
 	timeout();
 }
 #endif
-
-	if (rcControllerFlag >= 3)
-	{
-		ledControl.setRCLight(35, _blink);
-
-		if (!interrupt)
-		{
-			//esc.brake();
-			esc.arm();
-			//ledControl.setBrakeLights(_ON_);
-			wait(2);
-		}
-#ifdef DEBUG
-		Serial.println("4");
-#endif
-		interrupt = 1;
-
-		int angle = receiver.readChannel1();
-		int speed = receiver.readChannel2();
-#ifdef DEBUG
-		Serial.println("5");
-#endif
-		if (angle == 0)
-		{
-
-			esc.brake();
-			ledControl.setBrakeLights(_ON_);
-
-			rcControllerFlag = 0;
-			ledControl.setRCLight(0, _blink);
-			interrupt = 0;
-			//attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
-			return;
-		}
-#ifdef DEBUG
-		Serial.println("6");
-#endif
-		ledControl.setBrakeLights(_OFF_);
-		servo.setAngle(receiver.filter(angle));
-		esc.setSpeed(receiver.filter(speed));
-#ifdef DEBUG
-		Serial.print("steer ");
-		Serial.println(receiver.filter(angle));
-		Serial.print("speed ");
-		Serial.println(receiver.filter(speed));
-#endif
-	}
 
 	axes.readMotion();
 #ifdef DEBUG
