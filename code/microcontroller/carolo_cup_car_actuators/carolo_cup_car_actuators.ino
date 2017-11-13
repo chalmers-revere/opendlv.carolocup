@@ -104,9 +104,9 @@ void loop()
 			esc.brake();
 			ledControl.setBrakeLights(_ON_);
 
-			interrupt = 0;
 			rcControllerFlag = 0;
 			ledControl.setRCLight(0, _blink);
+			interrupt = 0;
 			//attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
 			return;
 		}
@@ -126,8 +126,8 @@ void loop()
 
 	axes.readMotion();
 #ifdef DEBUG
-	//Serial.print("YAW ");
-	//Serial.println(axes.getYaw());
+	Serial.print("YAW ");
+	Serial.println(axes.getYaw());
 	//Serial.println(receiver.readChannel1());
 	//Serial.println(receiver.readChannel2());
 #endif
@@ -230,8 +230,8 @@ void interruptRoutine()
 		int a = pulseMeasure(CH_1);
 
 #ifdef DEBUG
-		//Serial.print("interrupt ch1 ");
-		//Serial.println(a);
+		Serial.print("interrupt ch1 ");
+		Serial.println(a);
 #endif
 
 		if (a >= DEAD_LOW && a <= DEAD_HIGH)
@@ -281,6 +281,9 @@ unsigned long pulseMeasure(uint8_t pin)
 	unsigned long loopMax = 5000000;
 
 	// While the pin is *not* in the target state we make sure the timeout hasn't been reached.
+#ifdef DEBUG
+	Serial.println("While");
+#endif
 	while ((digitalRead(pin)) != state)
 	{
 		if (loopCount++ == loopMax)
