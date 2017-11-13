@@ -42,7 +42,7 @@ void setup()
 
 	ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
 
-	attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
+	//attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
 
 	Serial.begin(BAUD);
 
