@@ -42,8 +42,6 @@ void setup()
 
 	ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
 
-	//attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
-
 	Serial.begin(BAUD);
 
 #ifdef RUN
@@ -245,55 +243,6 @@ void serialEvent()
 	}
 }
 
-void interruptRoutine()
-{
-	if (!interrupt)
-	{
-		int a = pulseMeasure(CH_1);
-
-#ifdef DEBUG
-		Serial.print("interrupt ch1 ");
-		Serial.println(a);
-#endif
-
-		if (a >= DEAD_LOW && a <= DEAD_HIGH)
-		{
-			rcControllerFlag++;
-		}
-		else
-		{
-			if (interrupt)
-			{
-				esc.brake();
-				esc.arm();
-				ledControl.setBrakeLights(_ON_);
-			}
-			interrupt = 0;
-			rcControllerFlag = 0;
-		}
-
-		if (rcControllerFlag >= 3)
-		{
-#ifdef DEBUG
-			Serial.println("ISR");
-#endif
-			esc.brake();
-#ifdef DEBUG
-			Serial.println("1");
-#endif
-			esc.arm();
-#ifdef DEBUG
-			Serial.println("2");
-#endif
-			ledControl.setBrakeLights(_ON_);
-#ifdef DEBUG
-			Serial.println("3");
-#endif
-			//detachInterrupt(digitalPinToInterrupt(CH_1));
-		}
-	}
-}
-
 unsigned long pulseMeasure(uint8_t pin)
 {
 
@@ -304,7 +253,7 @@ unsigned long pulseMeasure(uint8_t pin)
 
 	// While the pin is *not* in the target state we make sure the timeout hasn't been reached.
 #ifdef DEBUG
-	Serial.println("While");
+	Serial.println("Pulse start");
 #endif
 	while ((digitalRead(pin)) != state)
 	{
@@ -322,8 +271,10 @@ unsigned long pulseMeasure(uint8_t pin)
 		}
 		pulseWidth++;
 	}
+#ifdef DEBUG
+	Serial.println("Pulse end");
+#endif
 	// Return the pulse time in microsecond!
 	return pulseWidth * 1.45; // Calculated the pulseWidth++ loop to be about 1.50uS in length.
 }
-
 
