@@ -74,7 +74,6 @@ void loop()
 #ifdef RUN
 	if (!interrupt) {
 	timeout();
-	ledControl.setRCLight(0, _blink);
 }
 #endif
 
@@ -84,9 +83,9 @@ void loop()
 
 		if (!interrupt)
 		{
-			esc.brake();
+			//esc.brake();
 			esc.arm();
-			ledControl.setBrakeLights(_ON_);
+			//ledControl.setBrakeLights(_ON_);
 			wait(2);
 		}
 #ifdef DEBUG
@@ -107,8 +106,8 @@ void loop()
 
 			interrupt = 0;
 			rcControllerFlag = 0;
-
-			attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
+			ledControl.setRCLight(0, _blink);
+			//attachInterrupt(digitalPinToInterrupt(CH_1), interruptRoutine, RISING);
 			return;
 		}
 #ifdef DEBUG
@@ -226,47 +225,50 @@ void serialEvent()
 
 void interruptRoutine()
 {
-	int a = pulseMeasure(CH_1);
+	if (!interrupt)
+	{
+		int a = pulseMeasure(CH_1);
 
 #ifdef DEBUG
-	//Serial.print("interrupt ch1 ");
-	//Serial.println(a);
+		//Serial.print("interrupt ch1 ");
+		//Serial.println(a);
 #endif
 
-	if (a >= DEAD_LOW && a <= DEAD_HIGH)
-	{
-		rcControllerFlag++;
-	}
-	else
-	{
-		if (interrupt)
+		if (a >= DEAD_LOW && a <= DEAD_HIGH)
 		{
-			esc.brake();
-			esc.arm();
-			ledControl.setBrakeLights(_ON_);
+			rcControllerFlag++;
 		}
-		interrupt = 0;
-		rcControllerFlag = 0;
-	}
+		else
+		{
+			if (interrupt)
+			{
+				esc.brake();
+				esc.arm();
+				ledControl.setBrakeLights(_ON_);
+			}
+			interrupt = 0;
+			rcControllerFlag = 0;
+		}
 
-	if (rcControllerFlag >= 3)
-	{
+		if (rcControllerFlag >= 3)
+		{
 #ifdef DEBUG
-		Serial.println("ISR");
+			Serial.println("ISR");
 #endif
-		esc.brake();
+			esc.brake();
 #ifdef DEBUG
-		Serial.println("1");
+			Serial.println("1");
 #endif
-		esc.arm();
+			esc.arm();
 #ifdef DEBUG
-		Serial.println("2");
+			Serial.println("2");
 #endif
-		ledControl.setBrakeLights(_ON_);
+			ledControl.setBrakeLights(_ON_);
 #ifdef DEBUG
-		Serial.println("3");
+			Serial.println("3");
 #endif
-		detachInterrupt(digitalPinToInterrupt(CH_1));
+			//detachInterrupt(digitalPinToInterrupt(CH_1));
+		}
 	}
 }
 
