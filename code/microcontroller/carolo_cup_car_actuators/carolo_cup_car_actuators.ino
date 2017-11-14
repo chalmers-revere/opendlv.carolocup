@@ -50,7 +50,7 @@ void setup()
 #ifdef RUN
 	waitConnection();
 
-	establishContact('a');
+	establishContact('a', 0);
 #endif
 }
 
@@ -128,7 +128,7 @@ void loop()
 		esc.brake();
 		esc.arm();
 		ledControl.setBrakeLights(_ON_);
-		establishContact('a');
+		establishContact('a', 1);
 #ifdef DEBUG
 		Serial.println("TIMEOUT");
 #endif
@@ -155,18 +155,23 @@ void loop()
 #endif
 }
 
-void establishContact(char toSend)
+void establishContact(char toSend, int st)
 {
 	while (Serial.available() <= 0)
 	{
 		Serial.write(toSend);   // send a char
 		wait(0.5);
 	}
-	Serial.read();
-	wait(5);
-	esc.arm();
-	ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
-	//ledControl.setHeadLights(_ON_);
+	if (!st) {
+		Serial.read();
+		wait(5);
+		esc.arm();
+		ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
+		//ledControl.setHeadLights(_ON_);
+	} else {
+		esc.arm();
+		ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
+	}
 }
 
 void waitConnection()
