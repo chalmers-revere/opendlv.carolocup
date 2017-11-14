@@ -137,9 +137,9 @@ void loop()
 	oldNoData = noData;
 
 #ifdef RUN
-	if (!interrupt) {
-	timeout();
-}
+	//if (!interrupt) {
+	//timeout();
+//}
 #endif
 
 	axes.readMotion();
