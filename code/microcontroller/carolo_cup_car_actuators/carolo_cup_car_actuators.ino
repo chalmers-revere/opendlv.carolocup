@@ -257,7 +257,7 @@ unsigned long pulseMeasure(uint8_t pin)
 
 	// While the pin is *not* in the target state we make sure the timeout hasn't been reached.
 #ifdef DEBUG
-	Serial.println("Pulse start");
+	Serial.println("Pulse start ");
 #endif
 	while ((digitalRead(pin)) != state)
 	{
