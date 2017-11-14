@@ -241,9 +241,9 @@ void serialEvent()
 
 void requestEvent()
 {
-//#ifdef RUN
+#ifdef RUN
 	encodeAndWrite(ID_IN_YAW, axes.getYaw());
-//#endif
+#endif
 
 }
 
