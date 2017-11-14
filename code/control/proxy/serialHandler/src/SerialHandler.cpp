@@ -227,31 +227,31 @@ namespace carolocup
 					serial_send(this->serial, d_servo);
 				}
 
-				raw_sensors[ID_IN_YAW].clear();
-				raw_sensors[ID_IN_ROLL].clear();
-				raw_sensors[ID_IN_PITCH].clear();
-
-				int pending = g_async_queue_length(serial->incoming_queue);
-				protocol_data incoming;
-
-				for (int i = 0; i < pending; i++)
-				{
-					//If data available in the queue filter it
-					if (serial_receive(serial, &incoming))
-					{
-						filterData(incoming.id, incoming.value);
-					}//end of filtering
-				}
-
-				//If sensor data available
-				if (isSensorValues)
-				{
-					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
-					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
-					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
-
-					sendSensorBoardData(sensors, 1);
-				}//end
+//				raw_sensors[ID_IN_YAW].clear();
+//				raw_sensors[ID_IN_ROLL].clear();
+//				raw_sensors[ID_IN_PITCH].clear();
+//
+//				int pending = g_async_queue_length(serial->incoming_queue);
+//				protocol_data incoming;
+//
+//				for (int i = 0; i < pending; i++)
+//				{
+//					//If data available in the queue filter it
+//					if (serial_receive(serial, &incoming))
+//					{
+//						filterData(incoming.id, incoming.value);
+//					}//end of filtering
+//				}
+//
+//				//If sensor data available
+//				if (isSensorValues)
+//				{
+//					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
+//					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
+//					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
+//
+//					sendSensorBoardData(sensors, 1);
+//				}//end
 			}
 			else if (serialBehaviour.compare("arduino=in") == 0)
 			{
