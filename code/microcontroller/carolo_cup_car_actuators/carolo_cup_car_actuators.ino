@@ -128,6 +128,7 @@ void loop()
 		esc.brake();
 		esc.arm();
 		ledControl.setBrakeLights(_ON_);
+		establishContact('a');
 #ifdef DEBUG
 		Serial.println("TIMEOUT");
 #endif
@@ -158,7 +159,7 @@ void establishContact(char toSend)
 {
 	while (Serial.available() <= 0)
 	{
-		Serial.println(toSend);   // send a char
+		Serial.write(toSend);   // send a char
 		wait(0.5);
 	}
 	Serial.read();
