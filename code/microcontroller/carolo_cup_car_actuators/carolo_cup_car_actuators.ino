@@ -37,8 +37,6 @@ void reboot(void) //function to do software reboot on arduino if necessary
 
 void setup()
 {
-	Wire.begin(COMMON_ADDRESS);
-	Wire.onRequest(requestEvent);
 	axes.begin();
 	servo.init();
 	esc.init();
@@ -52,7 +50,7 @@ void setup()
 #ifdef RUN
 	waitConnection();
 
-	//establishContact('a');
+	establishContact('a');
 #endif
 }
 
@@ -150,6 +148,10 @@ void loop()
 	//Serial.println(receiver.readChannel1());
 	//Serial.println(receiver.readChannel2());
 #endif
+
+#ifdef RUN
+	encodeAndWrite(ID_IN_YAW, axes.getYaw());
+#endif
 }
 
 void establishContact(char toSend)
@@ -198,7 +200,7 @@ void encodeAndWrite(int id, int value)
 
 	if (st)
 	{
-		Wire.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
+		Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
 	}
 }
 
@@ -237,14 +239,6 @@ void serialEvent()
 	{
 		Serial.read();
 	}
-}
-
-void requestEvent()
-{
-//#ifdef RUN
-	encodeAndWrite(ID_IN_YAW, axes.getYaw());
-//#endif
-
 }
 
 unsigned long pulseMeasure(uint8_t pin)
