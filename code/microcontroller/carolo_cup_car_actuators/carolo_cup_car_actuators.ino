@@ -206,7 +206,7 @@ void encodeAndWrite(int id, int value)
 
 	if (st)
 	{
-		Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
+		Serial.write(protocol.getBufferOut(), BUFFER_SIZE);
 	}
 }
 
