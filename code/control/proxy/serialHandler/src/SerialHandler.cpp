@@ -28,7 +28,6 @@ namespace carolocup
 		using namespace odcore::base;
 		using namespace gap;
 
-		bool debug = false;
 
 		SerialHandler::SerialHandler(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-serialhandler"),
@@ -37,6 +36,7 @@ namespace carolocup
 				  motor(90),
 				  servo(90),
 				  sbd(),
+				  gyroMSG(),
 				  sensors(),
 				  raw_sensors(),
 				  odometerCounter(0),
@@ -55,7 +55,7 @@ namespace carolocup
 			}
 			else
 			{
-				cerr << "Usage: " << argv[0] << "SOURCE DESTINATION" << endl;
+				cerr << "Usage: " << argv[0] << "SOURCE DESTINATION (arduino=one/arduino=two)" << endl;
 			}
 		}
 
@@ -72,7 +72,10 @@ namespace carolocup
 
 					_debug = kv.getValue<int32_t>("global.debug") == 1;
 
-					debug = _debug;
+					if (_debug)
+					{
+#define DEBUG
+					}
 
 					if (serialBehaviour.compare("arduino=one") == 0)
 					{
@@ -95,13 +98,16 @@ namespace carolocup
 					const char *_port = _S_PORT.c_str();
 					serial_open(this->serial, _port, BAUD_RATE);
 
-					//uint8_t rb = serial_handshake(this->serial, 'a', 's');
+					uint8_t rb = serial_handshake(this->serial, 'a', 's'); //a = actuators, s = sensors
 
-					//if (rb == 'a') {
+					if (rb == 'a')
+					{
 						serialBehaviour = "arduino=out";
-					//} else if (rb == 's') {
-						//serialBehaviour = "arduino=in";
-					//}
+					}
+					else if (rb == 's')
+					{
+						serialBehaviour = "arduino=in";
+					}
 
 					odcore::base::Thread::usleepFor(5 * ONE_SECOND);
 
@@ -220,6 +226,32 @@ namespace carolocup
 
 					serial_send(this->serial, d_servo);
 				}
+
+				raw_sensors[ID_IN_YAW].clear();
+				raw_sensors[ID_IN_ROLL].clear();
+				raw_sensors[ID_IN_PITCH].clear();
+
+				int pending = g_async_queue_length(serial->incoming_queue);
+				protocol_data incoming;
+
+				for (int i = 0; i < pending; i++)
+				{
+					//If data available in the queue filter it
+					if (serial_receive(serial, &incoming))
+					{
+						filterData(incoming.id, incoming.value);
+					}//end of filtering
+				}
+
+				//If sensor data available
+				if (isSensorValues)
+				{
+					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
+					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
+					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
+
+					sendSensorBoardData(sensors, 1);
+				}//end
 			}
 			else if (serialBehaviour.compare("arduino=in") == 0)
 			{
@@ -230,10 +262,6 @@ namespace carolocup
 				raw_sensors[ID_IN_ULTRASONIC_SIDE_FRONT].clear();
 				raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK].clear();
 				raw_sensors[ID_IN_ULTRASONIC_BACK].clear();
-
-				raw_sensors[ID_IN_YAW].clear();
-				raw_sensors[ID_IN_ROLL].clear();
-				raw_sensors[ID_IN_PITCH].clear();
 
 				int pending = g_async_queue_length(serial->incoming_queue);
 				protocol_data incoming;
@@ -256,11 +284,7 @@ namespace carolocup
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_SIDE_BACK, raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK]);
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_BACK, raw_sensors[ID_IN_ULTRASONIC_BACK]);
 
-					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
-					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
-					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
-
-					sendSensorBoardData(sensors);
+					sendSensorBoardData(sensors, 0);
 				}//end
 			}
 
@@ -270,7 +294,8 @@ namespace carolocup
 		{
 			if (id >= IDS_MIN_RANGE && id <= IDS_MAX_RANGE)
 			{
-				if (_debug) {
+				if (_debug)
+				{
 					cout << ">> ID " << id << " | >> VALUE " << value << endl;
 				}
 				if (id >= ID_IN_ULTRASONIC_CENTER && id <= ID_IN_ULTRASONIC_BACK)
@@ -297,11 +322,13 @@ namespace carolocup
 				}
 				else if (id >= ID_IN_BUTTON_LANE && id <= ID_IN_BUTTON_OVERTAKE)
 				{
-					if (value == 0 || value == 1) {
+					if (value == 0 || value == 1)
+					{
 						sensors[id] = value;
-						sendSensorBoardData(sensors); //send signal
+						sendSensorBoardData(sensors, 0); //send signal
 					}
-					else if (value == 2) {
+					else if (value == 2)
+					{
 						sensors[id] = value;
 					}
 				}
@@ -333,28 +360,38 @@ namespace carolocup
 			}
 		}
 
-		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor)
+		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor, int t)
 		{
-			sbd.setMapOfSensors(sensor);
-			Container c(sbd);
-			getConference().send(c);
+			if (!t)
+			{
+				sbd.setMapOfSensors(sensor);
+				Container c(sbd);
+				getConference().send(c);
+			}
+			else
+			{
+				gyroMSG.setYaw(sensor[ID_IN_YAW]);
+				gyroMSG.setPitch(sensor[ID_IN_PITCH]);
+				gyroMSG.setRoll(sensor[ID_IN_ROLL]);
+
+				Container c(sbd);
+				getConference().send(c);
+			}
 			isSensorValues = false;
 		}
 
 		void __on_read(uint8_t b)
 		{
-			if (debug)
-			{
-				cout << ">> read " << (int) b << endl;
-			}
+#ifdef DEBUG
+			cout << ">> read " << (int) b << endl;
+#endif
 		}
 
 		void __on_write(uint8_t b)
 		{
-			if (debug)
-			{
-				cout << "<< write " << (int) b << endl;
-			}
+#ifdef DEBUG
+			cout << "<< write " << (int) b << endl;
+#endif
 		}
 	}
 } // carolocup::control

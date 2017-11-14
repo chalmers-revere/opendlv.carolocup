@@ -1,8 +1,11 @@
-#include "CaroloCupActuators.h"
-#include "Protocol.h"
-
+/*
+ * Comment it to turn off
+ */
 #define DEBUG
 //#define RUN
+
+#include "CaroloCupActuators.h"
+#include "Protocol.h"
 
 Protocol protocol;
 SteeringMotor servo;
@@ -26,7 +29,7 @@ int oldNoData = 0;
 #define SCSS_RSTC 0x570
 #define RSTC_WARM_RESET (1 << 1)
 
-void reboot(void)
+void reboot(void) //function to do software reboot on arduino if necessary
 {
 	SCSS_REG_VAL(SCSS_SS_CFG) |= ARC_HALT_REQ_A;
 	SCSS_REG_VAL(SCSS_RSTC) = RSTC_WARM_RESET;
@@ -34,6 +37,8 @@ void reboot(void)
 
 void setup()
 {
+	Wire.begin(COMMON_ADDRESS);
+	Wire.onRequest(requestEvent);
 	axes.begin();
 	servo.init();
 	esc.init();
@@ -58,7 +63,7 @@ void loop()
 		int a = receiver.readChannel1();
 
 #ifdef DEBUG
-		Serial.print("interrupt ch1 ");
+		Serial.print("ch1 ");
 		Serial.println(a);
 #endif
 
@@ -91,16 +96,12 @@ void loop()
 			esc.arm();
 			wait(2);
 		}
-#ifdef DEBUG
-		Serial.println("4");
-#endif
+
 		interrupt = 1;
 
 		int angle = receiver.readChannel1();
 		int speed = receiver.readChannel2();
-#ifdef DEBUG
-		Serial.println("5");
-#endif
+
 		if (angle == 0)
 		{
 			esc.brake();
@@ -111,9 +112,7 @@ void loop()
 			interrupt = 0;
 			return;
 		}
-#ifdef DEBUG
-		Serial.println("6");
-#endif
+
 		ledControl.setBrakeLights(_OFF_);
 		servo.setAngle(receiver.filter(angle));
 		esc.setSpeed(receiver.filter(speed));
@@ -132,7 +131,7 @@ void loop()
 		esc.arm();
 		ledControl.setBrakeLights(_ON_);
 #ifdef DEBUG
-		Serial.println("OUT");
+		Serial.println("TIMEOUT");
 #endif
 	}
 
@@ -150,9 +149,6 @@ void loop()
 	Serial.println(axes.getYaw());
 	//Serial.println(receiver.readChannel1());
 	//Serial.println(receiver.readChannel2());
-#endif
-#ifdef RUN
-	encodeAndWrite(ID_IN_YAW, axes.getYaw());
 #endif
 }
 
@@ -202,7 +198,7 @@ void encodeAndWrite(int id, int value)
 
 	if (st)
 	{
-		Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
+		Wire.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
 	}
 }
 
@@ -241,6 +237,14 @@ void serialEvent()
 	{
 		Serial.read();
 	}
+}
+
+void requestEvent()
+{
+//#ifdef RUN
+	encodeAndWrite(ID_IN_YAW, axes.getYaw());
+//#endif
+
 }
 
 unsigned long pulseMeasure(uint8_t pin)

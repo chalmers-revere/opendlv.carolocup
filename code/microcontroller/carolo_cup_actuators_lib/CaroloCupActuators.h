@@ -9,6 +9,8 @@
 
 #define BAUD 115200
 
+#define COMMON_ADDRESS 8
+
 #define ID_OUT_BRAKE                0
 #define ID_OUT_MOTOR                1
 #define ID_OUT_SERVO                2

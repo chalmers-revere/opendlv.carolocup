@@ -29,6 +29,7 @@
 
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/GyroMSG.h"
 
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/data/TimeStamp.h>
@@ -105,7 +106,7 @@ namespace carolocup
 
 			void sensorBoardDataMedian(int id, vector<int> sensorList);
 
-			void sendSensorBoardData(std::map<uint32_t, double> sensor);
+			void sendSensorBoardData(std::map<uint32_t, double> sensor, int t);
 
 			serial_state *serial;
 
@@ -115,6 +116,8 @@ namespace carolocup
 			int servo;
 
 			SensorsMSG sbd;
+
+			GyroMSG gyroMSG;
 
 			map<uint32_t, double> sensors;
 
