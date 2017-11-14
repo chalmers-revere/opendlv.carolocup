@@ -142,7 +142,7 @@ void loop()
 //}
 #endif
 
-	axes.readMotion();
+	//axes.readMotion();
 #ifdef DEBUG
 	Serial.print("YAW ");
 	Serial.println(axes.getYaw());
@@ -151,7 +151,7 @@ void loop()
 #endif
 
 #ifdef RUN
-	encodeAndWrite(ID_IN_YAW, axes.getYaw());
+	//encodeAndWrite(ID_IN_YAW, axes.getYaw());
 #endif
 }
 
