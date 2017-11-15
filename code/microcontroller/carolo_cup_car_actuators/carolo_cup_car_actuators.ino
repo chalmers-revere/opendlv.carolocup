@@ -1,8 +1,8 @@
 /*
  * Comment it to turn off
  */
-//#define DEBUG
-#define RUN
+#define DEBUG
+//#define RUN
 
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
@@ -13,9 +13,9 @@ ESCMotor esc;
 RCReceiver receiver;
 LEDControl ledControl;
 
-volatile protocol_data data_motor;
-volatile protocol_data data_servo;
-volatile protocol_data data_LEDS;
+protocol_data data_motor;
+protocol_data data_servo;
+protocol_data data_LEDS;
 
 unsigned long currentMillis;
 unsigned long interval;
@@ -133,9 +133,16 @@ void loop()
 #ifdef RUN
 		timeout();
 #endif
+		gotData = 0;
+
 		data_motor.id = 0;
+		data_motor.value = 90;
+
 		data_servo.id = 0;
+		data_servo.value = 90;
+
 		data_LEDS.id = -1;
+		data_LEDS.sub_id = -1;
 
 		while (Serial.available() && !gotData && !noData)
 		{
