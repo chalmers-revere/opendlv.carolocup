@@ -154,10 +154,13 @@ void loop()
 
 void establishContact(char toSend, int st)
 {
+	unsigned int s = 1;
 	while (Serial.available() <= 0)
 	{
 		Serial.write(toSend);   // send a char
+		ledControl.setStatusLight(s);
 		wait(0.5);
+		s = !s;
 	}
 	if (!st)
 	{

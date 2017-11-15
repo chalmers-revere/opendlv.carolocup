@@ -9,12 +9,12 @@ void LEDControl::begin() {
     pinMode(INDICATOR_BACK_RIGHT, OUTPUT);
     pinMode(INDICATOR_FRONT_LEFT, OUTPUT);
     pinMode(INDICATOR_FRONT_RIGHT, OUTPUT);
-    pinMode(HEADLIGHTS, OUTPUT);
+    pinMode(STATUS_LIGHT, OUTPUT);
 }
 
-void LEDControl::setHeadLights(unsigned int state) {
+void LEDControl::setStatusLight(unsigned int state) {
     state = constrain(state, 0, 1);
-    digitalWrite(HEADLIGHTS, state);
+    digitalWrite(STATUS_LIGHT, state);
 }
 
 void LEDControl::setBrakeLights(unsigned int value) {
@@ -67,6 +67,7 @@ void LEDControl::setIndicators(unsigned int state, double seconds) {
                 digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
                 digitalWrite(RC_LIGHT, HIGH);
                 digitalWrite(BRAKE_LIGHTS, HIGH);
+                digitalWrite(STATUS_LIGHT, HIGH);
 
                 wait(seconds);
 
@@ -76,6 +77,7 @@ void LEDControl::setIndicators(unsigned int state, double seconds) {
                 digitalWrite(INDICATOR_FRONT_LEFT, LOW);
                 digitalWrite(RC_LIGHT, LOW);
                 digitalWrite(BRAKE_LIGHTS, LOW);
+                digitalWrite(STATUS_LIGHT, LOW);
 
                 wait(seconds);
             }

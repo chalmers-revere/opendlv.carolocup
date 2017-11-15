@@ -33,7 +33,7 @@
 #define INDICATOR_FRONT_RIGHT 7
 #define INDICATOR_BACK_LEFT 8
 #define INDICATOR_BACK_RIGHT 10
-#define HEADLIGHTS 14
+#define STATUS_LIGHT A0
 
 #define PULSE_TIMEOUT 25000 //10000
 
@@ -99,7 +99,7 @@ public:
 
     void setBrakeLights(unsigned int value);
 
-    void setHeadLights(unsigned int state);
+    void setStatusLight(unsigned int state);
 
     void setRCLight(unsigned int frequency, unsigned long counter);
 
