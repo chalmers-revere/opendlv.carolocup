@@ -45,6 +45,8 @@ public:
 
 	int getValue();
 
+	protocol_data getData();
+
 private:
 	uint8_t bufferOut[BUFFER_SIZE];
 

@@ -154,6 +154,11 @@ int Protocol::getValue()
 	return data.value;
 }
 
+protocol_data Protocol::getData()
+{
+	return data;
+}
+
 uint8_t Protocol::encodeOneByte(int _id, int sub_id, int _value)
 {
 	uint8_t tosend = 0;

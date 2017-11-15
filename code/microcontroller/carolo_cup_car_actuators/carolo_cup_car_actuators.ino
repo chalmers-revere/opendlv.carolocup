@@ -13,6 +13,10 @@ ESCMotor esc;
 RCReceiver receiver;
 LEDControl ledControl;
 
+volatile protocol_data data_motor;
+volatile protocol_data data_servo;
+volatile protocol_data data_LEDS;
+
 unsigned long currentMillis;
 unsigned long interval;
 
@@ -22,8 +26,10 @@ volatile int interrupt = 0;
 volatile int rcControllerFlag = 0;
 
 unsigned long oldMillis;
-int noData = 0;
+volatile int noData = 0;
 int oldNoData = 0;
+
+volatile int gotData = 0;
 
 #define SCSS_RSTC 0x570
 #define RSTC_WARM_RESET (1 << 1)
@@ -59,8 +65,8 @@ void loop()
 		int a = receiver.readChannel1();
 
 #ifdef DEBUG
-//		Serial.print("ch1 ");
-//		Serial.println(a);
+		//		Serial.print("ch1 ");
+		//		Serial.println(a);
 #endif
 
 		if (a >= DEAD_LOW && a <= DEAD_HIGH)
@@ -121,26 +127,91 @@ void loop()
 #endif
 	}
 
-	if (noData && (oldNoData != noData) && !interrupt)
-	{
-		servo.setAngle(STRAIGHT_DEGREES);
-		esc.brake();
-		esc.arm();
-		ledControl.setBrakeLights(_ON_);
-		establishContact('a', 1);
-#ifdef DEBUG
-		Serial.println("TIMEOUT");
-#endif
-	}
-
-	oldNoData = noData;
-
-#ifdef RUN
 	if (!interrupt)
 	{
+		//ledControl.setIndicators(ID_OUT_INDICATOR_RF, 0.2);
+#ifdef RUN
 		timeout();
-	}
 #endif
+		data_motor.id = 0;
+		data_servo.id = 0;
+		data_LEDS.id = -1;
+
+		while (Serial.available() && !gotData && !noData)
+		{
+			uint8_t incoming = Serial.read();
+			uint8_t id = protocol.decodeOneByte(incoming);
+
+			switch (id)
+			{
+				case ID_OUT_LIGHTS:
+					data_LEDS = protocol.getData();
+					gotData = 1;
+					break;
+				case ID_OUT_MOTOR:
+					data_motor = protocol.getData();
+					gotData = 1;
+					break;
+				case ID_OUT_SERVO:
+					data_servo = protocol.getData();
+					gotData = 1;
+					break;
+				default:
+					break;
+			}
+		}
+
+		if (!noData)
+		{
+			if (data_motor.id == ID_OUT_MOTOR)
+			{
+				ledControl.setBrakeLights(_OFF_);
+				esc.setSpeed(data_motor.value);
+#ifdef DEBUG
+				Serial.print("Motor ");
+				Serial.println(data_motor.value);
+#endif
+			}
+
+			if (data_servo.id == ID_OUT_SERVO)
+			{
+				servo.setAngle(data_servo.value);
+#ifdef DEBUG
+				Serial.print("Servo ");
+				Serial.println(data_servo.value);
+#endif
+			}
+
+			if (data_LEDS.id == ID_OUT_LIGHTS)
+			{
+				if (data_LEDS.sub_id == ID_OUT_BRAKE)
+				{
+					esc.brake();
+					ledControl.setBrakeLights(_ON_);
+				}
+				else if (data_LEDS.sub_id >= ID_OUT_LIGHTS_EFFECT && data_LEDS.sub_id <= ID_OUT_INDICATOR_RB)
+				{
+					ledControl.setIndicators(data_LEDS.sub_id, 0.5);
+				}
+
+#ifdef DEBUG
+				Serial.print("LED ");
+				Serial.println(data_LEDS.sub_id);
+#endif
+			}
+		}
+		else if (noData && (oldNoData != noData) && !interrupt)
+		{
+			servo.setAngle(STRAIGHT_DEGREES);
+			esc.brake();
+			esc.arm();
+			ledControl.setBrakeLights(_ON_);
+			establishContact('a', 1);
+#ifdef DEBUG
+			Serial.println("TIMEOUT");
+#endif
+		}
+	}
 
 #ifdef DEBUG
 	//Serial.println(receiver.readChannel1());
@@ -148,7 +219,8 @@ void loop()
 #endif
 
 #ifdef RUN
-
+	oldNoData = noData;
+	noData = 0;
 #endif
 }
 
@@ -199,54 +271,8 @@ void timeout()
 
 void serialEvent()
 {
-	if (!interrupt)
-	{
-		ledControl.setIndicators(ID_OUT_INDICATOR_RF, 0.2);
-
-		uint8_t incoming = Serial.read();
-		noData = 0;
-		uint8_t id = protocol.decodeOneByte(incoming);
-		if (id)
-		{
-			int value = protocol.getValue();
-#ifdef DEBUG
-			Serial.print("not 0 ");
-			Serial.println(id);
-			Serial.println(value);
-#endif
-			switch (protocol.getId())
-			{
-				case ID_OUT_MOTOR:
-					ledControl.setBrakeLights(_OFF_);
-					esc.setSpeed(value);
-					break;
-				case ID_OUT_SERVO:
-					servo.setAngle(value);
-					break;
-				default:
-					break;
-			}
-		}
-		else
-		{
-			//int value = protocol.getValue();
-#ifdef DEBUG
-			Serial.print("is 0 ");
-			Serial.println(protocol.getSubId());
-#endif
-			if (protocol.getSubId() == ID_OUT_BRAKE)
-			{
-				esc.brake();
-				ledControl.setBrakeLights(_ON_);
-			}
-			else if (protocol.getSubId() >= ID_OUT_LIGHTS_EFFECT && protocol.getSubId() <= ID_OUT_INDICATOR_RB) {
-				ledControl.setIndicators(protocol.getSubId(), 0.5);
-			}
-		}
-	}
-	else
+	if (interrupt)
 	{
 		Serial.read();
 	}
 }
-
