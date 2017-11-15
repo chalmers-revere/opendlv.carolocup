@@ -227,6 +227,10 @@ void serialEvent()
 					break;
 			}
 		}
+		else
+		{
+			ledControl.setIndicators(INDICATOR_FRONT_LEFT, 0.5);
+		}
 	}
 	else
 	{
