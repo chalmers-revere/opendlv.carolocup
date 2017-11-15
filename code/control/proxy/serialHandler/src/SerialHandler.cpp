@@ -35,6 +35,8 @@ namespace carolocup
 				  SERIAL_PORT("dummy"),
 				  motor(90),
 				  servo(90),
+				  lights(-1),
+				  brake(true),
 				  sbd(),
 				  sensors(),
 				  raw_sensors(),
@@ -177,13 +179,16 @@ namespace carolocup
 					const AutomotiveMSG automotiveMSG =
 							c.getData<AutomotiveMSG>();
 
-					bool brake = automotiveMSG.getBrakeLights();
-					//int lights = automotiveMSG.getLights();
-					if (!brake)
+					bool _brake = automotiveMSG.getBrakeLights();
+					int _lights = automotiveMSG.getLights();
+					int arduinoAngle = STRAIGHT_DEGREES;
+					int speed = MOTOR_IDLE;
+
+					if (!_brake)
 					{
 						double angle = automotiveMSG.getSteeringWheelAngle();
 
-						int arduinoAngle = STRAIGHT_DEGREES + (angle * (MAX_DEGREES / _PI));
+						arduinoAngle = STRAIGHT_DEGREES + (angle * (MAX_DEGREES / _PI));
 						if (arduinoAngle < MIN_DEGREES)
 						{
 							arduinoAngle = MIN_DEGREES;
@@ -193,45 +198,58 @@ namespace carolocup
 							arduinoAngle = MAX_DEGREES;
 						}
 
-						int speed = automotiveMSG.getSpeed();
-
-						this->motor = speed;
-						this->servo = arduinoAngle;
-
+						speed = automotiveMSG.getSpeed();
 					}
-//					else
-//					{
-//						this->motor = MOTOR_IDLE;
-//						this->servo = STRAIGHT_DEGREES;
-//
-//						protocol_data d_brake;
-//						d_brake.id = ID_OUT_LIGHTS;
-//						d_brake.value = NO_DATA;
-//						d_brake.sub_id = ID_OUT_BRAKE;
-//
-//						serial_send(this->serial, d_brake);
-//					}
+					else
+					{
+						speed = MOTOR_IDLE;
+						arduinoAngle = STRAIGHT_DEGREES;
 
-//					protocol_data d_lights;
-//					d_lights.id = ID_OUT_LIGHTS;
-//					d_lights.value = NO_DATA;
-//					d_lights.sub_id = lights;
-//
-//					serial_send(this->serial, d_lights);
+						if (_brake != this->brake)
+						{
+							this->brake = _brake;
 
-					protocol_data d_motor;
-					d_motor.id = ID_OUT_MOTOR;
-					d_motor.value = this->motor;
-					d_motor.sub_id = NO_DATA;
+							protocol_data d_brake;
+							d_brake.id = ID_OUT_LIGHTS;
+							d_brake.value = NO_DATA;
+							d_brake.sub_id = ID_OUT_BRAKE;
 
-					serial_send(this->serial, d_motor);
+							serial_send(this->serial, d_brake);
+						}
+					}
 
-					protocol_data d_servo;
-					d_servo.id = ID_OUT_SERVO;
-					d_servo.value = this->servo;
-					d_servo.sub_id = NO_DATA;
+					if (_lights != this->lights)
+					{
+						this->lights = _lights;
+						protocol_data d_lights;
+						d_lights.id = ID_OUT_LIGHTS;
+						d_lights.value = NO_DATA;
+						d_lights.sub_id = _lights;
 
-					serial_send(this->serial, d_servo);
+						serial_send(this->serial, d_lights);
+					}
+
+					if (this->motor != speed)
+					{
+						this->motor = speed;
+						protocol_data d_motor;
+						d_motor.id = ID_OUT_MOTOR;
+						d_motor.value = this->motor;
+						d_motor.sub_id = NO_DATA;
+
+						serial_send(this->serial, d_motor);
+					}
+
+					if (this->servo != arduinoAngle)
+					{
+						this->servo = arduinoAngle;
+						protocol_data d_servo;
+						d_servo.id = ID_OUT_SERVO;
+						d_servo.value = this->servo;
+						d_servo.sub_id = NO_DATA;
+
+						serial_send(this->serial, d_servo);
+					}
 				}
 
 			}

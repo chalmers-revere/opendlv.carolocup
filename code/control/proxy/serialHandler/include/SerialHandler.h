@@ -114,6 +114,8 @@ namespace carolocup
 
 			int motor;
 			int servo;
+			int lights;
+			bool brake;
 
 			SensorsMSG sbd;
 
