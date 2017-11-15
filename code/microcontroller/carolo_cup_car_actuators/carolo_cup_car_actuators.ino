@@ -106,6 +106,7 @@ void loop()
 			rcControllerFlag = 0;
 			ledControl.setRCLight(0, _blink);
 			interrupt = 0;
+			wait(1);
 			return;
 		}
 
