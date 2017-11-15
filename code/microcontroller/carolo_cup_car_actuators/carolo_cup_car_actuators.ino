@@ -59,8 +59,8 @@ void loop()
 		int a = receiver.readChannel1();
 
 #ifdef DEBUG
-		Serial.print("ch1 ");
-		Serial.println(a);
+//		Serial.print("ch1 ");
+//		Serial.println(a);
 #endif
 
 		if (a >= DEAD_LOW && a <= DEAD_HIGH)
