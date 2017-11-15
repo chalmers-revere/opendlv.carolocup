@@ -1,8 +1,8 @@
 /*
  * Comment it to turn off
  */
-//#define DEBUG
-#define RUN
+#define DEBUG
+//#define RUN
 
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
@@ -209,8 +209,12 @@ void serialEvent()
 		uint8_t id = protocol.decodeOneByte(incoming);
 		if (id)
 		{
-
 			int value = protocol.getValue();
+#ifdef DEBUG
+			Serial.print("not 0 ");
+			Serial.println(id);
+			Serial.println(value);
+#endif
 			switch (protocol.getId())
 			{
 				case ID_OUT_MOTOR:
@@ -226,7 +230,11 @@ void serialEvent()
 		}
 		else
 		{
-			int value = protocol.getValue();
+			//int value = protocol.getValue();
+#ifdef DEBUG
+			Serial.print("is 0 ");
+			Serial.println(protocol.getSubId());
+#endif
 			if (protocol.getSubId() == ID_OUT_BRAKE)
 			{
 				esc.brake();
