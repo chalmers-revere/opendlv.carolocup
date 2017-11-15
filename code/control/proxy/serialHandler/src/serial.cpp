@@ -123,21 +123,30 @@ void *serial_outgoing_thread_routine(void *_state)
 
 		g_mutex_lock(&state->write_mutex);
 
-		int st = protocol.encode(data->id, data->value);
-
-		if (st)
+		if (data->sub_id == -1)
 		{
-			for (int i = 0; i < BUFFER_SIZE; i++)
-			{
-				serialport_writebyte(state->fd, protocol.getBufferOut()[i]);
+			int st = protocol.encode(data->id, data->value);
 
-				state->on_write(protocol.getBufferOut()[i]);
+			if (st)
+			{
+				for (int i = 0; i < BUFFER_SIZE; i++)
+				{
+					serialport_writebyte(state->fd, protocol.getBufferOut()[i]);
+
+					state->on_write(protocol.getBufferOut()[i]);
+				}
+			}
+			else
+			{
+
+				std::cout << "<< Encode failed " << std::endl;
 			}
 		}
 		else
 		{
+			serialport_writebyte(state->fd, protocol.encodeOneByte(data->id, data->sub_id, data->value));
 
-			std::cout << "<< Encode failed " << std::endl;
+			state->on_write(protocol.encodeOneByte(data->id, data->sub_id, data->value));
 		}
 
 
@@ -197,6 +206,7 @@ void serial_send(serial_state *state, protocol_data data)
 	protocol_data *_data = (protocol_data *) malloc(sizeof(protocol_data));
 	_data->id = data.id;
 	_data->value = data.value;
+	_data->sub_id = data.sub_id;
 
 	g_async_queue_push(state->outgoing_queue, _data);
 }

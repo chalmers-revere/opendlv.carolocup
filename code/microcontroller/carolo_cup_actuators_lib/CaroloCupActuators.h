@@ -9,17 +9,18 @@
 
 #define COMMON_ADDRESS 8
 
-#define ID_OUT_BRAKE                0
+#define ID_OUT_LIGHTS               0
 #define ID_OUT_MOTOR                1
 #define ID_OUT_SERVO                2
-#define ID_OUT_LIGHTS_EFFECT        3
-#define ID_OUT_INDICATORS           4
-#define ID_OUT_INDICATOR_LF         6
-#define ID_OUT_INDICATOR_RF         7
-#define ID_OUT_INDICATOR_LB         8
-#define ID_OUT_INDICATOR_RB         10
 
-#define LED_SIGNAL 5
+#define ID_OUT_BRAKE                0
+#define ID_OUT_LIGHTS_EFFECT        1
+#define ID_OUT_INDICATOR_LF         2
+#define ID_OUT_INDICATOR_RF         3
+#define ID_OUT_INDICATOR_LB         4
+#define ID_OUT_INDICATOR_RB         5
+
+#define LED_SIGNAL 6
 
 #define _SERVO_PIN 6 //steering servo pin
 #define ESC_PIN 5 //ESC motor pin

@@ -201,20 +201,18 @@ void serialEvent()
 {
 	if (!interrupt)
 	{
+//		ledControl.setIndicators(INDICATOR_FRONT_RIGHT, 0.5);
+//		ledControl.setIndicators(INDICATOR_FRONT_LEFT, 0.5);
+
 		uint8_t incoming = Serial.read();
 		noData = 0;
-		protocol.decode(incoming);
-		if (protocol.isValid())
+		uint8_t id = protocol.decodeOneByte(incoming);
+		if (id)
 		{
-			ledControl.setIndicators(INDICATOR_FRONT_RIGHT, 0.5);
 
 			int value = protocol.getValue();
 			switch (protocol.getId())
 			{
-				case ID_OUT_BRAKE:
-					esc.brake();
-					ledControl.setBrakeLights(_ON_);
-					break;
 				case ID_OUT_MOTOR:
 					ledControl.setBrakeLights(_OFF_);
 					esc.setSpeed(value);
@@ -222,16 +220,21 @@ void serialEvent()
 				case ID_OUT_SERVO:
 					servo.setAngle(value);
 					break;
-				case ID_OUT_INDICATORS:
-					ledControl.setIndicators(value, 0.5);
-					break;
 				default:
 					break;
 			}
 		}
 		else
 		{
-			ledControl.setIndicators(INDICATOR_FRONT_LEFT, 0.5);
+			int value = protocol.getValue();
+			if (protocol.getSubId() == ID_OUT_BRAKE)
+			{
+				esc.brake();
+				ledControl.setBrakeLights(_ON_);
+			}
+			else if (protocol.getSubId() >= ID_OUT_LIGHTS_EFFECT && protocol.getSubId() <= ID_OUT_INDICATOR_RB) {
+				ledControl.setIndicators(protocol.getSubId(), 0.5);
+			}
 		}
 	}
 	else

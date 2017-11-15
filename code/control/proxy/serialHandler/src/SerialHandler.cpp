@@ -115,12 +115,14 @@ namespace carolocup
 						protocol_data d_motor;
 						d_motor.id = ID_OUT_MOTOR;
 						d_motor.value = MOTOR_IDLE;
+						d_motor.sub_id = NO_DATA;
 
 						serial_send(this->serial, d_motor);
 
 						protocol_data d_servo;
 						d_servo.id = ID_OUT_SERVO;
 						d_servo.value = STRAIGHT_DEGREES;
+						d_servo.sub_id = NO_DATA;
 
 						serial_send(this->serial, d_servo);
 					}
@@ -148,12 +150,14 @@ namespace carolocup
 				protocol_data d_motor;
 				d_motor.id = ID_OUT_MOTOR;
 				d_motor.value = MOTOR_IDLE;
+				d_motor.sub_id = NO_DATA;
 
 				serial_send(this->serial, d_motor);
 
 				protocol_data d_servo;
 				d_servo.id = ID_OUT_SERVO;
 				d_servo.value = STRAIGHT_DEGREES;
+				d_servo.sub_id = NO_DATA;
 
 				serial_send(this->serial, d_servo);
 			}
@@ -201,29 +205,31 @@ namespace carolocup
 						this->servo = STRAIGHT_DEGREES;
 
 						protocol_data d_brake;
-						d_brake.id = ID_OUT_BRAKE;
+						d_brake.id = ID_OUT_LIGHTS;
 						d_brake.value = NO_DATA;
+						d_brake.sub_id = ID_OUT_BRAKE;
 
 						serial_send(this->serial, d_brake);
 					}
 
 					protocol_data d_lights;
-					d_lights.id = ID_OUT_INDICATORS;
-					d_lights.value = lights;
+					d_lights.id = ID_OUT_LIGHTS;
+					d_lights.value = NO_DATA;
+					d_lights.sub_id = lights;
 
-					d_lights = d_lights;
-
-//					serial_send(this->serial, d_lights);
+					serial_send(this->serial, d_lights);
 
 					protocol_data d_motor;
 					d_motor.id = ID_OUT_MOTOR;
 					d_motor.value = this->motor;
-					d_motor = d_motor;
-//					serial_send(this->serial, d_motor);
+					d_motor.sub_id = NO_DATA;
+
+					serial_send(this->serial, d_motor);
 
 					protocol_data d_servo;
 					d_servo.id = ID_OUT_SERVO;
 					d_servo.value = this->servo;
+					d_servo.sub_id = NO_DATA;
 
 					serial_send(this->serial, d_servo);
 				}

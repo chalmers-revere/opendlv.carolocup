@@ -96,22 +96,22 @@ void LEDControl::setIndicators(unsigned int state, double seconds)
 				wait(seconds);
 			}
 			break;
-		case INDICATOR_FRONT_LEFT:
+		case ID_OUT_INDICATOR_LF:
 			digitalWrite(INDICATOR_FRONT_LEFT, HIGH);
 			wait(seconds);
 			digitalWrite(INDICATOR_FRONT_LEFT, LOW);
 			break;
-		case INDICATOR_FRONT_RIGHT:
+		case ID_OUT_INDICATOR_RF:
 			digitalWrite(INDICATOR_FRONT_RIGHT, HIGH);
 			wait(seconds);
 			digitalWrite(INDICATOR_FRONT_RIGHT, LOW);
 			break;
-		case INDICATOR_BACK_LEFT:
+		case ID_OUT_INDICATOR_LB:
 			digitalWrite(INDICATOR_BACK_LEFT, HIGH);
 			wait(seconds);
 			digitalWrite(INDICATOR_BACK_LEFT, LOW);
 			break;
-		case INDICATOR_BACK_RIGHT:
+		case ID_OUT_INDICATOR_RB:
 			digitalWrite(INDICATOR_BACK_RIGHT, HIGH);
 			wait(seconds);
 			digitalWrite(INDICATOR_BACK_RIGHT, LOW);
