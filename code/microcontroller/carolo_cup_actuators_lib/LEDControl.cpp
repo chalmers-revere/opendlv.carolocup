@@ -18,7 +18,7 @@ void LEDControl::setStatusLight(unsigned int state) {
 }
 
 void LEDControl::setBrakeLights(unsigned int value) {
-    if (value == 2) //flash light
+    if (value == 2)
     {
         for (int i = 0; i < 2000; ++i) {
             digitalWrite(BRAKE_LIGHTS, HIGH);
