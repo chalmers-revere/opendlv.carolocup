@@ -129,6 +129,7 @@ void *serial_outgoing_thread_routine(void *_state)
 
 			if (st)
 			{
+				std::cout << "<< Encode 5 BYTES " << std::endl;
 				for (int i = 0; i < BUFFER_SIZE; i++)
 				{
 					serialport_writebyte(state->fd, protocol.getBufferOut()[i]);
@@ -139,11 +140,13 @@ void *serial_outgoing_thread_routine(void *_state)
 			else
 			{
 
-				std::cout << "<< Encode failed " << std::endl;
+				std::cerr << "<< Encode failed " << std::endl;
 			}
 		}
 		else
 		{
+			std::cout << "<< Encode 1 BYTE " << std::endl;
+
 			serialport_writebyte(state->fd, protocol.encodeOneByte(data->id, data->sub_id, data->value));
 
 			state->on_write(protocol.encodeOneByte(data->id, data->sub_id, data->value));
