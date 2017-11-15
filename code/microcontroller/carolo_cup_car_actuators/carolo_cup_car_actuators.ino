@@ -206,6 +206,8 @@ void serialEvent()
 		protocol.decode(incoming);
 		if (protocol.isValid())
 		{
+			ledControl.setIndicators(INDICATOR_FRONT_RIGHT, 0.5);
+
 			int value = protocol.getValue();
 			switch (protocol.getId())
 			{

@@ -36,7 +36,6 @@ namespace carolocup
 				  motor(90),
 				  servo(90),
 				  sbd(),
-				  gyroMSG(),
 				  sensors(),
 				  raw_sensors(),
 				  odometerCounter(0),
@@ -212,7 +211,9 @@ namespace carolocup
 					d_lights.id = ID_OUT_INDICATORS;
 					d_lights.value = lights;
 
-					serial_send(this->serial, d_lights);
+					d_lights = d_lights;
+
+//					serial_send(this->serial, d_lights);
 
 					protocol_data d_motor;
 					d_motor.id = ID_OUT_MOTOR;
@@ -227,31 +228,6 @@ namespace carolocup
 					serial_send(this->serial, d_servo);
 				}
 
-//				raw_sensors[ID_IN_YAW].clear();
-//				raw_sensors[ID_IN_ROLL].clear();
-//				raw_sensors[ID_IN_PITCH].clear();
-//
-//				int pending = g_async_queue_length(serial->incoming_queue);
-//				protocol_data incoming;
-//
-//				for (int i = 0; i < pending; i++)
-//				{
-//					//If data available in the queue filter it
-//					if (serial_receive(serial, &incoming))
-//					{
-//						filterData(incoming.id, incoming.value);
-//					}//end of filtering
-//				}
-//
-//				//If sensor data available
-//				if (isSensorValues)
-//				{
-//					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
-//					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
-//					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
-//
-//					sendSensorBoardData(sensors, 1);
-//				}//end
 			}
 			else if (serialBehaviour.compare("arduino=in") == 0)
 			{
@@ -262,6 +238,10 @@ namespace carolocup
 				raw_sensors[ID_IN_ULTRASONIC_SIDE_FRONT].clear();
 				raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK].clear();
 				raw_sensors[ID_IN_ULTRASONIC_BACK].clear();
+
+				raw_sensors[ID_IN_YAW].clear();
+				raw_sensors[ID_IN_ROLL].clear();
+				raw_sensors[ID_IN_PITCH].clear();
 
 				int pending = g_async_queue_length(serial->incoming_queue);
 				protocol_data incoming;
@@ -284,7 +264,11 @@ namespace carolocup
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_SIDE_BACK, raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK]);
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_BACK, raw_sensors[ID_IN_ULTRASONIC_BACK]);
 
-					sendSensorBoardData(sensors, 0);
+					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
+					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
+					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
+
+					sendSensorBoardData(sensors);
 				}//end
 			}
 
@@ -325,7 +309,7 @@ namespace carolocup
 					if (value == 0 || value == 1)
 					{
 						sensors[id] = value;
-						sendSensorBoardData(sensors, 0); //send signal
+						sendSensorBoardData(sensors); //send signal
 					}
 					else if (value == 2)
 					{
@@ -360,37 +344,26 @@ namespace carolocup
 			}
 		}
 
-		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor, int t)
+		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor)
 		{
-			if (!t)
-			{
-				sbd.setMapOfSensors(sensor);
-				Container c(sbd);
-				getConference().send(c);
-			}
-			else
-			{
-				gyroMSG.setYaw(sensor[ID_IN_YAW]);
-				gyroMSG.setPitch(sensor[ID_IN_PITCH]);
-				gyroMSG.setRoll(sensor[ID_IN_ROLL]);
+			sbd.setMapOfSensors(sensor);
+			Container c(sbd);
+			getConference().send(c);
 
-				Container c(sbd);
-				getConference().send(c);
-			}
 			isSensorValues = false;
 		}
 
 		void __on_read(uint8_t b)
 		{
 #ifdef DEBUG
-			cout << ">> read " << (int) b << endl;
+			cout << ">> read " << b << endl;
 #endif
 		}
 
 		void __on_write(uint8_t b)
 		{
 #ifdef DEBUG
-			cout << "<< write " << (int) b << endl;
+			cout << "<< write " << b << endl;
 #endif
 		}
 	}
