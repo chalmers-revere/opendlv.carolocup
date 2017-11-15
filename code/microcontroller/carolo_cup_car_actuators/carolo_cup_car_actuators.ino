@@ -31,6 +31,8 @@ int oldNoData = 0;
 
 volatile int gotData = 0;
 
+volatile int serialCount = 0;
+
 #define SCSS_RSTC 0x570
 #define RSTC_WARM_RESET (1 << 1)
 
@@ -111,8 +113,8 @@ void loop()
 			servo.setAngle(STRAIGHT_DEGREES);
 			rcControllerFlag = 0;
 			ledControl.setRCLight(0, _blink);
-			interrupt = 0;
 			wait(1);
+			interrupt = 0;
 			return;
 		}
 
