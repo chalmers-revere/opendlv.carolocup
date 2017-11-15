@@ -178,7 +178,7 @@ namespace carolocup
 							c.getData<AutomotiveMSG>();
 
 					bool brake = automotiveMSG.getBrakeLights();
-					int lights = automotiveMSG.getLights();
+					//int lights = automotiveMSG.getLights();
 					if (!brake)
 					{
 						double angle = automotiveMSG.getSteeringWheelAngle();
