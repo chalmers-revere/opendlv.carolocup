@@ -10,7 +10,6 @@ RCReceiver	KEYWORD1
 LEDControl	KEYWORD1
 ESCMotor	KEYWORD1
 SteeringMotor	KEYWORD1
-Axes	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -33,10 +32,6 @@ readChannel1	KEYWORD2
 readChannel2	KEYWORD2
 filter	KEYWORD2
 wait	KEYWORD2
-readMotion	KEYWORD2
-getYaw	KEYWORD2
-getPitch	KEYWORD2
-getRoll	KEYWORD2
 
 ######################################
 # Constants (LITERAL1)
@@ -64,12 +59,6 @@ _ON_	LITERAL1
 T_OUT	LITERAL1
 CH_1	LITERAL1
 CH_2	LITERAL1
-ID_IN_GX	LITERAL1
-ID_IN_GY	LITERAL1
-ID_IN_GZ	LITERAL1
-ID_IN_AX	LITERAL1
-ID_IN_AY	LITERAL1
-ID_IN_AZ	LITERAL1
 LED_SIGNAL	LITERAL1
 REVERSE	LITERAL1
 NOT_REVERSE	LITERAL1

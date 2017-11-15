@@ -4,8 +4,6 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Servo.h>
-#include "CurieIMU.h"
-#include "MadgwickAHRS.h"
 
 #define BAUD 115200
 
@@ -20,10 +18,6 @@
 #define ID_OUT_INDICATOR_RF         7
 #define ID_OUT_INDICATOR_LB         8
 #define ID_OUT_INDICATOR_RB         10
-
-#define ID_IN_YAW                   11
-#define ID_IN_ROLL                  12
-#define ID_IN_PITCH                 13
 
 #define LED_SIGNAL 5
 
@@ -131,41 +125,6 @@ public:
 private:
     int ch1;
     int ch2;
-};
-
-class Axes {
-public:
-    explicit Axes();
-
-    void begin();
-
-    void readMotion();
-
-    int getYaw();
-
-    int getPitch(); // if necessary protocol has to be modified to accept negative numbers
-
-    int getRoll(); // if necessary protocol has to be modified to accept negative numbers
-
-    float convertRawAcceleration(int aRaw);
-
-    float convertRawGyro(int gRaw);
-
-private:
-    int ax, ay, az;   //scaled accelerometer values
-
-    int gx, gy, gz; //scaled Gyro values
-
-    Madgwick filter;
-
-    int yaw;
-    int pitch;
-    int roll;
-
-    int factor; // variable by which to divide gyroscope values, used to control sensitivity
-
-    unsigned long microsPerReading, microsPrevious;
-    float accelScale, gyroScale;
 };
 
 #endif

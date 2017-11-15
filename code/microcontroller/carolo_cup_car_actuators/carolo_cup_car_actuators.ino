@@ -12,7 +12,6 @@ SteeringMotor servo;
 ESCMotor esc;
 RCReceiver receiver;
 LEDControl ledControl;
-Axes axes;
 
 unsigned long currentMillis;
 unsigned long interval;
@@ -37,7 +36,6 @@ void reboot(void) //function to do software reboot on arduino if necessary
 
 void setup()
 {
-	axes.begin();
 	servo.init();
 	esc.init();
 	receiver.begin();
@@ -104,7 +102,7 @@ void loop()
 		{
 			esc.brake();
 			ledControl.setBrakeLights(_ON_);
-
+			servo.setAngle(STRAIGHT_DEGREES);
 			rcControllerFlag = 0;
 			ledControl.setRCLight(0, _blink);
 			interrupt = 0;
@@ -143,16 +141,13 @@ void loop()
 	}
 #endif
 
-	//axes.readMotion();
 #ifdef DEBUG
-	Serial.print("YAW ");
-	Serial.println(axes.getYaw());
 	//Serial.println(receiver.readChannel1());
 	//Serial.println(receiver.readChannel2());
 #endif
 
 #ifdef RUN
-	//encodeAndWrite(ID_IN_YAW, axes.getYaw());
+
 #endif
 }
 
@@ -163,16 +158,13 @@ void establishContact(char toSend, int st)
 		Serial.write(toSend);   // send a char
 		wait(0.5);
 	}
-	if (!st) {
+	if (!st)
+	{
 		Serial.read();
-		wait(5);
-		esc.arm();
-		ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
-		//ledControl.setHeadLights(_ON_);
-	} else {
-		esc.arm();
-		ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
 	}
+	esc.arm();
+	ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
+
 }
 
 void waitConnection()
@@ -198,16 +190,6 @@ void timeout()
 			noData = 1;
 			break;
 		}
-	}
-}
-
-void encodeAndWrite(int id, int value)
-{
-	int st = protocol.encode(id, value);
-
-	if (st)
-	{
-		Serial.write(protocol.getBufferOut(), BUFFER_SIZE);
 	}
 }
 
@@ -246,40 +228,5 @@ void serialEvent()
 	{
 		Serial.read();
 	}
-}
-
-unsigned long pulseMeasure(uint8_t pin)
-{
-
-	uint8_t state = HIGH;
-	unsigned long pulseWidth = 0;
-	unsigned long loopCount = 0;
-	unsigned long loopMax = 5000000;
-
-	// While the pin is *not* in the target state we make sure the timeout hasn't been reached.
-#ifdef DEBUG
-	Serial.println("Pulse start");
-#endif
-	while ((digitalRead(pin)) != state)
-	{
-		if (loopCount++ == loopMax)
-		{
-			return 0;
-		}
-	}
-	// When the pin *is* in the target state we bump the counter while still keeping track of the timeout.
-	while ((digitalRead(pin)) == state)
-	{
-		if (loopCount++ == loopMax)
-		{
-			return 0;
-		}
-		pulseWidth++;
-	}
-#ifdef DEBUG
-	Serial.println("Pulse end");
-#endif
-	// Return the pulse time in microsecond!
-	return pulseWidth * 1.45; // Calculated the pulseWidth++ loop to be about 1.50uS in length.
 }
 

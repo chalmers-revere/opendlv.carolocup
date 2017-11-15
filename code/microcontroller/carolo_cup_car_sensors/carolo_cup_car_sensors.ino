@@ -3,6 +3,7 @@
 
 #define RUN // uncomment this for normal executation and comment DEBUG
 //#define DEBUG //uncomment this for debugging and comment RUN
+
 #define BOUNCE_DURATION 700   // define an appropriate bounce time in ms for your switches
 
 unsigned long currentMillis;
@@ -11,6 +12,7 @@ unsigned long interval;
 Protocol protocol;
 Odometer odometer;
 UltrasonicSensor u_center, u_front_right, u_right_front, u_right_back, u_back;
+Axes axes;
 
 volatile unsigned long bounceTimeP = 0; // variable to hold ms count to debounce a pressed switch
 volatile unsigned long bounceTimeL = 0; // variable to hold ms count to debounce a pressed switch
@@ -22,6 +24,7 @@ volatile int o = 0;
 
 void setup()
 {
+	axes.begin();
 	odometer.begin();
 
 	u_center.attach(US_FRONT);
@@ -29,6 +32,7 @@ void setup()
 	u_right_front.attach(US_SIDE_FRONT);
 	u_right_back.attach(US_SIDE_BACK);
 	u_back.attach(US_BACK);
+
 #ifdef RUN
 	pinMode(BUTTON_PARK, INPUT);
 	pinMode(BUTTON_LANE, INPUT);
@@ -48,7 +52,11 @@ void setup()
 
 void loop()
 {
+	axes.readMotion();
+
 #ifdef RUN
+	encodeAndWrite(ID_IN_YAW, axes.getYaw());
+
 	sendButtonsIDLE();
 
 	encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
@@ -61,12 +69,14 @@ void loop()
 #endif
 
 #ifdef DEBUG
-	//Serial.println(u_center.getDistance());
-		Serial.println(u_front_right.getDistance());
-	//    Serial.println(u_right_front.getDistance());
-	//    Serial.println(u_right_back.getDistance());
-	//    Serial.println(u_back.getDistance());
-	//  Serial.println(odometer.getDistance());
+//	Serial.println(u_center.getDistance());
+//	Serial.println(u_front_right.getDistance());
+//  	Serial.println(u_right_front.getDistance());
+//	Serial.println(u_right_back.getDistance());
+//	Serial.println(u_back.getDistance());
+//	Serial.println(odometer.getDistance());
+//  	Serial.print("YAW ");
+//  	Serial.println(axes.getYaw());
 #endif
 }
 
@@ -76,7 +86,7 @@ void encodeAndWrite(int id, int value)
 
 	if (st)
 	{
-		Serial.write(protocol.getBufferOut(), BUFFER_SIZE); //try this first
+		Serial.write(protocol.getBufferOut(), BUFFER_SIZE);
 	}
 }
 
