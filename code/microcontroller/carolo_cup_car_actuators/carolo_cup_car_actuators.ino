@@ -1,8 +1,8 @@
 /*
  * Comment it to turn off
  */
-#define DEBUG
-//#define RUN
+//#define DEBUG
+#define RUN
 
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
@@ -201,8 +201,7 @@ void serialEvent()
 {
 	if (!interrupt)
 	{
-		ledControl.setIndicators(INDICATOR_FRONT_RIGHT, 0.5);
-//		ledControl.setIndicators(INDICATOR_FRONT_LEFT, 0.5);
+		ledControl.setIndicators(ID_OUT_INDICATOR_RF, 0.2);
 
 		uint8_t incoming = Serial.read();
 		noData = 0;
