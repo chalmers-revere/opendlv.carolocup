@@ -219,7 +219,7 @@ namespace carolocup
 					d_motor.id = ID_OUT_MOTOR;
 					d_motor.value = this->motor;
 
-					serial_send(this->serial, d_motor);
+//					serial_send(this->serial, d_motor);
 
 					protocol_data d_servo;
 					d_servo.id = ID_OUT_SERVO;
