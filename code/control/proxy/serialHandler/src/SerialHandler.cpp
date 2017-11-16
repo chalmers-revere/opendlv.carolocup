@@ -218,16 +218,13 @@ namespace carolocup
 						}
 					}
 
-					if (_lights != this->lights)
-					{
-						this->lights = _lights;
-						protocol_data d_lights;
-						d_lights.id = ID_OUT_LIGHTS;
-						d_lights.value = NO_DATA;
-						d_lights.sub_id = _lights;
+					this->lights = _lights;
+					protocol_data d_lights;
+					d_lights.id = ID_OUT_LIGHTS;
+					d_lights.value = NO_DATA;
+					d_lights.sub_id = this->lights;
 
-						serial_send(this->serial, d_lights);
-					}
+					serial_send(this->serial, d_lights);
 
 					if (this->motor != speed)
 					{

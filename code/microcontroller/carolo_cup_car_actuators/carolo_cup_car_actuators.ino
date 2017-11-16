@@ -236,25 +236,11 @@ void loop()
 void establishContact(char toSend, int st)
 {
 	unsigned int s = 1;
-	while (Serial.available() <= 0 || rcControllerFlag < 3)
+	while (Serial.available() <= 0)
 	{
 		Serial.write(toSend);   // send a char
 		ledControl.setStatusLight(s);
-		int a = receiver.readChannel1();
-
-#ifdef DEBUG
-		//		Serial.print("ch1 ");
-		//		Serial.println(a);
-#endif
-
-		if (a >= DEAD_LOW && a <= DEAD_HIGH)
-		{
-			rcControllerFlag++;
-		}
-		else
-		{
-			rcControllerFlag = 0;
-		}
+		wait(0.5);
 		s = !s;
 	}
 	if (!st)
@@ -281,28 +267,13 @@ void wait(double seconds)
 void timeout()
 {
 	oldMillis = micros();
-	while (!Serial.available() || rcControllerFlag < 3)
+	while (!Serial.available())
 	{
 
 		if ((micros() - oldMillis) > T_OUT)
 		{
 			noData = 1;
 			break;
-		}
-		int a = receiver.readChannel1();
-
-#ifdef DEBUG
-		//		Serial.print("ch1 ");
-		//		Serial.println(a);
-#endif
-
-		if (a >= DEAD_LOW && a <= DEAD_HIGH)
-		{
-			rcControllerFlag++;
-		}
-		else
-		{
-			rcControllerFlag = 0;
 		}
 	}
 }
