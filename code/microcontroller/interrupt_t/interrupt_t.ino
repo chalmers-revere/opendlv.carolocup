@@ -9,6 +9,7 @@ void reboot(void) //function to do software reboot on arduino if necessary
 
 
 unsigned long a = 0;
+volatile int rcControllerFlag = 0;
 
 void setup()
 {
