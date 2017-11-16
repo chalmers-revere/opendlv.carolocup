@@ -47,7 +47,7 @@ namespace carolocup {
                   laneFollowerMSG(),
                   m_threshold1(50),  // Both thresholds are dynamically adjusted at image processing
                   m_threshold2(200),
-                  m_control_scanline(250),// Lane markings are searched for at this pixel line
+                  m_control_scanline(300),// Lane markings are searched for at this pixel line
                   m_stop_scanline(160),// Stop line lane marking searched for at this pixel line
                   m_distance(140),  // Distance from the lane marking at which the car attempts to drive
                   p_gain(0),       // The gain values for the PID control algorithm

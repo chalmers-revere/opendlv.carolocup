@@ -205,8 +205,8 @@ namespace carolocup
 						speed = MOTOR_IDLE;
 						arduinoAngle = STRAIGHT_DEGREES;
 
-						if (_brake != this->brake)
-						{
+//						if (_brake != this->brake)
+//						{
 							this->brake = _brake;
 
 							protocol_data d_brake;
@@ -215,7 +215,7 @@ namespace carolocup
 							d_brake.sub_id = ID_OUT_BRAKE;
 
 							serial_send(this->serial, d_brake);
-						}
+//						}
 					}
 					//TODO lights ???????
 					this->lights = _lights;
@@ -224,9 +224,9 @@ namespace carolocup
 					d_lights.value = NO_DATA;
 					d_lights.sub_id = this->lights;
 
-					d_lights.sub_id = ID_OUT_INDICATOR_LF;
+					d_lights = d_lights;
 
-					serial_send(this->serial, d_lights);
+					//serial_send(this->serial, d_lights);
 
 					if (this->motor != speed)
 					{
