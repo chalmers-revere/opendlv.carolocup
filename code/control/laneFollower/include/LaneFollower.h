@@ -148,7 +148,7 @@ namespace carolocup
 
             void processImage();
 
-            double Median(cv::Mat mat);
+            //double Median(cv::Mat mat);
 
             double errorCalculation();
 

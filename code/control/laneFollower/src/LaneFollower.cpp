@@ -289,38 +289,38 @@ namespace carolocup {
             // Apply a gaussian blur to the image, to smooth it out
             GaussianBlur(m_image_mat, m_image_new, Size(5, 5), 0, 0);
             // Calculate median of pixel color in order to dynamically calculate Canny thresholds
-            double median;
-            median = Median(m_image_new);
+//            double median;
+//            median = Median(m_image_new);
             // Thresholds calculation
-            m_threshold1 = max(static_cast<double>(0), ((1.0 - 0.33) * median));
-            m_threshold2 = min(static_cast<double>(255), (1.0 + 0.33) * median);
+//            m_threshold1 = max(static_cast<double>(0), ((1.0 - 0.33) * median));
+//            m_threshold2 = min(static_cast<double>(255), (1.0 + 0.33) * median);
             // See header for algorithm and threshold explanation
-            Canny(m_image_new, m_image_new, m_threshold1, m_threshold2,
+            Canny(m_image_new, m_image_new, 50, 150,
                   3);
         }
 
-        // Pixel median value calculation
-        double LaneFollower::Median(Mat mat) {
-            double m = (mat.rows * mat.cols) / 2;
-            int bin = 0;
-            double med = -1.0;
-
-            int histSize = 256;
-            float range[] = {0, 256};
-            const float *histRange = {range};
-            bool uniform = true;
-            bool accumulate = false;
-            Mat hist;
-            calcHist(&mat, 1, 0, Mat(), hist, 1, &histSize, &histRange, uniform, accumulate);
-
-            for (int i = 0; i < histSize && med < 0.0; ++i) {
-                bin += cvRound(hist.at<float>(i));
-                if (bin > m && med < 0.0)
-                    med = i;
-            }
-
-            return med;
-        }
+//        // Pixel median value calculation
+//        double LaneFollower::Median(Mat mat) {
+//            double m = (mat.rows * mat.cols) / 2;
+//            int bin = 0;
+//            double med = -1.0;
+//
+//            int histSize = 256;
+//            float range[] = {0, 256};
+//            const float *histRange = {range};
+//            bool uniform = true;
+//            bool accumulate = false;
+//            Mat hist;
+//            calcHist(&mat, 1, 0, Mat(), hist, 1, &histSize, &histRange, uniform, accumulate);
+//
+//            for (int i = 0; i < histSize && med < 0.0; ++i) {
+//                bin += cvRound(hist.at<float>(i));
+//                if (bin > m && med < 0.0)
+//                    med = i;
+//            }
+//
+//            return med;
+//        }
 
         // Calculate deviation from goal
         double LaneFollower::errorCalculation() {
