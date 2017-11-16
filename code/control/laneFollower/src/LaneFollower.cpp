@@ -49,7 +49,7 @@ namespace carolocup {
                   m_threshold2(200),
                   m_control_scanline(300),// Lane markings are searched for at this pixel line
                   m_stop_scanline(160),// Stop line lane marking searched for at this pixel line
-                  m_distance(140),  // Distance from the lane marking at which the car attempts to drive
+                  m_distance(120),  // Distance from the lane marking at which the car attempts to drive
                   p_gain(0),       // The gain values for the PID control algorithm
                   i_gain(0),
                   d_gain(0),
