@@ -223,6 +223,7 @@ namespace carolocup
 					d_lights.id = ID_OUT_LIGHTS;
 					d_lights.value = NO_DATA;
 					d_lights.sub_id = this->lights;
+
 					d_lights.sub_id = ID_OUT_INDICATOR_LF;
 
 					serial_send(this->serial, d_lights);
