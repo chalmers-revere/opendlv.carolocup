@@ -8,12 +8,12 @@
 #define ID_OUT_MOTOR                1
 #define ID_OUT_SERVO                2
 
-#define ID_OUT_BRAKE                6
 #define ID_OUT_LIGHTS_EFFECT        1
 #define ID_OUT_INDICATOR_LF         2
 #define ID_OUT_INDICATOR_RF         3
 #define ID_OUT_INDICATOR_LB         4
 #define ID_OUT_INDICATOR_RB         5
+#define ID_OUT_BRAKE                6
 //#####################################################################################################################
 // ID IN
 //#####################################################################################################################

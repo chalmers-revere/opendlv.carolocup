@@ -13,12 +13,12 @@
 #define ID_OUT_MOTOR                1
 #define ID_OUT_SERVO                2
 
-#define ID_OUT_BRAKE                6
 #define ID_OUT_LIGHTS_EFFECT        1
 #define ID_OUT_INDICATOR_LF         2
 #define ID_OUT_INDICATOR_RF         3
 #define ID_OUT_INDICATOR_LB         4
 #define ID_OUT_INDICATOR_RB         5
+#define ID_OUT_BRAKE                6
 
 #define LED_SIGNAL 6
 
@@ -47,8 +47,8 @@
 #define DEAD_LOW 1430
 #define DEAD_HIGH 1580
 
-#define MAX_RIGHT_ANGLE 180
-#define MAX_LEFT_ANGLE 0
+#define MAX_RIGHT_ANGLE 175
+#define MAX_LEFT_ANGLE 5
 #define STRAIGHT_DEGREES 90
 
 //what percentage of the motor's power is allowed be used at most

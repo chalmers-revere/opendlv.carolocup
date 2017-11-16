@@ -217,7 +217,7 @@ namespace carolocup
 							serial_send(this->serial, d_brake);
 						}
 					}
-
+					//TODO lights ???????
 					this->lights = _lights;
 					protocol_data d_lights;
 					d_lights.id = ID_OUT_LIGHTS;

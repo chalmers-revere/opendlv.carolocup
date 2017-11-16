@@ -62,6 +62,83 @@ void setup()
 
 void loop()
 {
+	_blink++;
+	if (_blink > 1000000) _blink = 0;
+
+	if (isRCOn() >= 3)
+	{
+		RCControl();
+	}
+	else
+	{
+		serialControl();
+	}
+
+#ifdef DEBUG
+	//Serial.println(receiver.readChannel1());
+	//Serial.println(receiver.readChannel2());
+#endif
+
+#ifdef RUN
+	oldNoData = noData;
+	noData = 0;
+#endif
+}
+
+void establishContact(char toSend, int st)
+{
+	unsigned int s = 1;
+	while (Serial.available() <= 0)
+	{
+		Serial.write(toSend);   // send a char
+		ledControl.setStatusLight(s);
+		wait(0.5);
+		s = !s;
+	}
+	if (!st)
+	{
+		Serial.read();
+	}
+	esc.arm();
+	ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
+
+}
+
+void waitConnection()
+{
+	while (!Serial); // wait for serial port to connect. Needed for native USB port only
+}
+
+void wait(double seconds)
+{
+	interval = seconds * 1000000;
+	currentMillis = micros();
+	while (micros() - currentMillis <= interval);
+}
+
+void timeout()
+{
+	oldMillis = micros();
+	while (!Serial.available())
+	{
+		if ((micros() - oldMillis) > T_OUT)
+		{
+			noData = 1;
+			break;
+		}
+	}
+}
+
+void serialEvent()
+{
+	if (interrupt)
+	{
+		Serial.read();
+	}
+}
+
+int isRCOn()
+{
 	if (!interrupt)
 	{
 		int a = receiver.readChannel1();
@@ -88,47 +165,49 @@ void loop()
 		}
 	}
 
-	_blink++;
-	if (_blink > 1000000) _blink = 0;
+	return rcControllerFlag;
+}
 
-	if (rcControllerFlag >= 3)
+void RCControl()
+{
+	ledControl.setRCLight(35, _blink);
+
+	if (!interrupt)
 	{
-		ledControl.setRCLight(35, _blink);
+		esc.arm();
+		wait(2);
+	}
 
-		if (!interrupt)
-		{
-			esc.arm();
-			wait(2);
-		}
+	interrupt = 1;
 
-		interrupt = 1;
+	int angle = receiver.readChannel1();
+	int speed = receiver.readChannel2();
 
-		int angle = receiver.readChannel1();
-		int speed = receiver.readChannel2();
+	if (angle == 0)
+	{
+		esc.brake();
+		ledControl.setBrakeLights(_ON_);
+		servo.setAngle(STRAIGHT_DEGREES);
+		rcControllerFlag = 0;
+		ledControl.setRCLight(0, _blink);
+		wait(1);
+		interrupt = 0;
+		return;
+	}
 
-		if (angle == 0)
-		{
-			esc.brake();
-			ledControl.setBrakeLights(_ON_);
-			servo.setAngle(STRAIGHT_DEGREES);
-			rcControllerFlag = 0;
-			ledControl.setRCLight(0, _blink);
-			wait(1);
-			interrupt = 0;
-			return;
-		}
-
-		ledControl.setBrakeLights(_OFF_);
-		servo.setAngle(receiver.filter(angle));
-		esc.setSpeed(receiver.filter(speed));
+	ledControl.setBrakeLights(_OFF_);
+	servo.setAngle(receiver.filter(angle));
+	esc.setSpeed(receiver.filter(speed));
 #ifdef DEBUG
-		Serial.print("steer ");
+	Serial.print("steer ");
 		Serial.println(receiver.filter(angle));
 		Serial.print("speed ");
 		Serial.println(receiver.filter(speed));
 #endif
-	}
+}
 
+void serialControl()
+{
 	if (!interrupt)
 	{
 		//ledControl.setIndicators(ID_OUT_INDICATOR_RF, 0.2);
@@ -220,68 +299,5 @@ void loop()
 			Serial.println("TIMEOUT");
 #endif
 		}
-	}
-
-#ifdef DEBUG
-	//Serial.println(receiver.readChannel1());
-	//Serial.println(receiver.readChannel2());
-#endif
-
-#ifdef RUN
-	oldNoData = noData;
-	noData = 0;
-#endif
-}
-
-void establishContact(char toSend, int st)
-{
-	unsigned int s = 1;
-	while (Serial.available() <= 0)
-	{
-		Serial.write(toSend);   // send a char
-		ledControl.setStatusLight(s);
-		wait(0.5);
-		s = !s;
-	}
-	if (!st)
-	{
-		Serial.read();
-	}
-	esc.arm();
-	ledControl.setIndicators(LED_SIGNAL, 0.5); //blink all leds to aware car is on
-
-}
-
-void waitConnection()
-{
-	while (!Serial); // wait for serial port to connect. Needed for native USB port only
-}
-
-void wait(double seconds)
-{
-	interval = seconds * 1000000;
-	currentMillis = micros();
-	while (micros() - currentMillis <= interval);
-}
-
-void timeout()
-{
-	oldMillis = micros();
-	while (!Serial.available())
-	{
-
-		if ((micros() - oldMillis) > T_OUT)
-		{
-			noData = 1;
-			break;
-		}
-	}
-}
-
-void serialEvent()
-{
-	if (interrupt)
-	{
-		Serial.read();
 	}
 }
