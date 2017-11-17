@@ -52,9 +52,30 @@ namespace carolocup
 			{
 				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
+				map<uint32, double> sensors =communicationLinkMSG.getSensors;
+				double ultrasonicSideBack=sensors.get(ID_IN_ULTRASONIC_BACK);
+				double ultrasonicSideFront=sensors.get(ID_IN_ULTRASONIC_FRONT);
+				double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_BACK);
+				uint16 distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
+				map<uint32,double> lidarDistance=communicationLinkMSG.LidarDistance();
+				map<uint32,double> lidarStrength=communicationLinkMSG.LidarStrength();
 
 			}
 		}
+		
+		double Parker::getIdealWheelTrajectory(map<uint32,double> sensors){
+			double leftEncoder=sensors.get(ID_IN_ENCODER_L);
+			double rightEncoder=sensors.get(ID_IN_ENCODER_R);
+			return 0;
+		}
+		
+		double Parker::getLaneWidth(){
+			return 0;
+		
+		}
+		
+		
+		
 
 		vector<double> Parker::getFoundGaps() const {
 			return m_foundGaps;

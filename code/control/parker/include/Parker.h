@@ -88,7 +88,10 @@ namespace carolocup
  			 * return Gaps found during the parking process.
  			 */
 			vector<double> getFoundGaps() const;
-
+			
+			double getIdealWheelTrajectory(map<uint32,double>);
+			double getLaneWidth();
+			
 			char readOdometer();
 			int readSensorData(int sensorId);
 
