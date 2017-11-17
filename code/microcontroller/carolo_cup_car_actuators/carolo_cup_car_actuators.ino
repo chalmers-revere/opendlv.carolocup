@@ -1,8 +1,8 @@
 /*
  * Comment it to turn off
  */
-//#define DEBUG
-#define RUN
+#define DEBUG
+//#define RUN
 
 
 #include "CaroloCupActuators.h"
