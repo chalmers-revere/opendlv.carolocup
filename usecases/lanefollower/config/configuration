@@ -213,8 +213,8 @@ global.sim = 0    # Set simulation true or false
 #
 # CONFIGURATION FOR LANEFOLLOWER
 #
-global.lanefollower.p = 1.3    #OG val = 1.3
-global.lanefollower.d = 0    #OG val = 0.10
+global.lanefollower.p = 1.2    #OG val = 1.3
+global.lanefollower.d = 0.2    #OG val = 0.10
 global.lanefollower.i = 0.01    #OG val = 0.01
 
 ###############################################################################
