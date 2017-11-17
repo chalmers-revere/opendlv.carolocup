@@ -23,7 +23,7 @@ services:
         build: .
         network_mode: host
         volumes:
-            - .:/opt/configuration
+            - ./config:/opt/configuration
         command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
 
 
@@ -49,10 +49,55 @@ services:
             - odsupercomponent
             - proxy-camera
         volumes:
-            - ~/recordings:/opt/recordings
+            - ../recordings:/opt/recordings
         user: odv
         network_mode: host
         ipc: host
         working_dir: "/opt/recordings"
         command: "/opt/od4/bin/odrecorderh264 --cid=${CID}"
+
+
+        # carolocup-control-proxy-serialouthandler
+    #    carolocup-control-proxy-serialouthandler:
+    #        build: .
+    #        network_mode: "host"
+    #        ipc : host
+    #        depends_on:
+    #            - odsupercomponent
+    #        devices:
+    #            - "/dev/ttyUSB0:/dev/ttyUSB0"
+    #        restart: on-failure
+    #        privileged: true
+    #        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
+    #
+
+        #Micro-service for lanefollower scenario.
+    lanefollower:
+        build: .
+        network_mode: host
+        ipc: host
+        environment:
+            - DISPLAY=$DISPLAY
+        volumes:
+            - ./config:/opt/configuration
+        depends_on:
+            - odsupercomponent
+            #- carolocup-control-proxy-serialinhandler
+            - communicationlink
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
+
+                 #Micro-service for communication link
+    communicationlink:
+        build: .
+        network_mode: host
+        ipc: host
+        volumes:
+           - ./config:/opt/configuration
+        depends_on:
+           - odsupercomponent
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
 

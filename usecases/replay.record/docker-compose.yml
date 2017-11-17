@@ -18,7 +18,7 @@ services:
         - DISPLAY=$DISPLAY
         volumes:
         - /tmp/.X11-unix:/tmp/.X11-unix
-        - ~/recordings:/opt/recordings
+        - ../recordings:/opt/recordings
 #        - .:/opt/opendlv.data
         ipc: host
         user: odv

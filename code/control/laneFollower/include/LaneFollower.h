@@ -52,6 +52,8 @@
 #include "odvdcarolocupdatamodel/generated/gap/LaneFollowerMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
 
+#include <opendavinci/odcore/data/TimeStamp.h>
+
 namespace carolocup
 {
     namespace control

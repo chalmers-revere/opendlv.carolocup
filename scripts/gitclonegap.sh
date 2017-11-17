@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd $HOME/CaroloCup/ && git clone https://github.com/chalmers-revere/opendlv.carolocup.git && git checkout gap-dev
+cd $HOME/CaroloCup/ && git clone https://github.com/chalmers-revere/opendlv.carolocup.git && cd $HOME/CaroloCup/opendlv.carolocup/ && git checkout gap-dev
