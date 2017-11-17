@@ -71,6 +71,8 @@ namespace carolocup
 				{
 					KeyValueConfiguration kv = getKeyValueConfiguration();
 
+					cerr << kv.toString() << endl;
+
 					_debug = kv.getValue<int32_t>("global.debug") == 1;
 
 					if (_debug)
@@ -87,7 +89,7 @@ namespace carolocup
 						SERIAL_PORT = kv.getValue<string>("global.serialhandler.two");
 					}
 
-					const string _S_PORT = SERIAL_PORT;
+					const string _S_PORT = "/dev/ttyACM0";
 
 					cerr << "Setting up serial handler to port " << SERIAL_PORT << endl;
 
