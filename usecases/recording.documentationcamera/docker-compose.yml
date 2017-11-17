@@ -57,19 +57,19 @@ services:
         command: "/opt/od4/bin/odrecorderh264 --cid=${CID}"
 
 
-        # carolocup-control-proxy-serialouthandler
-    #    carolocup-control-proxy-serialouthandler:
-    #        build: .
-    #        network_mode: "host"
-    #        ipc : host
-    #        depends_on:
-    #            - odsupercomponent
-    #        devices:
-    #            - "/dev/ttyUSB0:/dev/ttyUSB0"
-    #        restart: on-failure
-    #        privileged: true
-    #        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
-    #
+    # carolocup-control-proxy-serialouthandler
+    carolocup-control-proxy-serialouthandler:
+        build: .
+        network_mode: "host"
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        devices:
+            - "/dev/ttyUSB0:/dev/ttyUSB0"
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
+
 
         #Micro-service for lanefollower scenario.
     lanefollower:
