@@ -47,9 +47,13 @@
 #define DEAD_LOW 1430
 #define DEAD_HIGH 1580
 
-#define MAX_RIGHT_ANGLE 185
+#define MAX_RIGHT_ANGLE 175
 #define MAX_LEFT_ANGLE 5
 #define STRAIGHT_DEGREES 90
+
+#define MAX_RIGHT 180
+#define MAX_LEFT 0
+#define MED 90
 
 //what percentage of the motor's power is allowed be used at most
 #define FULL_FORWARD 102
