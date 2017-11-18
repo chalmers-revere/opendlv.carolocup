@@ -19,13 +19,15 @@ version: '2'
 
 services:
     # Micro-service for odsupercomponent.
-    odsupercomponent:
+     odsupercomponent:
         build: .
-        network_mode: host
+        network_mode: "host"
+        ipc : host
+        restart: on-failure
+        privileged: true
         volumes:
             - ./config:/opt/configuration
         command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
-
 
     # Micro-service for proxy-camera.
     proxy-camera:

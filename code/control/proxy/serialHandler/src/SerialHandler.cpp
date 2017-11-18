@@ -32,7 +32,6 @@ namespace carolocup
 		SerialHandler::SerialHandler(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-serialhandler"),
 				  serial(),
-				  SERIAL_PORT("dummy"),
 				  motor(90),
 				  servo(90),
 				  lights(-1),
@@ -43,20 +42,16 @@ namespace carolocup
 				  odometerCounter(0),
 				  km(0),
 				  isSensorValues(false),
-				  _debug(false)
+				  _debug(false),
+				  serialBehaviour("dummy")
 		{
-			for (int i = 0; i < argc; ++i)
-			{
-				cout << argv[i] << endl; //the argument we are looking for is the i=3
-			}
-
 			if (argc >= 4)
 			{
-				serialBehaviour = argv[3];
+				SERIAL_PORT = argv[3];
 			}
 			else
 			{
-				cerr << "Usage: " << argv[0] << "SOURCE DESTINATION (arduino=one/arduino=two)" << endl;
+				cerr << "Usage: " << argv[0] << "SOURCE DESTINATION (DEV PORT)" << endl;
 			}
 		}
 
@@ -67,79 +62,61 @@ namespace carolocup
 		{
 			try
 			{
-				if (serialBehaviour.compare("arduino=one") == 0 || serialBehaviour.compare("arduino=two") == 0)
+				KeyValueConfiguration kv = getKeyValueConfiguration();
+
+				_debug = kv.getValue<int32_t>("global.debug") == 1;
+
+				if (_debug)
 				{
-					KeyValueConfiguration kv = getKeyValueConfiguration();
-
-					cerr << kv.toString() << endl;
-
-					_debug = kv.getValue<int32_t>("global.debug") == 1;
-
-					if (_debug)
-					{
 #define DEBUG
-					}
-
-					if (serialBehaviour.compare("arduino=one") == 0)
-					{
-						SERIAL_PORT = kv.getValue<string>("global.serialhandler.one");
-					}
-					else if (serialBehaviour.compare("arduino=two") == 0)
-					{
-						SERIAL_PORT = kv.getValue<string>("global.serialhandler.two");
-					}
-
-					const string _S_PORT = "/dev/ttyACM0";
-
-					cerr << "Setting up serial handler to port " << SERIAL_PORT << endl;
-
-					this->serial = serial_new();
-
-					this->serial->on_write = &__on_write;
-					this->serial->on_read = &__on_read;
-
-					const char *_port = _S_PORT.c_str();
-					serial_open(this->serial, _port, BAUD_RATE);
-
-					uint8_t rb = serial_handshake(this->serial, 'a', 's'); //a = actuators, s = sensors
-
-					if (rb == 'a')
-					{
-						serialBehaviour = "arduino=out";
-					}
-					else if (rb == 's')
-					{
-						serialBehaviour = "arduino=in";
-					}
-
-					odcore::base::Thread::usleepFor(5 * ONE_SECOND);
-
-					if (serialBehaviour.compare("arduino=out") == 0)
-					{
-						protocol_data d_motor;
-						d_motor.id = ID_OUT_MOTOR;
-						d_motor.value = MOTOR_IDLE;
-						d_motor.sub_id = NO_DATA;
-
-						serial_send(this->serial, d_motor);
-
-						protocol_data d_servo;
-						d_servo.id = ID_OUT_SERVO;
-						d_servo.value = STRAIGHT_DEGREES;
-						d_servo.sub_id = NO_DATA;
-
-						serial_send(this->serial, d_servo);
-					}
-
-					odcore::base::Thread::usleepFor(2 * ONE_SECOND);
-
-					serial_start(this->serial);
 				}
-				else
+
+				const string _S_PORT = SERIAL_PORT;
+
+				cerr << "Setting up serial handler to port " << SERIAL_PORT << endl;
+
+				this->serial = serial_new();
+
+				this->serial->on_write = &__on_write;
+				this->serial->on_read = &__on_read;
+
+				const char *_port = _S_PORT.c_str();
+				serial_open(this->serial, _port, BAUD_RATE);
+
+				uint8_t rb = serial_handshake(this->serial, 'a', 's'); //a = actuators, s = sensors
+
+				if (rb == 'a')
 				{
-					cerr << "Wrong Usage!" << endl;
-					throw "No Port Created!";
+					serialBehaviour = "out";
 				}
+				else if (rb == 's')
+				{
+					serialBehaviour = "in";
+				}
+
+				odcore::base::Thread::usleepFor(5 * ONE_SECOND);
+
+				if (serialBehaviour.compare("out") == 0)
+				{
+					protocol_data d_motor;
+					d_motor.id = ID_OUT_MOTOR;
+					d_motor.value = MOTOR_IDLE;
+					d_motor.sub_id = NO_DATA;
+
+					serial_send(this->serial, d_motor);
+
+					protocol_data d_servo;
+					d_servo.id = ID_OUT_SERVO;
+					d_servo.value = STRAIGHT_DEGREES;
+					d_servo.sub_id = NO_DATA;
+
+					serial_send(this->serial, d_servo);
+				}
+
+				odcore::base::Thread::usleepFor(2 * ONE_SECOND);
+
+				serial_start(this->serial);
+
 			}
 			catch (const char *msg)
 			{
@@ -149,7 +126,7 @@ namespace carolocup
 
 		void SerialHandler::tearDown()
 		{
-			if (serialBehaviour.compare("arduino=out") == 0)
+			if (serialBehaviour.compare("out") == 0)
 			{
 				protocol_data d_motor;
 				d_motor.id = ID_OUT_MOTOR;
@@ -174,7 +151,7 @@ namespace carolocup
 
 		void SerialHandler::nextContainer(Container &c)
 		{
-			if (serialBehaviour.compare("arduino=out") == 0)
+			if (serialBehaviour.compare("out") == 0)
 			{
 				if (c.getDataType() == AutomotiveMSG::ID())
 				{
@@ -209,14 +186,14 @@ namespace carolocup
 
 //						if (_brake != this->brake)
 //						{
-							this->brake = _brake;
+						this->brake = _brake;
 
-							protocol_data d_brake;
-							d_brake.id = ID_OUT_LIGHTS;
-							d_brake.value = NO_DATA;
-							d_brake.sub_id = ID_OUT_BRAKE;
+						protocol_data d_brake;
+						d_brake.id = ID_OUT_LIGHTS;
+						d_brake.value = NO_DATA;
+						d_brake.sub_id = ID_OUT_BRAKE;
 
-							serial_send(this->serial, d_brake);
+						serial_send(this->serial, d_brake);
 //						}
 					}
 					//TODO lights ???????
@@ -254,7 +231,7 @@ namespace carolocup
 				}
 
 			}
-			else if (serialBehaviour.compare("arduino=in") == 0)
+			else if (serialBehaviour.compare("in") == 0)
 			{
 				c = c;
 				isSensorValues = false;
@@ -381,14 +358,14 @@ namespace carolocup
 		void __on_read(uint8_t b)
 		{
 #ifdef DEBUG
-			cout << ">> read " << b << endl;
+			cout << ">> read " << (int) b << endl;
 #endif
 		}
 
 		void __on_write(uint8_t b)
 		{
 #ifdef DEBUG
-			cout << "<< write " << b << endl;
+			cout << "<< write " << (int) b << endl;
 #endif
 		}
 	}

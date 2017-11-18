@@ -110,8 +110,6 @@ namespace carolocup
 
 			serial_state *serial;
 
-			string SERIAL_PORT;
-
 			int motor;
 			int servo;
 			int lights;
@@ -132,6 +130,8 @@ namespace carolocup
 			bool _debug;
 
 			string serialBehaviour;
+
+			string SERIAL_PORT;
 		};
 	}
 } // carolocup::control

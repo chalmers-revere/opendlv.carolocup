@@ -142,7 +142,6 @@ namespace carolocup
 			{
 				c.setReceivedTimeStamp(TimeStamp());
 				m_recorder->store(c);
-				//cerr << "m_record " << endl;
 			}
 
 			// Share container with image

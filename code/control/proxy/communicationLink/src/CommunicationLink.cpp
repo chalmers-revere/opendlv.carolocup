@@ -76,15 +76,6 @@ namespace carolocup
 					communicationLinkMSG.setStateOvertaker(sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_OVERTAKE));
 				}
 			}
-			else if (c.getDataType() == GyroMSG::ID())
-			{
-				Container gyroMSGContainer = c.getData<GyroMSG>();
-				GyroMSG gyroMSG = gyroMSGContainer.getData<GyroMSG>();
-
-				communicationLinkMSG.setYaw(gyroMSG.getYaw());
-				communicationLinkMSG.setPitch(gyroMSG.getPitch());
-				communicationLinkMSG.setRoll(gyroMSG.getRoll());
-			}
 			else if (c.getDataType() == OvertakerMSG::ID())
 			{
 				Container overtakerMSGContainer = c.getData<OvertakerMSG>();
