@@ -53,8 +53,7 @@ message gap.ParkerMSG [id = 558 ] {
 }
 
 message gap.SensorsMSG [id = 559 ] {
-    map<uint32, double> sensors [id = 1]
-    
+    map<uint32, double> sensors [id = 1];
 }
 
 message gap.LIDARMSG [id = 560 ] {

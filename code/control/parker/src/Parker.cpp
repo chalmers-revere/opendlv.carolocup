@@ -43,7 +43,9 @@ namespace carolocup
 		{}
 
 		void Parker::setUp()
-		{}
+		{
+
+		}
 
 		void Parker::tearDown()
 		{}
