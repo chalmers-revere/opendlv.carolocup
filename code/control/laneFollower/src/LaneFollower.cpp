@@ -23,7 +23,6 @@ namespace carolocup
 {
 	namespace control
 	{
-
 		using namespace std;
 		using namespace cv;
 		using namespace odcore::base;
