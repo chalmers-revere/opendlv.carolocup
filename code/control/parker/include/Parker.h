@@ -76,6 +76,9 @@ namespace carolocup
 			virtual ~Parker();
 
 		private:
+		
+			AutomotiveMSG m_vehicleControl;
+			
 			void setUp();
 
 			void tearDown();
@@ -89,7 +92,10 @@ namespace carolocup
  			 */
 			vector<double> getFoundGaps() const;
 			
-			double getIdealWheelTrajectory(map<uint32,double>);
+			double getIdealWheelEncoder(map<uint32,double>);
+			void resetEncoders();
+			vector<double> getDistanceForStages();
+			
 			double getLaneWidth();
 			
 			char readOdometer();

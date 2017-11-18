@@ -48,10 +48,13 @@ message gap.OvertakerMSG [id = 557 ] {
 
 message gap.ParkerMSG [id = 558 ] {
     uint8 stateStop [id = 1]; // 0 move or 1 stop
+    uint8 reset [id=2];//reset both odometers
+    
 }
 
 message gap.SensorsMSG [id = 559 ] {
-    map<uint32, double> sensors [id = 1];
+    map<uint32, double> sensors [id = 1]
+    
 }
 
 message gap.LIDARMSG [id = 560 ] {
