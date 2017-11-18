@@ -1,8 +1,8 @@
 /*
  * Comment it to turn off
  */
-//#define DEBUG
-#define RUN
+#define DEBUG
+//#define RUN
 
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
@@ -197,7 +197,8 @@ void RCControl()
 
 	ledControl.setBrakeLights(_OFF_);
 	servo.setAngle(receiver.filter(angle));
-	esc.setSpeed(receiver.filter(speed));
+	//esc.setSpeed(receiver.filter(speed));
+	esc.setSpeed(102);
 #ifdef DEBUG
 	Serial.print("steer ");
 		Serial.println(receiver.filter(angle));
