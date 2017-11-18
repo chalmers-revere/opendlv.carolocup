@@ -47,7 +47,7 @@
 #define DEAD_LOW 1430
 #define DEAD_HIGH 1580
 
-#define MAX_RIGHT_ANGLE 175
+#define MAX_RIGHT_ANGLE 185
 #define MAX_LEFT_ANGLE 5
 #define STRAIGHT_DEGREES 90
 
