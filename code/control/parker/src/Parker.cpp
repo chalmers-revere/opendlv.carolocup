@@ -66,9 +66,9 @@ namespace carolocup
 				vector<double> stages=getDistanceForStages();
 				double turningAngle=90;
 				int8_t direction=2;
-				for(int i=0;i<stages.length;i++){
+				for(int i=0;i<stages.size();i++){
 					resetEncoders();
-					while(getIdealWheelEncoder<=stages.get(i)*(1+i)){
+					while(getIdealWheelEncoder<=stages.at(i)*(1+i)){
 						if(i%2){	
 							m_vehicleControl.setSteeringWheelAngle(0);
 							m_vehicleControl.setSpeed(1);
@@ -106,8 +106,9 @@ namespace carolocup
 			double arcDistance=circleCircumpherence/8;
 			
 			vector<double> stages;
-			stages.add(arcDistance);
-			stages.add(arcDistance);
+			stages.push_back(arcDistance);
+			stages.push_back(arcDistance);
+			
 			
 			return stages;
 			
