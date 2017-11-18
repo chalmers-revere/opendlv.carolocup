@@ -68,15 +68,20 @@ namespace carolocup
 				int8_t direction=2;
 				for(int i=0;i<stages.size();i++){
 					resetEncoders();
+					
 					while(getIdealWheelEncoder<=stages.at(i)*(1+i)){
 						if(i%2){	
 							m_vehicleControl.setSteeringWheelAngle(0);
 							m_vehicleControl.setSpeed(1);
-						}
-						else{
+							m_vehicleControl.setLights(ID_OUT_INDICATOR_LF);
+							m_vehicleControl.setLights(ID_OUT_INDICATOR_BF);
+						}else{
 							m_vehicleControl.setSteeringWheelAngle(180);
-							m_vehicleControl.setSpeed(-1)
-						}	
+							m_vehicleControl.setSpeed(-1);
+							m_vehicleControl.setLights(ID_OUT_INDICATOR_RF);
+							m_vehicleControl.setLights(ID_OUT_INDICATOR_RB);
+						
+						}		
 					}
 				}
 				m_vehicleControl.setSteeringWheelAngle(90);
