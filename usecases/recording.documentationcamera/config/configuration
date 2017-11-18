@@ -94,6 +94,8 @@ odrecorderh264.portbaseforchildprocesses = 29000 # Every spawned child processes
 
 
 ###############################################################################
+
+###############################################################################
 ###############################################################################
 #
 # CONFIGURATION FOR PROXY
@@ -134,4 +136,3 @@ global.debug = 1      # set to 0 to disable any windows and further output
 global.sim = 0    # Set simulation true or false
 
 ###############################################################################
-

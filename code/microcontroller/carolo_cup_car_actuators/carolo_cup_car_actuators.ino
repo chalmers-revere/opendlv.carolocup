@@ -1,8 +1,8 @@
 /*
  * Comment it to turn off
  */
-#define DEBUG
-//#define RUN
+//#define DEBUG
+#define RUN
 
 #include "CaroloCupActuators.h"
 #include "Protocol.h"
@@ -214,8 +214,6 @@ void serialControl()
 #ifdef RUN
 		timeout();
 #endif
-		gotData = 0;
-
 		data_motor.id = 0;
 		data_motor.value = 90;
 
@@ -225,7 +223,7 @@ void serialControl()
 		data_LEDS.id = -1;
 		data_LEDS.sub_id = -1;
 
-		while (Serial.available() && !gotData && !noData)
+		if (Serial.available() && !noData)
 		{
 			uint8_t incoming = Serial.read();
 			uint8_t id = protocol.decodeOneByte(incoming);
@@ -234,15 +232,15 @@ void serialControl()
 			{
 				case ID_OUT_LIGHTS:
 					data_LEDS = protocol.getData();
-					gotData = 1;
+
 					break;
 				case ID_OUT_MOTOR:
 					data_motor = protocol.getData();
-					gotData = 1;
+
 					break;
 				case ID_OUT_SERVO:
 					data_servo = protocol.getData();
-					gotData = 1;
+
 					break;
 				default:
 					break;

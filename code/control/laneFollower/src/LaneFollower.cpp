@@ -123,6 +123,8 @@ namespace carolocup
 
 				if (_state == 0)
 				{
+					TimeStamp now;
+					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " Lanefollower _state " << _state << " && m_debug " << m_debug << endl;
 					bool has_next_frame = false;
 					_stop = 0;
 
