@@ -268,5 +268,5 @@ global.udpconnectionstreamer.ip = $IP
 #
 # SERIALS
 #
-global.serialhandler.one = $SENSORS
-global.serialhandler.two = $ACTUATORS
+global.serialhandler.one = /dev/ttyACM0
+global.serialhandler.two = /dev/ttyACM1

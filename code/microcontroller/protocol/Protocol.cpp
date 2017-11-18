@@ -144,7 +144,63 @@ int Protocol::getId()
 	return data.id;
 }
 
+int Protocol::getSubId()
+{
+	return data.sub_id;
+}
+
 int Protocol::getValue()
 {
 	return data.value;
+}
+
+protocol_data Protocol::getData()
+{
+	return data;
+}
+
+uint8_t Protocol::encodeOneByte(int _id, int sub_id, int _value)
+{
+	uint8_t tosend = 0;
+	tosend = (_id & 0X03) << 6;
+
+	if (!_id)
+	{
+		tosend |= (sub_id << 3);
+		tosend |= _value;
+	}
+	else
+	{
+		tosend |= (_value / 3);
+	}
+
+	return tosend;
+}
+
+uint8_t Protocol::decodeOneByte(uint8_t byte)
+{
+	uint8_t received = 0;
+	received = (byte & 0XC0) >> 6;
+	data.id = received;
+
+	if (!data.id)
+	{
+		uint8_t sub_id = 0;
+		sub_id = (byte & 0X38) >> 3;
+		data.sub_id = sub_id;
+
+		received = 0;
+		received = byte & 0X07;
+		data.value = received;
+
+		return data.id;
+	}
+	else
+	{
+		uint8_t _received = 0;
+		_received = byte & 0X3F;
+		data.value = _received * 3;
+
+		return data.id;
+	}
 }

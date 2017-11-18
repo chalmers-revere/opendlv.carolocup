@@ -17,6 +17,7 @@
 typedef struct {
 	int id;
 	int value;
+	int sub_id;
 } protocol_data;
 
 class Protocol
@@ -30,13 +31,21 @@ public:
 
 	uint8_t encode(int _id, int _value);
 
+	uint8_t encodeOneByte(int _id, int sub_id, int _value);
+
 	void decode(uint8_t byte);
+
+	uint8_t decodeOneByte(uint8_t byte);
 
 	uint8_t isValid();
 
 	int getId();
 
+	int getSubId();
+
 	int getValue();
+
+	protocol_data getData();
 
 private:
 	uint8_t bufferOut[BUFFER_SIZE];

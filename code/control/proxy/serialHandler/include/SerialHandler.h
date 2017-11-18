@@ -106,18 +106,16 @@ namespace carolocup
 
 			void sensorBoardDataMedian(int id, vector<int> sensorList);
 
-			void sendSensorBoardData(std::map<uint32_t, double> sensor, int t);
+			void sendSensorBoardData(std::map<uint32_t, double> sensor);
 
 			serial_state *serial;
 
-			string SERIAL_PORT;
-
 			int motor;
 			int servo;
+			int lights;
+			bool brake;
 
 			SensorsMSG sbd;
-
-			GyroMSG gyroMSG;
 
 			map<uint32_t, double> sensors;
 
@@ -132,6 +130,8 @@ namespace carolocup
 			bool _debug;
 
 			string serialBehaviour;
+
+			string SERIAL_PORT;
 		};
 	}
 } // carolocup::control

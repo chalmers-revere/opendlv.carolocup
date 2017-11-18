@@ -77,7 +77,7 @@ services:
 #        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
 #
 
-    #Micro-service for lanedtecter scenario.
+    #Micro-service for lanefollower scenario.
     lanefollower:
          build: .
          network_mode: host

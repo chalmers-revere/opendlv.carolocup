@@ -50,14 +50,14 @@ namespace carolocup
 			// Get configuration data.
 			KeyValueConfiguration kv = getKeyValueConfiguration();
 
-			cerr << kv.toString() << endl;
+			//cerr << kv.toString() << endl;
 
-			const vector <string> vkv = kv.getListOfKeys();
-			for (unsigned int i = 0; i < vkv.size(); i++)
-			{
-				cout << "value -> " << vkv[i] << endl;  // prints d.
-
-			}
+//			const vector <string> vkv = kv.getListOfKeys();
+//			for (unsigned int i = 0; i < vkv.size(); i++)
+//			{
+//				cout << "value -> " << vkv[i] << endl;  // prints d.
+//
+//			}
 
 			// Create built-in recorder.
 			const bool useRecorder = kv.getValue<uint32_t>("global.cameraproxy.useRecorder") == 1;
@@ -142,7 +142,6 @@ namespace carolocup
 			{
 				c.setReceivedTimeStamp(TimeStamp());
 				m_recorder->store(c);
-				cerr << "m_record " << endl;
 			}
 
 			// Share container with image
