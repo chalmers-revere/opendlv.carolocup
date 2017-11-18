@@ -1,0 +1,52 @@
+version: '2'
+# Please note that docker-compose does not prescribe a startup order
+
+services:
+    #odsupercomponent
+    odsupercomponent:
+        build: .
+        network_mode: "host"
+        ipc : host
+        restart: on-failure
+        privileged: true
+        volumes:
+            #- .:/opt/carolocup.data
+            - ./config:/opt/configuration
+        command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
+        
+    #odcockpit
+    odcockpit:
+        build: .
+        network_mode: "host"
+        environment:
+        - DISPLAY=$DISPLAY
+        volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix
+        - ~/recordings:/opt/recordings
+#        - .:/opt/opendlv.data
+        ipc: host
+        user: odv
+        group_add:
+            - video
+        depends_on:
+            - odsupercomponent
+        restart: on-failure
+        privileged: true
+        command: "/opt/od4/bin/odcockpit --cid=${CID}"
+
+    # carolocup-control-proxy-lidarhandler
+    carolocup-control-proxy-lidarhandler:
+        build: .
+        network_mode: "host"
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        devices:
+            - "/dev/ttyUSB0:/dev/ttyUSB0"
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-lidarhandler --cid=${CID} --freq=20"
+        
+
+        
+

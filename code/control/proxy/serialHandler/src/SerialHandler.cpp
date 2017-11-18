@@ -32,30 +32,26 @@ namespace carolocup
 		SerialHandler::SerialHandler(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-serialhandler"),
 				  serial(),
-				  SERIAL_PORT("dummy"),
 				  motor(90),
 				  servo(90),
+				  lights(-1),
+				  brake(true),
 				  sbd(),
-				  gyroMSG(),
 				  sensors(),
 				  raw_sensors(),
 				  odometerCounter(0),
 				  km(0),
 				  isSensorValues(false),
-				  _debug(false)
+				  _debug(false),
+				  serialBehaviour("dummy")
 		{
-			for (int i = 0; i < argc; ++i)
-			{
-				cout << argv[i] << endl; //the argument we are looking for is the i=3
-			}
-
 			if (argc >= 4)
 			{
-				serialBehaviour = argv[3];
+				SERIAL_PORT = argv[3];
 			}
 			else
 			{
-				cerr << "Usage: " << argv[0] << "SOURCE DESTINATION (arduino=one/arduino=two)" << endl;
+				cerr << "Usage: " << argv[0] << "SOURCE DESTINATION (DEV PORT)" << endl;
 			}
 		}
 
@@ -66,75 +62,61 @@ namespace carolocup
 		{
 			try
 			{
-				if (serialBehaviour.compare("arduino=one") == 0 || serialBehaviour.compare("arduino=two") == 0)
+				KeyValueConfiguration kv = getKeyValueConfiguration();
+
+				_debug = kv.getValue<int32_t>("global.debug") == 1;
+
+				if (_debug)
 				{
-					KeyValueConfiguration kv = getKeyValueConfiguration();
-
-					_debug = kv.getValue<int32_t>("global.debug") == 1;
-
-					if (_debug)
-					{
 #define DEBUG
-					}
-
-					if (serialBehaviour.compare("arduino=one") == 0)
-					{
-						SERIAL_PORT = kv.getValue<string>("global.serialhandler.one");
-					}
-					else if (serialBehaviour.compare("arduino=two") == 0)
-					{
-						SERIAL_PORT = kv.getValue<string>("global.serialhandler.two");
-					}
-
-					const string _S_PORT = SERIAL_PORT;
-
-					cerr << "Setting up serial handler to port " << SERIAL_PORT << endl;
-
-					this->serial = serial_new();
-
-					this->serial->on_write = &__on_write;
-					this->serial->on_read = &__on_read;
-
-					const char *_port = _S_PORT.c_str();
-					serial_open(this->serial, _port, BAUD_RATE);
-
-					uint8_t rb = serial_handshake(this->serial, 'a', 's'); //a = actuators, s = sensors
-
-					if (rb == 'a')
-					{
-						serialBehaviour = "arduino=out";
-					}
-					else if (rb == 's')
-					{
-						serialBehaviour = "arduino=in";
-					}
-
-					odcore::base::Thread::usleepFor(5 * ONE_SECOND);
-
-					if (serialBehaviour.compare("arduino=out") == 0)
-					{
-						protocol_data d_motor;
-						d_motor.id = ID_OUT_MOTOR;
-						d_motor.value = MOTOR_IDLE;
-
-						serial_send(this->serial, d_motor);
-
-						protocol_data d_servo;
-						d_servo.id = ID_OUT_SERVO;
-						d_servo.value = STRAIGHT_DEGREES;
-
-						serial_send(this->serial, d_servo);
-					}
-
-					odcore::base::Thread::usleepFor(2 * ONE_SECOND);
-
-					serial_start(this->serial);
 				}
-				else
+
+				const string _S_PORT = SERIAL_PORT;
+
+				cerr << "Setting up serial handler to port " << SERIAL_PORT << endl;
+
+				this->serial = serial_new();
+
+				this->serial->on_write = &__on_write;
+				this->serial->on_read = &__on_read;
+
+				const char *_port = _S_PORT.c_str();
+				serial_open(this->serial, _port, BAUD_RATE);
+
+				uint8_t rb = serial_handshake(this->serial, 'a', 's'); //a = actuators, s = sensors
+
+				if (rb == 'a')
 				{
-					cerr << "Wrong Usage!" << endl;
-					throw "No Port Created!";
+					serialBehaviour = "out";
 				}
+				else if (rb == 's')
+				{
+					serialBehaviour = "in";
+				}
+
+				odcore::base::Thread::usleepFor(5 * ONE_SECOND);
+
+				if (serialBehaviour.compare("out") == 0)
+				{
+					protocol_data d_motor;
+					d_motor.id = ID_OUT_MOTOR;
+					d_motor.value = MOTOR_IDLE;
+					d_motor.sub_id = NO_DATA;
+
+					serial_send(this->serial, d_motor);
+
+					protocol_data d_servo;
+					d_servo.id = ID_OUT_SERVO;
+					d_servo.value = STRAIGHT_DEGREES;
+					d_servo.sub_id = NO_DATA;
+
+					serial_send(this->serial, d_servo);
+				}
+
+				odcore::base::Thread::usleepFor(2 * ONE_SECOND);
+
+				serial_start(this->serial);
+
 			}
 			catch (const char *msg)
 			{
@@ -144,17 +126,19 @@ namespace carolocup
 
 		void SerialHandler::tearDown()
 		{
-			if (serialBehaviour.compare("arduino=out") == 0)
+			if (serialBehaviour.compare("out") == 0)
 			{
 				protocol_data d_motor;
 				d_motor.id = ID_OUT_MOTOR;
 				d_motor.value = MOTOR_IDLE;
+				d_motor.sub_id = NO_DATA;
 
 				serial_send(this->serial, d_motor);
 
 				protocol_data d_servo;
 				d_servo.id = ID_OUT_SERVO;
 				d_servo.value = STRAIGHT_DEGREES;
+				d_servo.sub_id = NO_DATA;
 
 				serial_send(this->serial, d_servo);
 			}
@@ -167,20 +151,23 @@ namespace carolocup
 
 		void SerialHandler::nextContainer(Container &c)
 		{
-			if (serialBehaviour.compare("arduino=out") == 0)
+			if (serialBehaviour.compare("out") == 0)
 			{
 				if (c.getDataType() == AutomotiveMSG::ID())
 				{
 					const AutomotiveMSG automotiveMSG =
 							c.getData<AutomotiveMSG>();
 
-					bool brake = automotiveMSG.getBrakeLights();
-					int lights = automotiveMSG.getLights();
-					if (!brake)
+					bool _brake = automotiveMSG.getBrakeLights();
+					int _lights = automotiveMSG.getLights();
+					int arduinoAngle = STRAIGHT_DEGREES;
+					int speed = MOTOR_IDLE;
+
+					if (!_brake)
 					{
 						double angle = automotiveMSG.getSteeringWheelAngle();
 
-						int arduinoAngle = STRAIGHT_DEGREES + (angle * (MAX_DEGREES / _PI));
+						arduinoAngle = STRAIGHT_DEGREES + (angle * (MAX_DEGREES / _PI));
 						if (arduinoAngle < MIN_DEGREES)
 						{
 							arduinoAngle = MIN_DEGREES;
@@ -190,70 +177,61 @@ namespace carolocup
 							arduinoAngle = MAX_DEGREES;
 						}
 
-						int speed = automotiveMSG.getSpeed();
-
-						this->motor = speed;
-						this->servo = arduinoAngle;
-
+						speed = automotiveMSG.getSpeed();
 					}
 					else
 					{
-						this->motor = MOTOR_IDLE;
-						this->servo = STRAIGHT_DEGREES;
+						speed = MOTOR_IDLE;
+						arduinoAngle = STRAIGHT_DEGREES;
+
+//						if (_brake != this->brake)
+//						{
+						this->brake = _brake;
 
 						protocol_data d_brake;
-						d_brake.id = ID_OUT_BRAKE;
+						d_brake.id = ID_OUT_LIGHTS;
 						d_brake.value = NO_DATA;
+						d_brake.sub_id = ID_OUT_BRAKE;
 
 						serial_send(this->serial, d_brake);
+//						}
+					}
+					//TODO lights ???????
+					this->lights = _lights;
+					protocol_data d_lights;
+					d_lights.id = ID_OUT_LIGHTS;
+					d_lights.value = NO_DATA;
+					d_lights.sub_id = this->lights;
+
+					d_lights = d_lights;
+
+					//serial_send(this->serial, d_lights);
+
+					if (this->motor != speed)
+					{
+						this->motor = speed;
+						protocol_data d_motor;
+						d_motor.id = ID_OUT_MOTOR;
+						d_motor.value = this->motor;
+						d_motor.sub_id = NO_DATA;
+
+						serial_send(this->serial, d_motor);
 					}
 
-					protocol_data d_lights;
-					d_lights.id = ID_OUT_INDICATORS;
-					d_lights.value = lights;
-
-					serial_send(this->serial, d_lights);
-
-					protocol_data d_motor;
-					d_motor.id = ID_OUT_MOTOR;
-					d_motor.value = this->motor;
-
-					serial_send(this->serial, d_motor);
-
-					protocol_data d_servo;
-					d_servo.id = ID_OUT_SERVO;
-					d_servo.value = this->servo;
-
-					serial_send(this->serial, d_servo);
-				}
-
-				raw_sensors[ID_IN_YAW].clear();
-				raw_sensors[ID_IN_ROLL].clear();
-				raw_sensors[ID_IN_PITCH].clear();
-
-				int pending = g_async_queue_length(serial->incoming_queue);
-				protocol_data incoming;
-
-				for (int i = 0; i < pending; i++)
-				{
-					//If data available in the queue filter it
-					if (serial_receive(serial, &incoming))
+					if (this->servo != arduinoAngle)
 					{
-						filterData(incoming.id, incoming.value);
-					}//end of filtering
+						this->servo = arduinoAngle;
+						protocol_data d_servo;
+						d_servo.id = ID_OUT_SERVO;
+						d_servo.value = this->servo;
+						d_servo.sub_id = NO_DATA;
+
+						serial_send(this->serial, d_servo);
+					}
 				}
 
-				//If sensor data available
-				if (isSensorValues)
-				{
-					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
-					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
-					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
-
-					sendSensorBoardData(sensors, 1);
-				}//end
 			}
-			else if (serialBehaviour.compare("arduino=in") == 0)
+			else if (serialBehaviour.compare("in") == 0)
 			{
 				c = c;
 				isSensorValues = false;
@@ -262,6 +240,10 @@ namespace carolocup
 				raw_sensors[ID_IN_ULTRASONIC_SIDE_FRONT].clear();
 				raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK].clear();
 				raw_sensors[ID_IN_ULTRASONIC_BACK].clear();
+
+				raw_sensors[ID_IN_YAW].clear();
+				raw_sensors[ID_IN_ROLL].clear();
+				raw_sensors[ID_IN_PITCH].clear();
 
 				int pending = g_async_queue_length(serial->incoming_queue);
 				protocol_data incoming;
@@ -284,7 +266,11 @@ namespace carolocup
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_SIDE_BACK, raw_sensors[ID_IN_ULTRASONIC_SIDE_BACK]);
 					sensorBoardDataMedian(ID_IN_ULTRASONIC_BACK, raw_sensors[ID_IN_ULTRASONIC_BACK]);
 
-					sendSensorBoardData(sensors, 0);
+					sensorBoardDataMedian(ID_IN_YAW, raw_sensors[ID_IN_YAW]);
+					sensorBoardDataMedian(ID_IN_ROLL, raw_sensors[ID_IN_ROLL]);
+					sensorBoardDataMedian(ID_IN_PITCH, raw_sensors[ID_IN_PITCH]);
+
+					sendSensorBoardData(sensors);
 				}//end
 			}
 
@@ -325,7 +311,7 @@ namespace carolocup
 					if (value == 0 || value == 1)
 					{
 						sensors[id] = value;
-						sendSensorBoardData(sensors, 0); //send signal
+						sendSensorBoardData(sensors); //send signal
 					}
 					else if (value == 2)
 					{
@@ -360,23 +346,12 @@ namespace carolocup
 			}
 		}
 
-		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor, int t)
+		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor)
 		{
-			if (!t)
-			{
-				sbd.setMapOfSensors(sensor);
-				Container c(sbd);
-				getConference().send(c);
-			}
-			else
-			{
-				gyroMSG.setYaw(sensor[ID_IN_YAW]);
-				gyroMSG.setPitch(sensor[ID_IN_PITCH]);
-				gyroMSG.setRoll(sensor[ID_IN_ROLL]);
+			sbd.setMapOfSensors(sensor);
+			Container c(sbd);
+			getConference().send(c);
 
-				Container c(sbd);
-				getConference().send(c);
-			}
 			isSensorValues = false;
 		}
 

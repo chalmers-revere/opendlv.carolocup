@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include "NineAxesMotion.h"
 
 #define BAUD 115200
 
@@ -18,7 +19,9 @@
 #define ID_IN_BUTTON_LANE           8
 #define ID_IN_BUTTON_PARK           9
 #define ID_IN_BUTTON_OVERTAKE       10
-
+#define ID_IN_YAW                   11
+#define ID_IN_ROLL                  12
+#define ID_IN_PITCH                 13
 
 #define US_FRONT 0x71 //front ultrasonic pin
 #define US_FRONT_T 0x72 //front tilted right ultrasonic
@@ -91,6 +94,32 @@ private:
 	unsigned long rpmReadingRightWheel;
 	unsigned long timeOld;
 	unsigned long wheelCircumference;
+};
+
+class Axes {
+public:
+	explicit Axes();
+
+	void begin();
+
+	void readMotion();
+
+	int getYaw();
+
+	int getPitch(); // if necessary protocol has to be modified to accept negative numbers
+
+	int getRoll(); // if necessary protocol has to be modified to accept negative numbers
+
+private:
+
+	NineAxesMotion mySensor;
+
+	unsigned long lastStreamTime;     //To store the last streamed time stamp
+	const int streamPeriod = 20000;   //To stream at 50Hz without using additional timers (time period(ms) =1000/frequency(Hz))
+
+	int yaw;
+	int pitch;
+	int roll;
 };
 
 #endif
