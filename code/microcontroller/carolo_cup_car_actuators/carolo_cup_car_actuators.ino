@@ -197,8 +197,7 @@ void RCControl()
 
 	ledControl.setBrakeLights(_OFF_);
 	servo.setAngle(receiver.filter(angle));
-	//esc.setSpeed(receiver.filter(speed));
-	esc.setSpeed(102);
+	esc.setSpeed(receiver.filter(speed));
 #ifdef DEBUG
 	Serial.print("steer ");
 		Serial.println(receiver.filter(angle));

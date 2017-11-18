@@ -52,7 +52,7 @@
 #define STRAIGHT_DEGREES 90
 
 //what percentage of the motor's power is allowed be used at most
-#define FULL_FORWARD 180
+#define FULL_FORWARD 102
 #define FULL_BACKWARD 0
 #define IDLE_SPEED 90
 
