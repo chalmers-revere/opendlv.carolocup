@@ -77,10 +77,6 @@ namespace carolocup
 			m_debug = kv.getValue<int32_t>("global.debug") == 1;
 			Sim = kv.getValue<int32_t>("global.sim") == 1;
 
-			p_gain = kv.getValue<double>("global.lanefollower.p");
-			d_gain = kv.getValue<double>("global.lanefollower.d");
-			i_gain = kv.getValue<double>("global.lanefollower.i");
-
 			// Setup window for debugging if debug flag set
 			if (m_debug)
 			{
@@ -113,26 +109,30 @@ namespace carolocup
 		{
 			while (getModuleStateAndWaitForRemainingTimeInTimeslice() == ModuleStateMessage::RUNNING)
 			{
+				TimeStamp now;
 				Container communicationLinkContainer = getKeyValueDataStore().get(CommunicationLinkMSG::ID());
 				if (communicationLinkContainer.getDataType() == CommunicationLinkMSG::ID())
 				{
 					const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
 					_state = communicationLinkMSG.getStateLaneFollower();
 
-					if (communicationLinkMSG.getP != -1){
-						p_gain = communicationLinkMSG.getP;
-					}
-					if (communicationLinkMSG.getI != -1){
-						i_gain = communicationLinkMSG.getI;
-					}if (communicationLinkMSG.getD != -1){
-						d_gain = communicationLinkMSG.getD;
-					}
+
+					p_gain = communicationLinkMSG.getP();
+					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " new p_gain " << p_gain << endl;
+
+
+					i_gain = communicationLinkMSG.getI();
+					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " new i_gain " << i_gain << endl;
+
+					d_gain = communicationLinkMSG.getD();
+					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " new d_gain " << d_gain << endl;
+
 				}
 
 				if (_state == 0)
 				{
-					TimeStamp now;
-					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " Lanefollower _state " << _state << " && m_debug " << m_debug << endl;
+					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " Lanefollower _state " << _state << " && m_debug "
+						 << m_debug << endl;
 					bool has_next_frame = false;
 					_stop = 0;
 

@@ -50,18 +50,18 @@ services:
         restart: on-failure
         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-cameraproxy --cid=${CID} --freq=20 --configuration=/opt/configuration/configuration"
 
-    # carolocup-control-proxy-serialinhandler
-    carolocup-control-proxy-serialinhandler:
-        build: .
-        network_mode: "host"
-        ipc : host
-        depends_on:
-            - odsupercomponent
-        devices:
-            - "/dev/ttyUSB0:/dev/ttyUSB0"
-        restart: on-failure
-        privileged: true
-        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=one"
+#    # carolocup-control-proxy-serialinhandler
+#    carolocup-control-proxy-serialinhandler:
+#        build: .
+#        network_mode: "host"
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        devices:
+#            - "/dev/ttyUSB0:/dev/ttyUSB0"
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=one"
 
     # carolocup-control-proxy-serialouthandler
 #    carolocup-control-proxy-serialouthandler:
@@ -88,8 +88,9 @@ services:
              - ./config:/opt/configuration
          depends_on:
              - odsupercomponent
-             - carolocup-control-proxy-serialinhandler
+             #- carolocup-control-proxy-serialinhandler
              - communicationlink
+             - camera-proxy
          restart: on-failure
          privileged: true
          command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
@@ -106,3 +107,14 @@ services:
          restart: on-failure
          privileged: true
          command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
+
+    #udpconnectionreceiver
+    udpconnectionreceiver:
+        build: .
+        network_mode: host
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionreceiver --verbose=1 --cid=${CID} --rm=true --freq=25"

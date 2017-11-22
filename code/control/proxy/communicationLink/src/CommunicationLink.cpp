@@ -46,7 +46,11 @@ namespace carolocup
 			cout << "Starting CommunicationLink" << endl;
 
 			// Get configuration data.
-			//KeyValueConfiguration kv = getKeyValueConfiguration();
+			KeyValueConfiguration kv = getKeyValueConfiguration();
+
+			communicationLinkMSG.setP(kv.getValue<double>("global.lanefollower.p"));
+			communicationLinkMSG.setI(kv.getValue<double>("global.lanefollower.d"));
+			communicationLinkMSG.setD(kv.getValue<double>("global.lanefollower.i"));
 
 		}
 
@@ -57,10 +61,6 @@ namespace carolocup
 
 		void CommunicationLink::nextContainer(Container &c)
 		{
-			communicationLinkMSG.setP(-1);
-			communicationLinkMSG.setI(-1);
-			communicationLinkMSG.setD(-1);
-
 			if (c.getDataType() == SensorsMSG::ID())
 			{
 				Container sensorBoardDataContainer = c.getData<SensorsMSG>();

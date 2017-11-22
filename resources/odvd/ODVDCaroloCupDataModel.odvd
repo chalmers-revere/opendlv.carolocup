@@ -33,9 +33,9 @@ message gap.CommunicationLinkMSG [id = 555 ] {
     double yaw [id = 10];
     double pitch [id = 11];
     double roll [id = 12];
-    uint8 p [id=13];//proportional
-    uint8 i [id=14];//integral
-    uint8 d [id=15];//derivative
+    double p [id=13];//proportional
+    double i [id=14];//integral
+    double d [id=15];//derivative
 }
 
 message gap.LaneFollowerMSG [id = 556 ] {
@@ -75,9 +75,9 @@ message gap.UdpMSG [id = 562 ] {
     uint8 stateFunctionLane [id = 1];
     uint8 stateFunctionOvertaker [id = 2];
     uint8 stateFunctionParker [id = 3];
-    uint8 p [id=4];//proportional
-    uint8 i [id=5];//integral
-    uint8 d [id=6];//derivative
+    double p [id=4];//proportional
+    double i [id=5];//integral
+    double d [id=6];//derivative
 }
 
 message gap.ResetMSG [id = 563 ] {
