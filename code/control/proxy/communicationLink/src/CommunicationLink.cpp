@@ -57,6 +57,9 @@ namespace carolocup
 
 		void CommunicationLink::nextContainer(Container &c)
 		{
+			communicationLinkMSG.setP(-1);
+			communicationLinkMSG.setI(-1);
+			communicationLinkMSG.setD(-1);
 
 			if (c.getDataType() == SensorsMSG::ID())
 			{
