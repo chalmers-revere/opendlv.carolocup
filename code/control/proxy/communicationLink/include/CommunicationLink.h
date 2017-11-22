@@ -36,7 +36,7 @@
 #include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/LIDARMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/UdpMSG.h"
-#include "odvdcarolocupdatamodel/generated/gap/GyroMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/ResetMSG.h"
 #include <opendavinci/odcore/base/KeyValueConfiguration.h>
 
 #include <iostream>

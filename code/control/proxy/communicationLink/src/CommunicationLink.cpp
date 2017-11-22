@@ -66,14 +66,20 @@ namespace carolocup
 				communicationLinkMSG.setMapOfSensors(sensorsMSG.getMapOfSensors());
 				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_LANE) < 2) {
 					communicationLinkMSG.setStateLaneFollower(sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_LANE));
+					communicationLinkMSG.setStateParker(0);
+					communicationLinkMSG.setStateOvertaker(0);
 				}
 
 				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_PARK) < 2) {
 					communicationLinkMSG.setStateParker(sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_PARK));
+					communicationLinkMSG.setStateLaneFollower(0);
+					communicationLinkMSG.setStateOvertaker(0);
 				}
 
 				if (sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_OVERTAKE) < 2) {
 					communicationLinkMSG.setStateOvertaker(sensorsMSG.getValueForKey_MapOfSensors(ID_IN_BUTTON_OVERTAKE));
+					communicationLinkMSG.setStateParker(0);
+					communicationLinkMSG.setStateLaneFollower(0);
 				}
 			}
 			else if (c.getDataType() == OvertakerMSG::ID())
@@ -82,7 +88,7 @@ namespace carolocup
 				OvertakerMSG overtakerMSG = overtakerMSGContainer.getData<OvertakerMSG>();
 
 				communicationLinkMSG.setStateLaneFollower(overtakerMSG.getStateStop());
-				communicationLinkMSG.setStateParker(0);
+				//communicationLinkMSG.setStateParker(0);
 				communicationLinkMSG.setDrivingLane(overtakerMSG.getStateLane());
 
 			}
@@ -92,7 +98,14 @@ namespace carolocup
 				ParkerMSG parkerMSG = parkerMSGContainer.getData<ParkerMSG>();
 
 				communicationLinkMSG.setStateLaneFollower(parkerMSG.getStateStop());
-				communicationLinkMSG.setStateOvertaker(0);
+				//communicationLinkMSG.setStateOvertaker(0);
+				if (parkerMSG.getReset()) {
+					ResetMSG resetMSG;
+					resetMSG.setResetOdometer(1);
+					Container _container(resetMSG);
+					// Send container.
+					getConference().send(_container);
+				}
 			}
 			else if (c.getDataType() == LaneFollowerMSG::ID())
 			{
@@ -104,14 +117,6 @@ namespace carolocup
 				communicationLinkMSG.setDistanceToRightLane(laneFollowerMSG.getDistanceToRightLane());
 
 			}
-			else if (c.getDataType() == LIDARMSG::ID())
-			{
-				Container LIDARMSGContainer = c.getData<LIDARMSG>();
-				LIDARMSG lidarMSG = LIDARMSGContainer.getData<LIDARMSG>();
-
-				communicationLinkMSG.setMapOfLidarDistances(lidarMSG.getMapOfLidarDistances());
-				communicationLinkMSG.setMapOfLidarStrength(lidarMSG.getMapOfLidarStrength());
-			}
 			else if (c.getDataType() == UdpMSG::ID())
 			{
 				Container udpMSGContainer = c.getData<UdpMSG>();
@@ -120,6 +125,9 @@ namespace carolocup
 				communicationLinkMSG.setStateLaneFollower(udpMSG.getStateFunctionLane());
 				communicationLinkMSG.setStateOvertaker(udpMSG.getStateFunctionOvertaker());
 				communicationLinkMSG.setStateParker(udpMSG.getStateFunctionParker());
+				communicationLinkMSG.setP(udpMSG.getP());
+				communicationLinkMSG.setI(udpMSG.getI());
+				communicationLinkMSG.setD(udpMSG.getD());
 			}
 
 			Container container(communicationLinkMSG);

@@ -70,6 +70,24 @@ namespace carolocup
 				_udpmsg.setStateFunctionOvertaker(0);
 				_udpmsg.setStateFunctionParker(1);
 			}
+			else if (!(notValid = (received.find("p/") == string::npos)))
+			{
+				int delimiterIndex = received.find("/");
+				int value = atoi(received.substr(delimiterIndex + 1).c_str());
+				_udpmsg.setP(value);
+			}
+			else if (!(notValid = (received.find("i/") == string::npos)))
+			{
+				int delimiterIndex = received.find("/");
+				int value = atoi(received.substr(delimiterIndex + 1).c_str());
+				_udpmsg.setI(value);
+			}
+			else if (!(notValid = (received.find("d/") == string::npos)))
+			{
+				int delimiterIndex = received.find("/");
+				int value = atoi(received.substr(delimiterIndex + 1).c_str());
+				_udpmsg.setD(value);
+			}
 
 			if (!notValid && hasConference)
 			{

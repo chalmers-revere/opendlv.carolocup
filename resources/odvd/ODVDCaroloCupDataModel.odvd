@@ -33,6 +33,9 @@ message gap.CommunicationLinkMSG [id = 555 ] {
     double yaw [id = 10];
     double pitch [id = 11];
     double roll [id = 12];
+    uint8 p [id=13];//proportional
+    uint8 i [id=14];//integral
+    uint8 d [id=15];//derivative
 }
 
 message gap.LaneFollowerMSG [id = 556 ] {
@@ -48,6 +51,7 @@ message gap.OvertakerMSG [id = 557 ] {
 
 message gap.ParkerMSG [id = 558 ] {
     uint8 stateStop [id = 1]; // 0 move or 1 stop
+    uint8 reset [id=2];//reset both odometers
 }
 
 message gap.SensorsMSG [id = 559 ] {
@@ -71,10 +75,11 @@ message gap.UdpMSG [id = 562 ] {
     uint8 stateFunctionLane [id = 1];
     uint8 stateFunctionOvertaker [id = 2];
     uint8 stateFunctionParker [id = 3];
+    uint8 p [id=4];//proportional
+    uint8 i [id=5];//integral
+    uint8 d [id=6];//derivative
 }
 
-message gap.GyroMSG [id = 563 ] {
-    double yaw [id = 1];
-    double pitch [id = 2];
-    double roll [id = 3];
+message gap.ResetMSG [id = 563 ] {
+    uint8 resetOdometer [id = 1];
 }
