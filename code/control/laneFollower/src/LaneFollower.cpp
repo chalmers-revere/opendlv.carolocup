@@ -118,6 +118,15 @@ namespace carolocup
 				{
 					const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
 					_state = communicationLinkMSG.getStateLaneFollower();
+
+					if (communicationLinkMSG.getP != -1){
+						p_gain = communicationLinkMSG.getP;
+					}
+					if (communicationLinkMSG.getI != -1){
+						i_gain = communicationLinkMSG.getI;
+					}if (communicationLinkMSG.getD != -1){
+						d_gain = communicationLinkMSG.getD;
+					}
 				}
 
 				if (_state == 0)
