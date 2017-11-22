@@ -16,7 +16,7 @@ else
     echo "Not Building, Only Running!!!" >&2
 fi
 
-./findport.sh
+#./findport.sh
 
 cd $cwd && xhost + && docker-compose down && docker-compose up --build >> log_data/"$(date +"%Y_%m_%d_%I_%M_%p").txt"
 
