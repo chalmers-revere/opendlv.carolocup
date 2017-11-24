@@ -17,13 +17,13 @@
 
 IF(NOT UEYE_FOUND)
     FIND_PATH(UEYE_INCLUDE_DIR
-            NAMES ueye.h
+            NAMES uEyeCamera.h
             PATHS ${LIBUEYE_PATH}/include/
             /usr/local/include/
             /usr/include/
             )
 
-    FIND_FILE(UEYE_LIBRARIES libueye_api64.so.4.60
+    FIND_FILE(UEYE_LIBRARIES ueye_api
             PATHS ${LIBUEYE_PATH}/lib/
             /usr/local/lib64/
             /usr/local/lib/
@@ -32,14 +32,6 @@ IF(NOT UEYE_FOUND)
             /usr/lib64/
             /usr/lib/
             )
-
-    IF(UEYE_INCLUDE_DIR)
-        MESSAGE(STATUS "Found uEye_inclued: ${UEYE_INCLUDE_DIR}")
-    ENDIF()
-
-    IF(UEYE_LIBRARIES)
-        MESSAGE(STATUS "Found uEye_lib: ${UEYE_LIBRARIES}")
-    ENDIF()
 
     IF(UEYE_INCLUDE_DIR AND UEYE_LIBRARIES)
         SET (UEYE_FOUND TRUE)
@@ -51,7 +43,8 @@ IF(NOT UEYE_FOUND)
         IF(UEYE_FIND_REQUIRED)
             MESSAGE(FATAL_ERROR "Could not find uEye, try to setup LIBUEYE_PATH accordingly.")
         ELSE()
-            MESSAGE(FATAL_ERROR "uEye not found.")
+            MESSAGE(STATUS "uEye not found.")
         ENDIF()
     ENDIF()
 ENDIF()
+
