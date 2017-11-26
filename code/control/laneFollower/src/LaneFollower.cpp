@@ -568,16 +568,24 @@ namespace carolocup
 				putText(m_image_new, "Steering: " + steer, Point(m_image_new.cols - 150, 40), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
-				putText(m_image_new, "State: " + state, Point(m_image_new.cols - 150, 60), FONT_HERSHEY_PLAIN, 1,
+//				putText(m_image_new, "State: " + state, Point(m_image_new.cols - 150, 60), FONT_HERSHEY_PLAIN, 1,
+//						CV_RGB(255, 255, 255));
+//
+//				putText(m_image_new, "Old state: " + prevState, Point(m_image_new.cols - 150, 80), FONT_HERSHEY_PLAIN,
+//						1,
+//						CV_RGB(255, 255, 255));
+//
+//				putText(m_image_new, "Stop counter :" + std::to_string(stopCounter), Point(m_image_new.cols - 150, 100),
+//						FONT_HERSHEY_PLAIN, 1,
+//						CV_RGB(255, 255, 255));
+
+				putText(m_image_new, "P_gain: " + p_gain, Point(m_image_new.cols - 150, 60), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
-				putText(m_image_new, "Old state: " + prevState, Point(m_image_new.cols - 150, 80), FONT_HERSHEY_PLAIN,
-						1,
+				putText(m_image_new, "D_gain: " + d_gain, Point(m_image_new.cols - 150, 80), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
-
-				putText(m_image_new, "Stop counter :" + std::to_string(stopCounter), Point(m_image_new.cols - 150, 100),
-						FONT_HERSHEY_PLAIN, 1,
+				putText(m_image_new, "I_gain: " + i_gain, Point(m_image_new.cols - 150, 100), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
 				putText(m_image_new, "Distance " + std::to_string(m_distance), Point(m_image_new.cols - 150, 120),
