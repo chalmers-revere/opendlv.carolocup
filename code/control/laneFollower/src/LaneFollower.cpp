@@ -366,6 +366,27 @@ namespace carolocup
 			// See header for algorithm and threshold explanation
 			Canny(m_image_new, m_image_new, 50, 150,
 				  3);
+
+            // Apply hough line transformation algorithm, for more info see:  https://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
+//            vector<Vec4i> lines;
+//            Mat m_hough = Mat(m_image.rows, m_image.cols, CV_8UC1);
+//            HoughLinesP(m_hough, lines, 1, CV_PI/180, 50, 50, 10 );
+//
+//            for( size_t i = 0; i < lines.size(); i++ )
+//            {
+//                Vec4i l = lines[i];
+//                line(m_hough, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0,0,255), 3, CV_AA);
+//            }
+
+
+            // Test for dilation operation see: https://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
+//            Mat m_image_dst;
+//
+//            Mat element = getStructuringElement( dilation_type,
+//                                                 Size( 2*dilation_size + 1, 2*dilation_size+1 ),
+//                                                 Point( dilation_size, dilation_size ) );
+//
+//            dilate(m_image_new, m_image_dst, element);
 		}
 
 //        // Pixel median value calculation
@@ -718,6 +739,26 @@ namespace carolocup
 					waitKey(10);
 				}
 			}
+
+            //display the resulting image from hough algorithm implmentation
+//            if (m_debug) {
+//                if (m_hough != NULL) {
+//                    imshow("Hough algorithm applied",
+//                           m_image_hough);
+//                    waitKey(10);
+//                }
+//            }
+
+            //display the resulting image from dilation algorithm implmentation
+//            if (m_debug) {
+//                if (m_hough != NULL) {
+//                    imshow("Dilation algorithm applied",
+//                           m_image_dst);
+//                    waitKey(10);
+//                }
+//            }
+
+
 			m_vehicleControl.setSteeringWheelAngle(desiredSteering);
 		}
 	}
