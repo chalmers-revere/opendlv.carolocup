@@ -53,6 +53,7 @@ global.parking.length = 53
 #Add the ackermann angle here!
 #global.ackermannAngle =
 
+
 #
 
 ###############################################################################
@@ -241,6 +242,8 @@ global.lanefollower.i = 0.01    #OG val = 0.01
 # CONFIGURATION FOR PARKER
 #
 global.parker.example = example
+#global.parker.segment1 = 45degrees in radians multiplied by ackermann radius
+#specify the rest segments by multiplying ackermann radius constant by corresponding angle
 
 ###############################################################################
 ###############################################################################
