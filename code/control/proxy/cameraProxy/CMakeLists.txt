@@ -50,8 +50,8 @@ FIND_PACKAGE(OpenCV REQUIRED)
 
 ###########################################################################
 # Find uEye drivers.
-SET(LIBUEYE_PATH "/usr")
-FIND_PACKAGE(UEYE REQUIRED)
+#SET(LIBUEYE_PATH "/usr")
+#FIND_PACKAGE(UEYE REQUIRED)
 
 ###########################################################################
 # Find ODVDCaroloCupDataModel.
