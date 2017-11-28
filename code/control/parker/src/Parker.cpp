@@ -68,7 +68,7 @@ namespace carolocup
 				map<uint32,double> lidarStrength=communicationLinkMSG.LidarStrength();
 				
 				if(this.state==Parking){	
-					vector<double> stages=getDistanceForStages();
+					vector<double> stages = getDistanceForStages();
 					double turningAngle=90;
 					int8_t direction=2;
 				
