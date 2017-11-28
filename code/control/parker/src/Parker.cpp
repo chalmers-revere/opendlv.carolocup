@@ -36,7 +36,10 @@ namespace carolocup
 				  currentSpaceSize(0),
 				  m_foundGaps(),
 				  m_simulator(false), //Set m_simulator to true if simulator is used and false otherwise.
-				  m_vehicleControl()
+				  m_vehicleControl(),
+				  accumulatedEncoderData(0),
+				  stageProgress(0),
+				  state(Search)
 		{}
 
 		Parker::~Parker()
@@ -58,20 +61,18 @@ namespace carolocup
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
 				map<uint32, double> sensors =communicationLinkMSG.getSensors;
 				double ultrasonicSideBack=sensors.get(ID_IN_ULTRASONIC_BACK);
-				double ultrasonicSideFront=sensors.get(ID_IN_ULTRASONIC_FRONT);
-				double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_BACK);
+				double ultrasonicSideFront=sensors.get(ID_IN_ULTRASONIC_SIDE_FRONT);
+				double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
 				uint16 distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
 				map<uint32,double> lidarDistance=communicationLinkMSG.LidarDistance();
 				map<uint32,double> lidarStrength=communicationLinkMSG.LidarStrength();
 				
+				if(this.state==Parking){	
+					vector<double> stages=getDistanceForStages();
+					double turningAngle=90;
+					int8_t direction=2;
 				
-				vector<double> stages=getDistanceForStages();
-				double turningAngle=90;
-				int8_t direction=2;
-				for(int i=0;i<stages.size();i++){
-					resetEncoders();
-					
-					while(getIdealWheelEncoder<=stages.at(i)*(1+i)){
+					if(getIdealWheelEncoder(sensors)<=stages.at(i)){
 						if(i%2){	
 							m_vehicleControl.setSteeringWheelAngle(0);
 							m_vehicleControl.setSpeed(1);
@@ -82,21 +83,45 @@ namespace carolocup
 							m_vehicleControl.setSpeed(-1);
 							m_vehicleControl.setLights(ID_OUT_INDICATOR_RF);
 							m_vehicleControl.setLights(ID_OUT_INDICATOR_RB);
-						
-						}		
+						}
+						accumulatedEncoderData+=getIdealWheelEncoder(sensors);		
+					}else{
+						resetEncoders();
+						m_vehicleControl.setSteeringWheelAngle(90);
+						m_vehicleControl.setSpeed(0);
+						if(stages.size()==++stageProgress){
+							this.stateProgress=Parked;
+						}
 					}
+					
+					
+				}else{
+					accumulatedEncoderData+=getIdealWheelEncoder(sensors);
+					if(this.state==Search && ultrasonicSideFront >0){
+						this.state=DiscoveredInitialObject;
+					}else if(this.state==DiscoveredInitialObject && ultrasonicSideFront == 0){
+						this.state==MeasuringParkingSpace;
+						resetEncoders();
+					}else if(this.state==MeasuringParkingSpace && ultrasonicSideFront>0){
+						this.currentSpaceSize=getIdealWheelEncoder(sensors);
+						this.state=Positioning;
+						resetEncoders();
+					}else if(this.state==Positioning && getIdealWheelEncoder(sensors)>=50){
+						this.state=Parking;	
+					}
+				
 				}
-				m_vehicleControl.setSteeringWheelAngle(90);
-				m_vehicleControl.setSpeed(0);
 
 			}
 		}
 		
+		
+		
+		
 		double Parker::getIdealWheelEncoder(map<uint32,double> sensors){
 			double leftEncoder=sensors.get(ID_IN_ENCODER_L);
-			return leftEncoder;
-			//double rightEncoder=sensors.get(ID_IN_ENCODER_R);
-			//return (leftEncoder+rightEncoder)/2;
+			double rightEncoder=sensors.get(ID_IN_ENCODER_R);
+			return (leftEncoder+rightEncoder)/2;
 		}
 		
 		vector<double> Parker::getDistanceForStages(){
@@ -134,9 +159,7 @@ namespace carolocup
 		
 		
 
-		vector<double> Parker::getFoundGaps() const {
-			return m_foundGaps;
-		}
+
 
 
 	}

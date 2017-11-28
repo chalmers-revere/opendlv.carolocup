@@ -78,6 +78,22 @@ namespace carolocup
 		private:
 		
 			AutomotiveMSG m_vehicleControl;
+			long double accumulatedEncoderData;
+			int stageProgress;
+			bool isParking;
+			CarState state;
+			double currentSpaceSize;
+			bool m_simulator;
+			enum CarState
+			{
+				Search,
+				DiscoveredInitialObject,
+				MeasuringParkingSpace,
+				Positioning,
+				Parking,
+				Parked
+				
+			};
 			
 			void setUp();
 
@@ -103,15 +119,8 @@ namespace carolocup
 
 			void sendMotionData(double steeringAngle, int speed);
 
-			enum CarState
-			{
-				Search, Park
-			};
-			CarState state;
-			double currentSpaceSize;
-
-			vector<double> m_foundGaps;
-			bool m_simulator;
+			
+			
 
 		};
 	}
