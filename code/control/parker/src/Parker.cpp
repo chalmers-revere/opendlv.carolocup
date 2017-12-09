@@ -58,7 +58,7 @@ namespace carolocup
 			{
 				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<uint32_t, double> sensors =communicationLinkMSG::sensors;
+				map<uint32_t, double> sensors =communicationLinkMSG::sensors();
 
 				double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
 				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
@@ -127,16 +127,16 @@ namespace carolocup
 			double leftEncoder=sensors.get(ID_IN_ENCODER_L);
 			//double rightEncoder=sensors.get(ID_IN_ENCODER_R);
 			//return (leftEncoder+rightEncoder)/2;
-			return (leftEncoder+rightEncoder);
+			return leftEncoder;
 		}
 		
 		vector<double> Parker::getDistanceForStages(){
-			KeyValueConfiguration kv = getKeyValueConfiguration();
-			double carWidth= kv.getValue<double>("global.car.width");
-			double carLength= kv.getValue<double>("global.car.length");
-			double parkingWidth= kv.getValue<double>("global.parking.width");
-			double laneWidth= kv.getValue<double>("global.lane.width");
-			double ackermannAngle= kv.getValue<double>("global.ackermannAngle");
+			//KeyValueConfiguration kv = getKeyValueConfiguration();
+			//double carWidth= kv.getValue<double>("global.car.width");
+			//double carLength= kv.getValue<double>("global.car.length");
+			//double parkingWidth= kv.getValue<double>("global.parking.width");
+			//double laneWidth= kv.getValue<double>("global.lane.width");
+			//double ackermannAngle= kv.getValue<double>("global.ackermannAngle");
 			
 			
 			double circleDiameter=	laneWidth/2+parkingWidth/2;
