@@ -72,8 +72,8 @@ namespace carolocup
 					double turningAngle=90;
 					int8_t direction=2;
 				
-					if(getIdealWheelEncoder(sensors)<=stages.at(i)){
-						if(i%2){	
+					if(getIdealWheelEncoder(sensors)<=stages.at(stageProgress)){
+						if(stageProgress%2){	
 							m_vehicleControl.setSteeringWheelAngle(0);
 							m_vehicleControl.setSpeed(1);
 							m_vehicleControl.setLights(ID_OUT_INDICATOR_LF);
