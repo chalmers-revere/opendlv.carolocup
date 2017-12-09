@@ -19,7 +19,7 @@ project(carolocup-control)
 
 add_subdirectory(laneFollower)
 add_subdirectory(overtaker)
-#add_subdirectory(parker)
+add_subdirectory(parker)
 add_subdirectory(proxy/communicationLink)
 add_subdirectory(proxy/cameraProxy)
 add_subdirectory(proxy/serialHandler)

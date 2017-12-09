@@ -54,13 +54,20 @@ namespace carolocup
 
 		void Parker::nextContainer(Container &c)
 		{
-			if (c.getDataType() == CommunicationLinkMSG::ID())
+			if (c.getDataType() == CommunicationLinkMSG::ID() && communicationLinkContainer.getDataType() == CommunicationLinkMSG::ID())
 			{
-				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
-				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<uint32_t, double> sensors =CommunicationLinkMSG::sensors();
+				//Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
+				Container communicationLinkContainer = getKeyValueDataStore().get(CommunicationLinkMSG::ID());
+				//const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
+				//map<uint32_t, double> sensors =CommunicationLinkMSG::sensors();
+		
+				
 
+			
 				double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
+				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
+				map<uint32_t, double> sensors = communicationLinkMSG.getSensors();
+				
 				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
 				//double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
 				
