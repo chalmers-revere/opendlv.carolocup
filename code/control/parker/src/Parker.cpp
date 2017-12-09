@@ -89,7 +89,7 @@ namespace carolocup
 						resetEncoders();
 						m_vehicleControl.setSteeringWheelAngle(90);
 						m_vehicleControl.setSpeed(0);
-						if(stages.size()==++stageProgress){
+						if(stages.size()==(unsigned)++stageProgress){
 							this.stateProgress=Parked;
 						}
 					}
