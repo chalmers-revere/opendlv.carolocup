@@ -32,10 +32,9 @@ namespace carolocup
 
 		Parker::Parker(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-parker"),
+				  m_simulator(false),
 				  state(Search),
 				  currentSpaceSize(0),
-				  m_foundGaps(),
-				  m_simulator(false), //Set m_simulator to true if simulator is used and false otherwise.
 				  m_vehicleControl(),
 				  accumulatedEncoderData(0),
 				  stageProgress(0)
@@ -58,13 +57,13 @@ namespace carolocup
 			{
 				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<uint32, double> sensors =communicationLinkMSG.getSensors;
+				map<uint32_t, double> sensors =communicationLinkMSG.getSensors;
 				double ultrasonicSideBack=sensors.get(ID_IN_ULTRASONIC_BACK);
 				double ultrasonicSideFront=sensors.get(ID_IN_ULTRASONIC_SIDE_FRONT);
 				double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
-				uint16 distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
-				map<uint32,double> lidarDistance=communicationLinkMSG.LidarDistance();
-				map<uint32,double> lidarStrength=communicationLinkMSG.LidarStrength();
+				uint16_t distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
+				map<uint32_t,double> lidarDistance=communicationLinkMSG.LidarDistance();
+				map<uint32_t,double> lidarStrength=communicationLinkMSG.LidarStrength();
 				
 				if(this.state==Parking){	
 					vector<double> stages = getDistanceForStages();
