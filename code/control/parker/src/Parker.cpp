@@ -58,7 +58,8 @@ namespace carolocup
 			{
 				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<uint32_t, double> sensors =communicationLinkMSG(4);
+				map<uint32_t, double> sensors =communicationLinkMSG::sensors;
+
 				double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
 				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
 				//double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
