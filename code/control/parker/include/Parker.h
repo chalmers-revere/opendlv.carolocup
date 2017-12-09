@@ -76,6 +76,25 @@ namespace carolocup
 			virtual ~Parker();
 
 		private:
+		
+			AutomotiveMSG m_vehicleControl;
+			long double accumulatedEncoderData;
+			int stageProgress;
+			bool isParking;
+			CarState state;
+			double currentSpaceSize;
+			bool m_simulator;
+			enum CarState
+			{
+				Search,
+				DiscoveredInitialObject,
+				MeasuringParkingSpace,
+				Positioning,
+				Parking,
+				Parked
+				
+			};
+			
 			void setUp();
 
 			void tearDown();
@@ -88,21 +107,20 @@ namespace carolocup
  			 * return Gaps found during the parking process.
  			 */
 			vector<double> getFoundGaps() const;
-
+			
+			double getIdealWheelEncoder(map<uint32,double>);
+			void resetEncoders();
+			vector<double> getDistanceForStages();
+			
+			double getLaneWidth();
+			
 			char readOdometer();
 			int readSensorData(int sensorId);
 
 			void sendMotionData(double steeringAngle, int speed);
 
-			enum CarState
-			{
-				Search, Park
-			};
-			CarState state;
-			double currentSpaceSize;
-
-			vector<double> m_foundGaps;
-			bool m_simulator;
+			
+			
 
 		};
 	}
