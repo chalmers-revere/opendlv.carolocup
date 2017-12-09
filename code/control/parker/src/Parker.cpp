@@ -58,7 +58,7 @@ namespace carolocup
 			{
 				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<uint32_t, double> sensors =communicationLinkMSG::sensors();
+				map<uint32_t, double> sensors =CommunicationLinkMSG::sensors();
 
 				double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
 				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
@@ -70,8 +70,8 @@ namespace carolocup
 				
 				if(this.state==Parking){	
 					vector<double> stages = getDistanceForStages();
-					double turningAngle=90;
-					int8_t direction=2;
+					//double turningAngle=90;
+					//int8_t direction=2;
 				
 					if(getIdealWheelEncoder(sensors)<=stages.at(stageProgress)){
 						if(stageProgress%2){	
@@ -98,22 +98,22 @@ namespace carolocup
 					
 				}else{
 					accumulatedEncoderData+=getIdealWheelEncoder(sensors);
-					if(this.state==Search && ultrasonicSideFront >0){
-						this.state=DiscoveredInitialObject;
-					}else if(this.state==DiscoveredInitialObject && ultrasonicSideFront == 0){
+					if(this->state==Search && ultrasonicSideFront >0){
+						this->state=DiscoveredInitialObject;
+					}else if(this->state==DiscoveredInitialObject && ultrasonicSideFront == 0){
 						this.state==MeasuringParkingSpace;
 						resetEncoders();
-					}else if(this.state==MeasuringParkingSpace && ultrasonicSideFront>0){
-						this.currentSpaceSize=getIdealWheelEncoder(sensors);
-						this.state=Positioning;
+					}else if(this->state==MeasuringParkingSpace && ultrasonicSideFront>0){
+						this->currentSpaceSize=getIdealWheelEncoder(sensors);
+						this->state=Positioning;
 						resetEncoders();
-					}else if(this.state==Positioning && getIdealWheelEncoder(sensors)>=50){
+					}else if(this->state==Positioning && getIdealWheelEncoder(sensors)>=50){
 						this.state=Parking;	
 					}
 				
 				}
 
-				cout<<" Car state "<<this.state<<endl;
+				cout<<" Car state "<<this->state<<endl;
 				cout<<" Car stage "<<stage<<endl;
 				cout<<" distance travled "<< getIdealWheelEncoder(sensors)<<endl;
 
