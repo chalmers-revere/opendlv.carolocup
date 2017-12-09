@@ -104,7 +104,7 @@ namespace carolocup
 						m_vehicleControl.setSteeringWheelAngle(90);
 						m_vehicleControl.setSpeed(0);
 						if(stages.size()==(unsigned)++stageProgress){
-							this->stateProgress=Parked;
+							this->state=Parked;
 						}
 					}
 					
