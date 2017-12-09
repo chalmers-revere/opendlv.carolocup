@@ -67,7 +67,7 @@ namespace carolocup
 			
 				
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<uint32_t, double> sensors = communicationLinkMSG.getSensors();
+				map<unsigned int, double> sensors = communicationLinkMSG.getSensors();
 				
 				double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
 				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
@@ -77,7 +77,7 @@ namespace carolocup
 				//map<uint32_t,double> lidarDistance=communicationLinkMSG.LidarDistance();
 				//map<uint32_t,double> lidarStrength=communicationLinkMSG.LidarStrength();
 				
-				if(this.state==Parking){	
+				if(this->state==Parking){	
 					vector<double> stages = getDistanceForStages();
 					//double turningAngle=90;
 					//int8_t direction=2;
@@ -87,7 +87,7 @@ namespace carolocup
 							m_vehicleControl.setSteeringWheelAngle(0);
 							m_vehicleControl.setSpeed(1);
 							m_vehicleControl.setLights(ID_OUT_INDICATOR_LF);
-							m_vehicleControl.setLights(ID_OUT_INDICATOR_BF);
+							m_vehicleControl.setLights(ID_OUT_INDICATOR_LB);
 						}else{
 							m_vehicleControl.setSteeringWheelAngle(180);
 							m_vehicleControl.setSpeed(-1);
@@ -100,25 +100,25 @@ namespace carolocup
 						m_vehicleControl.setSteeringWheelAngle(90);
 						m_vehicleControl.setSpeed(0);
 						if(stages.size()==(unsigned)++stageProgress){
-							this.stateProgress=Parked;
+							this->stateProgress=Parked;
 						}
 					}
 					
 					
 				}else{
-					accumulatedEncoderData+=getIdealWheelEncoder(sensors);
+					/*accumulatedEncoderData+=getIdealWheelEncoder(sensors);
 					if(this->state==Search && ultrasonicSideFront >0){
 						this->state=DiscoveredInitialObject;
 					}else if(this->state==DiscoveredInitialObject && ultrasonicSideFront == 0){
-						this.state==MeasuringParkingSpace;
+						this->state==MeasuringParkingSpace;
 						resetEncoders();
 					}else if(this->state==MeasuringParkingSpace && ultrasonicSideFront>0){
 						this->currentSpaceSize=getIdealWheelEncoder(sensors);
 						this->state=Positioning;
 						resetEncoders();
 					}else if(this->state==Positioning && getIdealWheelEncoder(sensors)>=50){
-						this.state=Parking;	
-					}
+						this->state=Parking;	
+					}*/
 				
 				}
 
@@ -132,7 +132,7 @@ namespace carolocup
 		
 		
 		
-		double Parker::getIdealWheelEncoder(map<uint32,double> sensors){
+		double Parker::getIdealWheelEncoder(map<unsigned int,double> sensors){
 			double leftEncoder=sensors.get(ID_IN_ENCODER_L);
 			//double rightEncoder=sensors.get(ID_IN_ENCODER_R);
 			//return (leftEncoder+rightEncoder)/2;

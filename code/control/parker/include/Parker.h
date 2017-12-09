@@ -114,7 +114,7 @@ namespace carolocup
  			 * return Gaps found during the parking process.
  			 */
 			
-			double getIdealWheelEncoder(map<uint32_t,double>);
+			double getIdealWheelEncoder(map<unsigned int,double>);
 			void resetEncoders();
 			vector<double> getDistanceForStages();
 			
