@@ -145,7 +145,7 @@ namespace carolocup
 		vector<double> Parker::getDistanceForStages(){
 			//KeyValueConfiguration kv = getKeyValueConfiguration();
 			//double carWidth= kv.getValue<double>("global.car.width");
-			d//ouble carLength= kv.getValue<double>("global.car.length");
+			//double carLength= kv.getValue<double>("global.car.length");
 			double parkingWidth= 10;
 			double laneWidth= 10;
 			//double ackermannAngle= kv.getValue<double>("global.ackermannAngle");
@@ -165,8 +165,8 @@ namespace carolocup
 		}
 		
 		void Parker::resetEncoders(){
-			const ParkerMSG parkerMSG;
-			parker.setReset(1);
+			//const ParkerMSG parkerMSG;
+			//parker.setReset(1);
 		}
 		
 		
