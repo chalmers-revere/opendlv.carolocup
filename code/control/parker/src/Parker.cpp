@@ -38,7 +38,8 @@ namespace carolocup
 				  m_vehicleControl(),
 				  accumulatedEncoderData(0),
 				  stageProgress(0),
-				  isParking(false)
+				  isParking(false),
+				  m_debug(false)
 		{}
 
 		Parker::~Parker()
@@ -46,6 +47,8 @@ namespace carolocup
 
 		void Parker::setUp()
 		{
+			KeyValueConfiguration kv = getKeyValueConfiguration();
+			m_debug = kv.getValue<int32_t>("global.debug") == 1;
 
 		}
 
@@ -69,7 +72,7 @@ namespace carolocup
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
 				map<unsigned int, double> sensors = communicationLinkMSG.getSensors();
 				
-				double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
+				//double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
 				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
 				//double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
 				
@@ -123,7 +126,7 @@ namespace carolocup
 				}
 
 				cout<<" Car state "<<this->state<<endl;
-				cout<<" Car stage "<<stage<<endl;
+				cout<<" Car stage "<<stageProgress<<endl;
 				cout<<" distance travled "<< getIdealWheelEncoder(sensors)<<endl;
 
 			}
@@ -142,14 +145,14 @@ namespace carolocup
 		vector<double> Parker::getDistanceForStages(){
 			//KeyValueConfiguration kv = getKeyValueConfiguration();
 			//double carWidth= kv.getValue<double>("global.car.width");
-			//double carLength= kv.getValue<double>("global.car.length");
-			//double parkingWidth= kv.getValue<double>("global.parking.width");
-			//double laneWidth= kv.getValue<double>("global.lane.width");
+			d//ouble carLength= kv.getValue<double>("global.car.length");
+			double parkingWidth= 10;
+			double laneWidth= 10;
 			//double ackermannAngle= kv.getValue<double>("global.ackermannAngle");
 			
 			
 			double circleDiameter=	laneWidth/2+parkingWidth/2;
-			double circleCircumpherence=circleDiameter*_Pi;
+			double circleCircumpherence=circleDiameter*3.14;
 			double arcDistance=circleCircumpherence/8;
 			
 			vector<double> stages;

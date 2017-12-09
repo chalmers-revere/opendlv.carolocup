@@ -99,7 +99,7 @@ namespace carolocup
 			
 			bool isParking;
 			
-			
+			bool m_debug;
 			
 			
 			void setUp();
