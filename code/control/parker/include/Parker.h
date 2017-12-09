@@ -81,7 +81,7 @@ namespace carolocup
 			long double accumulatedEncoderData;
 			int stageProgress;
 			bool isParking;
-			CarState state;
+			
 			double currentSpaceSize;
 			bool m_simulator;
 			enum CarState
@@ -94,6 +94,8 @@ namespace carolocup
 				Parked
 				
 			};
+
+			CarState state;
 			
 			void setUp();
 
@@ -108,7 +110,7 @@ namespace carolocup
  			 */
 			vector<double> getFoundGaps() const;
 			
-			double getIdealWheelEncoder(map<uint32,double>);
+			double getIdealWheelEncoder(map<uint32_t,double>);
 			void resetEncoders();
 			vector<double> getDistanceForStages();
 			
