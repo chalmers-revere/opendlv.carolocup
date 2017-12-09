@@ -106,6 +106,8 @@ namespace carolocup
 
 			void tearDown();
 
+			KeyValueConfiguration kv;
+
 			virtual void nextContainer(Container &c);
 
 			/**

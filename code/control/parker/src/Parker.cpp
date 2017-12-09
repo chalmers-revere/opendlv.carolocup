@@ -39,7 +39,8 @@ namespace carolocup
 				  accumulatedEncoderData(0),
 				  stageProgress(0),
 				  isParking(false),
-				  m_debug(false)
+				  m_debug(false),
+				  kv(NULL)
 		{}
 
 		Parker::~Parker()
@@ -47,7 +48,7 @@ namespace carolocup
 
 		void Parker::setUp()
 		{
-			KeyValueConfiguration kv = getKeyValueConfiguration();
+			kv = getKeyValueConfiguration();
 			m_debug = kv.getValue<int32_t>("global.debug") == 1;
 
 		}
@@ -57,7 +58,7 @@ namespace carolocup
 
 		void Parker::nextContainer(Container &c)
 		{
-			Container communicationLinkContainer = getKeyValueDataStore().get(CommunicationLinkMSG::ID());
+			Container communicationLinkContainer = kv.get(CommunicationLinkMSG::ID());
 			if (c.getDataType() == CommunicationLinkMSG::ID() && communicationLinkContainer.getDataType() == CommunicationLinkMSG::ID())
 			{
 				//Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
