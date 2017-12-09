@@ -38,8 +38,7 @@ namespace carolocup
 				  m_simulator(false), //Set m_simulator to true if simulator is used and false otherwise.
 				  m_vehicleControl(),
 				  accumulatedEncoderData(0),
-				  stageProgress(0),
-				  state(Search)
+				  stageProgress(0)
 		{}
 
 		Parker::~Parker()
@@ -112,6 +111,10 @@ namespace carolocup
 				
 				}
 
+				cout<<" Car state "<<this.state<<endl;
+				cout<<" Car stage "<<stage<<endl;
+				cout<<" distance travled "<< getIdealWheelEncoder(sensors)<<endl;
+
 			}
 		}
 		
@@ -120,8 +123,9 @@ namespace carolocup
 		
 		double Parker::getIdealWheelEncoder(map<uint32,double> sensors){
 			double leftEncoder=sensors.get(ID_IN_ENCODER_L);
-			double rightEncoder=sensors.get(ID_IN_ENCODER_R);
-			return (leftEncoder+rightEncoder)/2;
+			//double rightEncoder=sensors.get(ID_IN_ENCODER_R);
+			//return (leftEncoder+rightEncoder)/2;
+			return (leftEncoder+rightEncoder);
 		}
 		
 		vector<double> Parker::getDistanceForStages(){
