@@ -37,7 +37,8 @@ namespace carolocup
 				  currentSpaceSize(0),
 				  m_vehicleControl(),
 				  accumulatedEncoderData(0),
-				  stageProgress(0)
+				  stageProgress(0),
+				  isPaisParking(false)
 		{}
 
 		Parker::~Parker()
@@ -57,10 +58,10 @@ namespace carolocup
 			{
 				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<uint32_t, double> sensors =communicationLinkMSG.getSensors;
-				double ultrasonicSideBack=sensors.get(ID_IN_ULTRASONIC_BACK);
-				double ultrasonicSideFront=sensors.get(ID_IN_ULTRASONIC_SIDE_FRONT);
-				double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
+				map<uint32_t, double> sensors =communicationLinkMSG.getSensors();
+				double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
+				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
+				//double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
 				uint16_t distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
 				map<uint32_t,double> lidarDistance=communicationLinkMSG.LidarDistance();
 				map<uint32_t,double> lidarStrength=communicationLinkMSG.LidarStrength();

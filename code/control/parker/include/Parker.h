@@ -76,14 +76,9 @@ namespace carolocup
 			virtual ~Parker();
 
 		private:
-		
-			AutomotiveMSG m_vehicleControl;
-			long double accumulatedEncoderData;
-			int stageProgress;
-			bool isParking;
 			
-			double currentSpaceSize;
 			bool m_simulator;
+
 			enum CarState
 			{
 				Search,
@@ -96,6 +91,16 @@ namespace carolocup
 			};
 
 			CarState state;
+			double currentSpaceSize;
+
+			AutomotiveMSG m_vehicleControl;
+			long double accumulatedEncoderData;
+			int stageProgress;
+			
+			bool isParking;
+			
+			
+			
 			
 			void setUp();
 
