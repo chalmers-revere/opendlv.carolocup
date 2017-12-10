@@ -31,31 +31,31 @@ services:
             - ./config:/opt/configuration
         command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
 
-#    carolocup-control-proxy-serialinhandler:
-#        build: .
-#        network_mode: "host"
-#        ipc : host
-#        depends_on:
-#            - odsupercomponent
-#        devices:
-#            - "/dev/ttyUSB0:/dev/ttyUSB0"
-#        restart: on-failure
-#        privileged: true
-#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=in"
+    carolocup-control-proxy-serialinhandler:
+        build: .
+        network_mode: "host"
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        devices:
+            - "/dev/ttyUSB0:/dev/ttyUSB0"
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=in"
 
     # carolocup-control-proxy-serialouthandler
-#    carolocup-control-proxy-serialouthandler:
-#        build: .
-#        network_mode: "host"
-#        ipc : host
-#        depends_on:
-#            - odsupercomponent
-#        devices:
-#            - "/dev/ttyUSB0:/dev/ttyUSB0"
-#        restart: on-failure
-#        privileged: true
-#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
-#
+    carolocup-control-proxy-serialouthandler:
+        build: .
+        network_mode: "host"
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        devices:
+            - "/dev/ttyUSB0:/dev/ttyUSB0"
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
+
 
     #Micro-service for parking scenario.
     parker:
@@ -68,8 +68,20 @@ services:
              - ./config:/opt/configuration
          depends_on:
              - odsupercomponent
-             #- proxy
-             #- communicationlink
+             - carolocup-control-proxy-serialinhandler
+             - communicationlink
          restart: on-failure
          privileged: true
          command: "/opt/opendlv.carolocup/bin/carolocup-control-parker --verbose=1  --cid=${CID} --freq=20"
+
+    communicationlink:
+         build: .
+         network_mode: host
+         ipc: host
+         volumes:
+             - ./config:/opt/configuration
+         depends_on:
+             - odsupercomponent
+         restart: on-failure
+         privileged: true
+         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"

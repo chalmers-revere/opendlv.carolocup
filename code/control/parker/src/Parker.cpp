@@ -63,8 +63,10 @@ namespace carolocup
 
 		void Parker::nextContainer(Container &c)
 		{
+			cout << "before first if" << endl;
 			if (c.getDataType() == CommunicationLinkMSG::ID())
 			{
+				cout << "first if" << endl;
 				//Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 
 				//const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
@@ -109,7 +111,6 @@ namespace carolocup
 						}
 					}
 
-
 				}else{
 					/*accumulatedEncoderData+=getIdealWheelEncoder(sensors);
 					if(this->state==Search && ultrasonicSideFront >0){
@@ -126,7 +127,7 @@ namespace carolocup
 					}*/
 
 				}
-
+				cout<< getIdealWheelEncoder(sensors)<<endl;
 				cout<<" Car state "<<this->state<<endl;
 				cout<<" Car stage "<<stageProgress<<endl;
 				cout<<" distance travled "<< getIdealWheelEncoder(sensors)<<endl;
@@ -139,7 +140,6 @@ namespace carolocup
 
 		double Parker::getIdealWheelEncoder(map<unsigned int,double> sensors){
 			double leftEncoder=sensors[ID_IN_ENCODER_L];
-			//double rightEncoder=sensors.get(ID_IN_ENCODER_R);
 			//return (leftEncoder+rightEncoder)/2;
 			return leftEncoder;
 		}
@@ -170,8 +170,6 @@ namespace carolocup
 			//const ParkerMSG parkerMSG;
 			//parker.setReset(1);
 		}
-
-
 		double Parker::getLaneWidth(){
 			return 0;
 		}
