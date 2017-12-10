@@ -43,7 +43,7 @@ namespace carolocup
 					m_sensors(),
 				  accumulatedEncoderData(0),
 				  stageProgress(0),
-				  laneWidth(0),
+				  m_laneWidth(0),
 				  isParking(false),
 				  m_debug(false),
 				  oldTime(0),
@@ -56,9 +56,9 @@ namespace carolocup
 
 		void Parker::setUp()
 		{
-			kv = &getKeyValueConfiguration();
-			m_debug = kv.getValue<int32_t>("global.debug") == 1;
-			m_laneWidth=kv.getValue<int32_t>("global.lane.width");
+			//kv = &getKeyValueConfiguration();
+			//m_debug = kv.getValue<int32_t>("global.debug") == 1;
+			//m_laneWidth=kv.getValue<int32_t>("global.lane.width");
 			oldTime=time(0);
 
 		}
@@ -80,7 +80,7 @@ namespace carolocup
 				const CommunicationLinkMSG communicationLinkMSG = c.getData<CommunicationLinkMSG>();
 				map<unsigned int, double> sensors = communicationLinkMSG.getMapOfSensors();
 
-				
+
 				//suff<
 				//uint16_t distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
 				//map<uint32_t,double> lidarDistance=communicationLinkMSG.LidarDistance();
@@ -118,7 +118,7 @@ namespace carolocup
 					//accumulatedEncoderData+=getIdealWheelEncoder(sensors);
 				/*	double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
 					double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
-					
+
 					if(this->state==Search && ultrasonicSideFront >0){
 						this->state=DiscoveredInitialObject;
 					}else if(this->state==DiscoveredInitialObject && ultrasonicSideFront == 0){
@@ -131,22 +131,22 @@ namespace carolocup
 					}else if(this->state==Positioning && getIdealWheelEncoder(sensors)>=50){
 						this->state=Parking;
 					}*/
-					
+
 					if(this->state==Search && newTime-oldTime>2){
 						this->state=DiscoveredInitialObject;
 						m_vehicleControl.setSpeed(10);
-						steeringWheelAngle(0);
+						m_vehicleControl.setSteeringWheelAngle(0);
 						oldTime=newTime;
 					}else if(this->state==DiscoveredInitialObject && newTime-oldTime>2){
-						this->state==MeasuringParkingSpace;
-						steeringWheelAngle(90);
+						this->state=MeasuringParkingSpace;
+						m_vehicleControl.setSteeringWheelAngle(90);
 						oldTime=newTime;
 					}else if(this->state==MeasuringParkingSpace && newTime-oldTime>2){
 						this->currentSpaceSize=getIdealWheelEncoder(sensors);
-						steeringWheelAngle(-90);
+						m_vehicleControl.setSteeringWheelAngle(-90);
 						oldTime=newTime;
 					}
-					
+
 					Container controller(m_vehicleControl);
 					// Send container
 					getConference().send(controller);
