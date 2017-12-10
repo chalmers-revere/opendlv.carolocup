@@ -49,9 +49,7 @@ global.obstacle.length = 27.5
 global.obstacle.width = 19.5
 global.obstacle.height = 15
 global.parking.length = 53
-#
-#Add the ackermann angle here!
-#global.ackermannAngle =
+global.ackermannAngle = 30
 
 
 #
@@ -59,7 +57,7 @@ global.parking.length = 53
 ###############################################################################
 ###############################################################################
 #
-# NEXT, THE CONFIGURATION FOR OpenDaVINCI TOOLS FOLLOWS. 
+# NEXT, THE CONFIGURATION FOR OpenDaVINCI TOOLS FOLLOWS.
 #
 ###############################################################################
 ###############################################################################
@@ -82,7 +80,7 @@ odsupercomponent.pulsetimeack.timeout = 5000 # (in milliseconds)
 # to deliver their respective containers, this yielding time is used to sleep
 # before supercomponent sends the pulse messages the next module in this execution
 # cycle. This value needs to be adjusted for networked simulations to ensure
-# deterministic execution. 
+# deterministic execution.
 odsupercomponent.pulsetimeack.yield = 5000 # (in microseconds)
 
 # List of modules (without blanks) that will not get a pulse message from odsupercomponent.

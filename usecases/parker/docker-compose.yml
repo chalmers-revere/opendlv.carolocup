@@ -31,26 +31,6 @@ services:
             - ./config:/opt/configuration
         command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
 
-    #Micro-service for camera
-    camera-proxy:
-        build: .
-        network_mode: host
-        ipc: host
-        group_add:
-            - video
-        environment:
-            - DISPLAY=$DISPLAY
-        volumes:
-            - .:/opt/carolocup.data
-            - ./config:/opt/configuration
-            - /tmp/.X11-unix:/tmp/.X11-unix
-        depends_on:
-            - odsupercomponent
-        privileged: true
-        restart: on-failure
-        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-cameraproxy --cid=${CID} --freq=20 --configuration=/opt/configuration/configuration"
-
-    # carolocup-control-proxy-serialinhandler
 #    carolocup-control-proxy-serialinhandler:
 #        build: .
 #        network_mode: "host"
@@ -77,8 +57,8 @@ services:
 #        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=out"
 #
 
-    #Micro-service for lanedtecter scenario.
-    lanefollower:
+    #Micro-service for parking scenario.
+    parker:
          build: .
          network_mode: host
          ipc: host
@@ -92,4 +72,4 @@ services:
              #- communicationlink
          restart: on-failure
          privileged: true
-         command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
+         command: "/opt/opendlv.carolocup/bin/carolocup-control-parker --verbose=1  --cid=${CID} --freq=20"
