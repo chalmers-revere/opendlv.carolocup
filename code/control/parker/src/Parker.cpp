@@ -29,6 +29,9 @@ namespace carolocup
 		using namespace odcore::base;
 		using namespace odcore::data;
 		using namespace gap;
+		using namespace odcore::data::image;
+		using namespace odcore::wrapper;
+		using namespace odcore::data::dmcp;
 
 		Parker::Parker(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-parker"),
@@ -39,8 +42,7 @@ namespace carolocup
 				  accumulatedEncoderData(0),
 				  stageProgress(0),
 				  isParking(false),
-				  m_debug(false),
-				  kv(NULL)
+				  m_debug(false)
 		{}
 
 		Parker::~Parker()
@@ -48,9 +50,9 @@ namespace carolocup
 
 		void Parker::setUp()
 		{
-			kv = getKeyValueConfiguration();
+			KeyValueConfiguration kv = getKeyValueConfiguration();
 			m_debug = kv.getValue<int32_t>("global.debug") == 1;
-
+	
 		}
 
 		void Parker::tearDown()
@@ -58,7 +60,7 @@ namespace carolocup
 
 		void Parker::nextContainer(Container &c)
 		{
-			Container communicationLinkContainer = kv.get(CommunicationLinkMSG::ID());
+			Container communicationLinkContainer = getKeyValueDataStore().get(CommunicationLinkMSG::ID());
 			if (c.getDataType() == CommunicationLinkMSG::ID() && communicationLinkContainer.getDataType() == CommunicationLinkMSG::ID())
 			{
 				//Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
@@ -71,12 +73,14 @@ namespace carolocup
 			
 				
 				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
-				map<unsigned int, double> sensors = communicationLinkMSG.getSensors();
+				int oops=communicationLinkMSG.getStateLaneFollower();
+				cout<<oops<<endl;
+				map<unsigned int, double> sensors = communicationLinkMSG.getMapOfSensors();
 				
 				//double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
 				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
 				//double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
-				
+				//suff<
 				//uint16_t distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
 				//map<uint32_t,double> lidarDistance=communicationLinkMSG.LidarDistance();
 				//map<uint32_t,double> lidarStrength=communicationLinkMSG.LidarStrength();
@@ -137,7 +141,7 @@ namespace carolocup
 		
 		
 		double Parker::getIdealWheelEncoder(map<unsigned int,double> sensors){
-			double leftEncoder=sensors.get(ID_IN_ENCODER_L);
+			double leftEncoder=sensors[ID_IN_ENCODER_L];
 			//double rightEncoder=sensors.get(ID_IN_ENCODER_R);
 			//return (leftEncoder+rightEncoder)/2;
 			return leftEncoder;

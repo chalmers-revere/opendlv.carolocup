@@ -39,9 +39,16 @@
 
 #include "opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h"
 
+#include <opendavinci/odcore/wrapper/SharedMemoryFactory.h>
+#include <opendavinci/odcore/wrapper/SharedMemory.h>
+#include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
+
 #include "odvdcarolocupdatamodel/generated/gap/CommunicationLinkMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/ParkerMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
+
+
 
 namespace carolocup
 {
@@ -106,7 +113,6 @@ namespace carolocup
 
 			void tearDown();
 
-			KeyValueConfiguration kv;
 
 			virtual void nextContainer(Container &c);
 
