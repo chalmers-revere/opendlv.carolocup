@@ -35,13 +35,14 @@
 #include "opendavinci/odcore/data/TimeStamp.h"
 
 #include <opendavinci/odcore/base/Thread.h>
-#include "opendavinci/GeneratedHeaders_OpenDaVINCI.h"
+#include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
+#include <automotivedata/GeneratedHeaders_AutomotiveData.h>
 
 #include "opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h"
 
 #include <opendavinci/odcore/wrapper/SharedMemoryFactory.h>
 #include <opendavinci/odcore/wrapper/SharedMemory.h>
-#include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
+
 
 #include "odvdcarolocupdatamodel/generated/gap/CommunicationLinkMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
@@ -62,13 +63,12 @@ namespace carolocup
 		using namespace gap;
 
 /**
- * Time-triggered Parker.
+ * Data-triggered Parker.
  */
 		class Parker : public odcore::base::module::DataTriggeredConferenceClientModule
 		{
 		private:
 			Parker(const Parker & /*obj*/) = delete;
-
 			Parker &operator=(const Parker & /*obj*/) = delete;
 
 		public:
@@ -83,7 +83,7 @@ namespace carolocup
 			virtual ~Parker();
 
 		private:
-			
+
 			bool m_simulator;
 
 			enum CarState
@@ -94,21 +94,21 @@ namespace carolocup
 				Positioning,
 				Parking,
 				Parked
-				
-			};
 
+			};
 			CarState state;
 			double currentSpaceSize;
 
 			AutomotiveMSG m_vehicleControl;
+			ParkerMSG m_parker;
+			SensorsMSG m_sensors;
+
 			long double accumulatedEncoderData;
 			int stageProgress;
-			
 			bool isParking;
-			
 			bool m_debug;
-			
-			
+
+
 			void setUp();
 
 			void tearDown();
@@ -121,20 +121,19 @@ namespace carolocup
 			 *
  			 * return Gaps found during the parking process.
  			 */
-			
+
 			double getIdealWheelEncoder(map<unsigned int,double>);
 			void resetEncoders();
 			vector<double> getDistanceForStages();
-			
+
 			double getLaneWidth();
-			
+
 			char readOdometer();
 			int readSensorData(int sensorId);
-
 			void sendMotionData(double steeringAngle, int speed);
 
-			
-			
+
+
 
 		};
 	}
