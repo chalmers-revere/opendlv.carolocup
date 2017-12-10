@@ -43,8 +43,11 @@ namespace carolocup
 					m_sensors(),
 				  accumulatedEncoderData(0),
 				  stageProgress(0),
+				  laneWidth(0),
 				  isParking(false),
-				  m_debug(false)
+				  m_debug(false),
+				  oldTime(0),
+				  newTime(0)
 
 		{}
 
@@ -53,8 +56,10 @@ namespace carolocup
 
 		void Parker::setUp()
 		{
-			KeyValueConfiguration kv = getKeyValueConfiguration();
+			kv = &getKeyValueConfiguration();
 			m_debug = kv.getValue<int32_t>("global.debug") == 1;
+			m_laneWidth=kv.getValue<int32_t>("global.lane.width");
+			oldTime=time(0);
 
 		}
 
@@ -63,10 +68,9 @@ namespace carolocup
 
 		void Parker::nextContainer(Container &c)
 		{
-			cout << "before first if" << endl;
+			newTime=time(0);
 			if (c.getDataType() == CommunicationLinkMSG::ID())
 			{
-				cout << "first if" << endl;
 				//Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
 
 				//const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
@@ -76,14 +80,12 @@ namespace carolocup
 				const CommunicationLinkMSG communicationLinkMSG = c.getData<CommunicationLinkMSG>();
 				map<unsigned int, double> sensors = communicationLinkMSG.getMapOfSensors();
 
-				//double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
-				//double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
-				//double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
+				
 				//suff<
 				//uint16_t distanceToRightLane=communicationLinkMSG.getDistanceToRightLane();
 				//map<uint32_t,double> lidarDistance=communicationLinkMSG.LidarDistance();
 				//map<uint32_t,double> lidarStrength=communicationLinkMSG.LidarStrength();
-
+				//double ultraSonicBack=sensors.get(ID_IN_ULTRASONIC_SIDE_BACK);
 				if(this->state==Parking){
 					vector<double> stages = getDistanceForStages();
 					//double turningAngle=90;
@@ -101,7 +103,7 @@ namespace carolocup
 							m_vehicleControl.setLights(ID_OUT_INDICATOR_RF);
 							m_vehicleControl.setLights(ID_OUT_INDICATOR_RB);
 						}
-						accumulatedEncoderData+=getIdealWheelEncoder(sensors);
+						//accumulatedEncoderData+=getIdealWheelEncoder(sensors);
 					}else{
 						resetEncoders();
 						m_vehicleControl.setSteeringWheelAngle(90);
@@ -111,8 +113,12 @@ namespace carolocup
 						}
 					}
 
+
 				}else{
-					/*accumulatedEncoderData+=getIdealWheelEncoder(sensors);
+					//accumulatedEncoderData+=getIdealWheelEncoder(sensors);
+				/*	double ultrasonicSideBack=sensors[ID_IN_ULTRASONIC_BACK];
+					double ultrasonicSideFront=sensors[ID_IN_ULTRASONIC_SIDE_FRONT];
+					
 					if(this->state==Search && ultrasonicSideFront >0){
 						this->state=DiscoveredInitialObject;
 					}else if(this->state==DiscoveredInitialObject && ultrasonicSideFront == 0){
@@ -125,9 +131,28 @@ namespace carolocup
 					}else if(this->state==Positioning && getIdealWheelEncoder(sensors)>=50){
 						this->state=Parking;
 					}*/
+					
+					if(this->state==Search && newTime-oldTime>2){
+						this->state=DiscoveredInitialObject;
+						m_vehicleControl.setSpeed(10);
+						steeringWheelAngle(0);
+						oldTime=newTime;
+					}else if(this->state==DiscoveredInitialObject && newTime-oldTime>2){
+						this->state==MeasuringParkingSpace;
+						steeringWheelAngle(90);
+						oldTime=newTime;
+					}else if(this->state==MeasuringParkingSpace && newTime-oldTime>2){
+						this->currentSpaceSize=getIdealWheelEncoder(sensors);
+						steeringWheelAngle(-90);
+						oldTime=newTime;
+					}
+					
+					Container controller(m_vehicleControl);
+					// Send container
+					getConference().send(controller);
 
 				}
-				cout<< getIdealWheelEncoder(sensors)<<endl;
+
 				cout<<" Car state "<<this->state<<endl;
 				cout<<" Car stage "<<stageProgress<<endl;
 				cout<<" distance travled "<< getIdealWheelEncoder(sensors)<<endl;
@@ -140,6 +165,7 @@ namespace carolocup
 
 		double Parker::getIdealWheelEncoder(map<unsigned int,double> sensors){
 			double leftEncoder=sensors[ID_IN_ENCODER_L];
+			//double rightEncoder=sensors.get(ID_IN_ENCODER_R);
 			//return (leftEncoder+rightEncoder)/2;
 			return leftEncoder;
 		}
@@ -167,9 +193,10 @@ namespace carolocup
 		}
 
 		void Parker::resetEncoders(){
-			//const ParkerMSG parkerMSG;
-			//parker.setReset(1);
+			m_parker.setReset(1);
 		}
+
+
 		double Parker::getLaneWidth(){
 			return 0;
 		}

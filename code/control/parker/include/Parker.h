@@ -23,6 +23,7 @@
 #include "../../defines/defines.h"
 
 #include <cstdio>
+#include <ctime>
 #include <cmath>
 #include <iostream>
 #include <math.h>
@@ -105,10 +106,11 @@ namespace carolocup
 
 			long double accumulatedEncoderData;
 			int stageProgress;
+			double m_laneWidth;
 			bool isParking;
 			bool m_debug;
-
-
+			std::time_t oldTime;
+			std::time_t newTime;
 			void setUp();
 
 			void tearDown();
