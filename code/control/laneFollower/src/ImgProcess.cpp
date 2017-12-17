@@ -34,7 +34,7 @@ namespace carolocup
 				m_image(),
 				m_threshold1(50),  // Both thresholds are dynamically adjusted at image processing
 				m_threshold2(200),
-				m_control_scanline((M_CONTROL_SCAN_LINE * 3 / 4)-10),// Lane markings are searched for at this pixel line
+				m_control_scanline((M_CONTROL_SCAN_LINE * 2 / 4)-10),// Lane markings are searched for at this pixel line
 				m_stop_scanline(M_STOP_SCAN_LINE),// Stop line lane marking searched for at this pixel line
 				m_distance(M_DISTANCE),  // Distance from the lane marking at which the car attempts to drive
 				m_image_mat(),
@@ -106,7 +106,7 @@ namespace carolocup
 			cerr << "size rows -> " <<  m_image.rows << " size cols -> " << m_image.cols << endl;
 			cerr << "size rows_2 -> " <<  m_image.size().width << " size cols_2 -> " << m_image.size().height << endl;
 			//Region of interest
-			Mat image_roi = m_image(Rect(0, m_image.size().height/4, m_image.size().width, m_image.size().height*3/4));
+			Mat image_roi = m_image(Rect(0, m_image.size().height/4, m_image.size().width, m_image.size().height*2/4));
 
 			// Apply a gaussian blur to the image, to smooth it out
 			GaussianBlur(image_roi, m_image_new, Size(5, 5), 0, 0);
