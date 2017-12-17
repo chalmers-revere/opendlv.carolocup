@@ -34,7 +34,7 @@ namespace carolocup
 				m_image(),
 				m_threshold1(50),  // Both thresholds are dynamically adjusted at image processing
 				m_threshold2(200),
-				m_control_scanline(M_CONTROL_SCAN_LINE),// Lane markings are searched for at this pixel line
+				m_control_scanline((M_CONTROL_SCAN_LINE * 3 / 4)-10),// Lane markings are searched for at this pixel line
 				m_stop_scanline(M_STOP_SCAN_LINE),// Stop line lane marking searched for at this pixel line
 				m_distance(M_DISTANCE),  // Distance from the lane marking at which the car attempts to drive
 				m_image_mat(),
@@ -103,12 +103,13 @@ namespace carolocup
 //			m_image_new = Mat(m_image.rows, m_image.cols, CV_8UC1);
 //			// Copy the original image to the new image as greyscale
 //			cvtColor(m_image, m_image_new, COLOR_BGR2GRAY);
-
+			cerr << "size rows -> " <<  m_image.rows << " size cols -> " << m_image.cols << endl;
+			cerr << "size rows_2 -> " <<  m_image.size().width << " size cols_2 -> " << m_image.size().height << endl;
 			//Region of interest
-			Mat image_roi = m_image(Rect(100, 100, m_image.rows, 300));
+			Mat image_roi = m_image(Rect(0, m_image.size().height/4, m_image.size().width, m_image.size().height*3/4));
 
 			// Apply a gaussian blur to the image, to smooth it out
-			GaussianBlur(m_image, m_image_new, Size(5, 5), 0, 0);
+			GaussianBlur(image_roi, m_image_new, Size(5, 5), 0, 0);
 
 			// Calculate median of pixel color in order to dynamically calculate Canny thresholds
 			double median;
@@ -136,7 +137,7 @@ namespace carolocup
 			//threshold: The minimum number of intersections to “detect” a line
 			//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded.
 			//maxLineGap: The maximum gap between two points to be considered in the same line.
-            HoughLinesP(m_image_dst, lines, 1, CV_PI/180, 100, 0, 50);
+            HoughLinesP(m_image_dst, lines, 1, CV_PI/180, 80, 0, 200);
 
             for( size_t i = 0; i < lines.size(); i++ )
             {
