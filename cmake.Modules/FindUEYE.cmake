@@ -14,15 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 IF(NOT UEYE_FOUND)
     FIND_PATH(UEYE_INCLUDE_DIR
-            NAMES "uEye.h"
+            NAMES ueye.h
             PATHS ${LIBUEYE_PATH}/include/
             /usr/local/include/
             /usr/include/
             )
-
-    MESSAGE(STATUS "Found uEye_dir: ${UEYE_INCLUDE_DIR}")
 
     FIND_FILE(UEYE_LIBRARIES libueye_api64.so.4.90
             PATHS ${LIBUEYE_PATH}/lib/
@@ -33,8 +32,6 @@ IF(NOT UEYE_FOUND)
             /usr/lib64/
             /usr/lib/
             )
-
-    MESSAGE(STATUS "Found uEye_lib: ${UEYE_LIBRARIES}")
 
     IF(UEYE_INCLUDE_DIR AND UEYE_LIBRARIES)
         SET (UEYE_FOUND TRUE)
@@ -50,4 +47,3 @@ IF(NOT UEYE_FOUND)
         ENDIF()
     ENDIF()
 ENDIF()
-

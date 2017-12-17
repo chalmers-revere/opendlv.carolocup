@@ -41,10 +41,17 @@ namespace carolocup
 
             int retVal = is_InitCamera(&m_capture, NULL);
 
+            //double *dFPS;
+
             is_AllocImageMem(m_capture, width, height, bpp, &m_imageMemory, &m_pid);
             is_SetImageMem(m_capture, m_imageMemory, m_pid);
             is_SetDisplayMode(m_capture, IS_SET_DM_DIB);
             is_SetColorMode(m_capture, IS_CM_MONO8);
+
+			is_SetHardwareGamma(m_capture, IS_SET_HW_GAMMA_OFF);
+			is_SetWhiteBalance(m_capture, IS_SET_WB_DAYLIGHT_65);
+
+			//is_SetFrameRate(m_capture, 10.0, dFPS);
 
             int pnCol, pnColMode;
             is_GetColorDepth(m_capture, &pnCol , &pnColMode);
@@ -61,7 +68,7 @@ namespace carolocup
                 m_capture = 0;
             }
             else {
-                m_image = cvCreateImageHeader(cvSize(m_width, m_height), IPL_DEPTH_8U, m_bpp);
+                m_image = cvCreateImageHeader(cvSize(m_width, m_height), IPL_DEPTH_8U, 1);
             }
         }
 
@@ -98,7 +105,7 @@ namespace carolocup
                 ::memcpy(dest, m_ueyeImagePtr, size);
                 m_image->imageData = (char*)m_ueyeImagePtr;
 
-              //  cvShowImage("WindowShowImage", m_image);
+                cvShowImage("WindowShowImage", m_image);
                 cvWaitKey(10);
 
                 retVal = true;
@@ -108,6 +115,6 @@ namespace carolocup
         }
 
     }
-} // automotive::miniature
+}
 
 #endif /*HAVE_UEYE*/

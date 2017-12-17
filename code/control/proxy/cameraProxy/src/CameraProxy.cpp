@@ -95,9 +95,11 @@ namespace carolocup
 			{
 				m_camera = unique_ptr<Camera>(new OpenCVCamera(NAME, ID, WIDTH, HEIGHT, BPP));
 			}
-			else
+			if (TYPE.compare("ueye") == 0)
 			{
-				cerr << "Use \"openCV\" as camera type. " << endl;
+#ifdef HAVE_UEYE
+				m_camera = unique_ptr<Camera>(new uEyeCamera(NAME, ID, WIDTH, HEIGHT, BPP));
+#endif
 			}
 
 			if (m_camera.get() == NULL)

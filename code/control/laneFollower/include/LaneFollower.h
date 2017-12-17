@@ -22,8 +22,12 @@
 
 #include "../../defines/defines.h"
 
+#include "ImgProcess.h"
+#include "PID.h"
+
 #include <stdint.h>
 #include <iostream>
+#include <fstream>
 #include <stdint.h>
 #include <memory>
 #include <math.h>
@@ -52,111 +56,104 @@
 #include "odvdcarolocupdatamodel/generated/gap/LaneFollowerMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
 
-#include <opendavinci/odcore/data/TimeStamp.h>
-
 namespace carolocup
 {
-    namespace control
-    {
+	namespace control
+	{
 
-        using namespace std;
-        using namespace gap;
-        using namespace cv;
-        using namespace odcore::data::image;
+		using namespace std;
+		using namespace gap;
+		using namespace cv;
+		using namespace odcore::data::image;
 
 /**
  * Time-triggered laneFollower.
  */
-        class LaneFollower : public odcore::base::module::TimeTriggeredConferenceClientModule
-        {
-        private:
-            LaneFollower(const LaneFollower & /*obj*/) = delete;
+		class LaneFollower : public odcore::base::module::TimeTriggeredConferenceClientModule
+		{
+		private:
+			LaneFollower(const LaneFollower & /*obj*/) = delete;
 
-            LaneFollower &operator=(const LaneFollower & /*obj*/) = delete;
+			LaneFollower &operator=(const LaneFollower & /*obj*/) = delete;
 
-        public:
-            /**
-             * Constructor.
-             *
-             * @param argc Number of command line arguments.
-             * @param argv Command line arguments.
-             */
-            LaneFollower(const int &argc, char **argv);
+		public:
+			/**
+			 * Constructor.
+			 *
+			 * @param argc Number of command line arguments.
+			 * @param argv Command line arguments.
+			 */
+			LaneFollower(const int &argc, char **argv);
 
-            virtual ~LaneFollower();
+			virtual ~LaneFollower();
 
-        private:
-            void setUp();
+		private:
+			void setUp();
 
-            void tearDown();
+			void tearDown();
 
-            odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+			odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
 
-            /**
-             * This method is called to process an incoming container.
-             *
-             * @param c Container to process.
-             * @return true if c was successfully processed.
-             */
-            bool readSharedImage(odcore::data::Container &c);
+			bool m_debug;
+			bool Sim;
+			int pid_tuning;
 
-            shared_ptr <odcore::wrapper::SharedMemory> m_sharedImageMemory;
-            shared_ptr <odcore::wrapper::SharedMemory> m_sharedProcessedImageMemory;
-            SharedImage m_sharedProcessedImage;
+			odcore::data::TimeStamp m_previousTime;
 
-            bool m_hasAttachedToSharedImageMemory;
-            bool m_debug;
-            bool Sim;
+			double m_eSum;
+			double m_eOld;
 
-            cv::Mat m_image;
-            odcore::data::TimeStamp m_previousTime;
+			AutomotiveMSG m_vehicleControl;
+			LaneFollowerMSG laneFollowerMSG;
 
-            double m_eSum;
-            double m_eOld;
+			double p_gain;
+			double i_gain;
+			double d_gain;
 
-            AutomotiveMSG m_vehicleControl;
-            LaneFollowerMSG laneFollowerMSG;
+			int _state, _isOvertaking;
 
-            /**
-             *Canny algoithm
-             * http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/canny_detector/canny_detector.html
-             *
-             *If a pixel gradient is higher than the upper threshold, the pixel is accepted as an edge
-             *If a pixel gradient value is below the lower threshold, then it is rejected.
-             *If the pixel gradient is between the two thresholds, then it will be accepted only if it is connected to a pixel that is above the upper threshold.
-             *
-             **/
-            int32_t m_threshold1;
-            int32_t m_threshold2;
-            int32_t m_control_scanline;
-            int32_t m_stop_scanline;
-            int32_t m_distance;
+			bool *stop;
+			double stopCounter;
 
+			enum StateMachine
+			{
+				IDLE,
+				MOVING,
+				RESUME,
+				STOP_LINE,
+				STOP,
+				DANGER
+			};
 
-            double p_gain;
-            double i_gain;
-            double d_gain;
+			StateMachine state, prevState;
 
-            int _state;
+			bool inRightLane;
+			int *currentDistance;
+			int _stop;
 
-            // Class variables
-            Mat m_image_mat, m_image_new;
-            bool stop;
-            double stopCounter, counter;
-            String state, prevState;
-            bool inRightLane;   //Flip this value to indicate lane change
-            int currentDistance;
-            int _stop;
+			double speed, steer;
 
-            void processImage();
+			ImgProcess imgProcess;
 
-            //double Median(cv::Mat mat);
+			PID auto_pid;
 
-            double errorCalculation();
+			double param[3];
+			double dp[3];
 
-            void laneFollower(double e);
-        };
-    }
+			double best_err;
+			double err;
+			double sum;
+
+			int firstIteration, iteration;
+
+			void laneFollower(double e);
+
+			void state_machine();
+
+			void sendToConference(bool sendMSG);
+
+		};
+	}
 } // carolocup::control
 
 #endif /*CONTROL_LANEFOLLOWER_H*/

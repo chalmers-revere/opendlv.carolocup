@@ -90,6 +90,10 @@ void establishContact(char toSend, int st)
 	unsigned int s = 1;
 	while (Serial.available() <= 0)
 	{
+		if (isRCOn() >= 3)
+		{
+			break;
+		}
 		Serial.write(toSend);   // send a char
 		ledControl.setStatusLight(s);
 		wait(0.5);
@@ -106,7 +110,13 @@ void establishContact(char toSend, int st)
 
 void waitConnection()
 {
-	while (!Serial); // wait for serial port to connect. Needed for native USB port only
+	while (!Serial) // wait for serial port to connect. Needed for native USB port only
+	{
+		if (isRCOn() >= 3)
+		{
+			break;
+		}
+	}
 }
 
 void wait(double seconds)

@@ -7,11 +7,11 @@ trap "docker-compose down --rmi 'all' type --volumes --remove-orphans" SIGINT
 
 if [ -n "${!BUILD}" ]; then
     echo "Building First!!!" >&2
-    cd $HOME/CaroloCup/opendlv.carolocup/docker
-    make updateDockerBaseImage 
+    cd $HOME/CaroloCup/opendlv.carolocup/docker   
     make buildIncremental
     make createDockerImage
-    make removeNoneImagesFromDocker  
+    make removeNoneImagesFromDocker
+    make removeExitedContainers 
 else
     echo "Not Building, Only Running!!!" >&2
 fi

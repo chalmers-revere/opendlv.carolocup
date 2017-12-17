@@ -34,7 +34,7 @@ global.buffer.memorySegmentSize = 2800000 # Size of a memory segment in bytes.
 global.buffer.numberOfMemorySegments = 40  # Number of memory segments.
 
 # The following key describes the list of modules expected to participate in this --cid session.
-global.session.expectedModules = copplar-control-example
+global.session.expectedModules = odrecorderh264,proxy-camera
 
 
 ###############################################################################
@@ -213,9 +213,11 @@ global.sim = 0    # Set simulation true or false
 #
 # CONFIGURATION FOR LANEFOLLOWER
 #
-global.lanefollower.p = 1.2    #OG val = 1.3
-global.lanefollower.d = 0.2    #OG val = 0.10
-global.lanefollower.i = 0.01    #OG val = 0.01
+global.lanefollower.p_gain = 1.2
+global.lanefollower.d_gain = 0.2
+global.lanefollower.i_gain = 0.01
+
+global.laneFollower.pid_tuning = 0
 
 ###############################################################################
 ###############################################################################
@@ -240,11 +242,11 @@ global.cameraProxy.debug = 0
 global.cameraProxy.useRecorder = 1 # 1 = record all captured data directly, 0 otherwise.
 global.cameraProxy.recorder.output = file://recs/
 global.cameraProxy.camera.name = WebCam
-global.cameraProxy.camera.type = OpenCV # OpenCV or UEYE
+global.cameraProxy.camera.type = UEYE # OpenCV or UEYE
 global.cameraProxy.camera.id = 0 # Select here the proper ID for OpenCV
-global.cameraProxy.camera.width = 640 #752-UEYE, 640-OpenCV
+global.cameraProxy.camera.width = 752 #752-UEYE, 640-OpenCV
 global.cameraProxy.camera.height = 480
-global.cameraProxy.camera.bpp = 3 #3- openCV, 1-UEYE
+global.cameraProxy.camera.bpp = 1 #3- openCV, 1-UEYE
 global.cameraProxy.camera.flipped = 1 #1 = flipped image, 0 =notflipped image.
 global.cameraProxy.camera.dumpSharedData = 1
 
@@ -253,20 +255,18 @@ global.cameraProxy.camera.dumpSharedData = 1
 #
 # CONFIGURATION FOR CommunicationLink
 #
-global.communicationlink.functionlane = $FUNCTION1
-global.communicationlink.function2 = $FUNCTION2
+global.communicationlink.example = example
 
 ###############################################################################
 ###############################################################################
 #
 # CLIENT IP
 #
-global.udpconnectionstreamer.ip = $IP
+global.udpconnectionstreamer.example = example
 
 ###############################################################################
 ###############################################################################
 #
 # SERIALS
 #
-global.serialhandler.one = /dev/ttyACM0
-global.serialhandler.two = /dev/ttyACM1
+global.serialhandler.example = example

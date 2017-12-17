@@ -19,13 +19,17 @@
 # What Docker images shall be used?
 # For example, seresearch/base is a generic name to the base image to be used
 # that, for example, could point to seresearch/ubuntu
-REPOSITORY=seresearch
+REPOSITORY=carolocup
 IMAGE=scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base
 BASE_IMAGE=$(REPOSITORY)/$(IMAGE)
-BASE_IMAGE_VERSION=v0.1.4
+BASE_IMAGE_VERSION=latest #v0.2 #v0.1.4
 BASE_IMAGE_DEV_SUFFIX=-dev
 BASE_IMAGE_DEV=$(REPOSITORY)/$(IMAGE)$(BASE_IMAGE_DEV_SUFFIX)
 BASE_IMAGE_DEV_VERSION=$(BASE_IMAGE_VERSION)
+
+B_IMAGE=seresearch/$(IMAGE)
+B_IMAGE_DEV=seresearch/$(IMAGE)$(BASE_IMAGE_DEV_SUFFIX)
+V=v0.1.4
 
 ###############################################################################
 # Product names.
@@ -112,10 +116,10 @@ updateDockerImages: updateDockerBaseImage updateDockerBaseImageDev
 updateDockerBaseImage: updateDockerBaseImageNonDev updateDockerBaseImageDev
 
 updateDockerBaseImageNonDev:
-	$(DOCKER) pull $(BASE_IMAGE):$(BASE_IMAGE_VERSION)
+	$(DOCKER) pull $(B_IMAGE):$(V)
 
 updateDockerBaseImageDev:
-	$(DOCKER) pull $(BASE_IMAGE_DEV):$(BASE_IMAGE_DEV_VERSION)
+	$(DOCKER) pull $(B_IMAGE_DEV):$(V)
 
 ###############################################################################
 define compile

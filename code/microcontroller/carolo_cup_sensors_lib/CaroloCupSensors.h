@@ -23,11 +23,9 @@
 #define ID_IN_ROLL                  12
 #define ID_IN_PITCH                 13
 
-#define US_FRONT 0x71 //front ultrasonic pin
-#define US_FRONT_T 0x72 //front tilted right ultrasonic
-#define US_BACK 0x75 //back ultrasonic pin
-#define US_SIDE_FRONT 0x73 //side front right ultrasonic
-#define US_SIDE_BACK 0x74 //side back ultrasonic pin
+#define US_BACK 0x71 //back ultrasonic pin
+#define US_SIDE_FRONT 0x72 //side front right ultrasonic
+#define US_SIDE_BACK 0x73 //side back ultrasonic pin
 
 #define ENCODER_A 2 //wheel encoder channel A pin
 #define ENCODER_B 3 //wheel encoder channel B pin

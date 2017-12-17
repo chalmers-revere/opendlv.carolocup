@@ -59,6 +59,21 @@
 // LANE FOLLOWER
 //#####################################################################################################################
 #define _SPEED 102
+
+#define M_CONTROL_SCAN_LINE 300 // Lane markings are searched for at this pixel line
+#define M_STOP_SCAN_LINE 160 // Stop line lane marking searched for at this pixel line
+#define M_DISTANCE 120   // Distance from the lane marking at which the car attempts to drive
+
+#define M_CONTROL_SCAN_LINE_SIM 350 // Lane markings are searched for at this pixel line
+#define M_STOP_SCAN_LINE_SIM 462 // Stop line lane marking searched for at this pixel line
+#define M_DISTANCE_SIM 250   // Distance from the lane marking at which the car attempts to drive
+
+#define _IDLE 0
+#define _MOVING 1
+#define _RESUME 2
+#define _STOP_LINE 3
+#define _STOP 4
+#define _DANGER 5
 //#####################################################################################################################
 // PARK
 //#####################################################################################################################

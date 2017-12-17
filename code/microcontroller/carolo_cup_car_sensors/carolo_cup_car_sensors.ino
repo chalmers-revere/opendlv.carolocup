@@ -11,7 +11,7 @@ unsigned long interval;
 
 Protocol protocol;
 Odometer odometer;
-UltrasonicSensor u_center, u_front_right, u_right_front, u_right_back, u_back;
+UltrasonicSensor u_right_front, u_right_back, u_back;
 Axes axes;
 
 volatile unsigned long bounceTimeP = 0; // variable to hold ms count to debounce a pressed switch
@@ -27,8 +27,6 @@ void setup()
 	axes.begin();
 	odometer.begin();
 
-	u_center.attach(US_FRONT);
-	u_front_right.attach(US_FRONT_T);
 	u_right_front.attach(US_SIDE_FRONT);
 	u_right_back.attach(US_SIDE_BACK);
 	u_back.attach(US_BACK);
@@ -59,8 +57,6 @@ void loop()
 
 	sendButtonsIDLE();
 
-	encodeAndWrite(ID_IN_ULTRASONIC_CENTER, u_center.getDistance());
-	encodeAndWrite(ID_IN_ULTRASONIC_CENTER_R, u_front_right.getDistance());
 	encodeAndWrite(ID_IN_ULTRASONIC_SIDE_FRONT, u_right_front.getDistance());
 	encodeAndWrite(ID_IN_ULTRASONIC_SIDE_BACK, u_right_back.getDistance());
 	encodeAndWrite(ID_IN_ULTRASONIC_BACK, u_back.getDistance());

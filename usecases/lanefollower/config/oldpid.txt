@@ -1,3 +1,0 @@
-lanefollowerp=1.2
-lanefollowerd=0.2
-lanefolloweri=0.01
