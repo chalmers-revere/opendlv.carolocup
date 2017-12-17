@@ -34,7 +34,7 @@ namespace carolocup
 				m_image(),
 				m_threshold1(50),  // Both thresholds are dynamically adjusted at image processing
 				m_threshold2(200),
-				m_control_scanline((M_CONTROL_SCAN_LINE * 2 / 4) - 5),// Lane markings are searched for at this pixel line
+				m_control_scanline((M_CONTROL_SCAN_LINE * 2 / 4) + 10),// Lane markings are searched for at this pixel line
 				m_stop_scanline(M_STOP_SCAN_LINE),// Stop line lane marking searched for at this pixel line
 				m_distance(M_DISTANCE),  // Distance from the lane marking at which the car attempts to drive
 				m_image_mat(),
@@ -104,7 +104,7 @@ namespace carolocup
 //			// Copy the original image to the new image as greyscale
 //			cvtColor(m_image, m_image_new, COLOR_BGR2GRAY);
 			cerr << "size rows -> " <<  m_image.rows << " size cols -> " << m_image.cols << endl;
-			cerr << "size rows_2 -> " <<  m_image.size().width << " size cols_2 -> " << m_image.size().height << endl;
+			cerr << "size width -> " <<  m_image.size().width << " height -> " << m_image.size().height << endl;
 			//Region of interest
 			Mat image_roi = m_image(Rect(0, m_image.size().height/4, m_image.size().width, m_image.size().height*2/4));
 
@@ -144,14 +144,14 @@ namespace carolocup
 				Vec4i l = lines[i];
 				TimeStamp now;
 				//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LINES " << abs(l[2] - l[0]) << endl;
-				if ( abs(l[2] - l[0]) < 300)
-				{
+//				if ( abs(l[2] - l[0]) < 300)
+//				{
 					line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 2, CV_AA);
-				}
-				else
-				{
-					line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 2, CV_AA);
-				}
+//				}
+//				else
+//				{
+//					line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 2, CV_AA);
+//				}
 			}
 
 //			for( size_t i = 0; i < lines.size(); i++ )
