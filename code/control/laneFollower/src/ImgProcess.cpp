@@ -137,7 +137,7 @@ namespace carolocup
 			//threshold: The minimum number of intersections to “detect” a line
 			//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded
 			//maxLineGap: The maximum gap between two points to be considered in the same line.
-            HoughLinesP(m_image_dst, lines, 2, CV_PI/180, 150, 25, 100);
+            HoughLinesP(m_image_dst, lines, 1, CV_PI/180, 125, 25, 100);
 
             for( size_t i = 0; i < lines.size(); i++ )
             {
@@ -148,10 +148,10 @@ namespace carolocup
 					if ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5) {
 						line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 2, CV_AA);
 					}
-					else
-					{
-						line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 0), 2, CV_AA);
-					}
+//					else
+//					{
+//						line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 0), 2, CV_AA);
+//					}
 
 				}
 //				if ( abs(l[2] - l[0]) < 300)
