@@ -34,7 +34,7 @@ namespace carolocup
 				m_image(),
 				m_threshold1(50),  // Both thresholds are dynamically adjusted at image processing
 				m_threshold2(200),
-				m_control_scanline((M_CONTROL_SCAN_LINE * 2 / 4)-10),// Lane markings are searched for at this pixel line
+				m_control_scanline((M_CONTROL_SCAN_LINE * 2 / 4) - 5),// Lane markings are searched for at this pixel line
 				m_stop_scanline(M_STOP_SCAN_LINE),// Stop line lane marking searched for at this pixel line
 				m_distance(M_DISTANCE),  // Distance from the lane marking at which the car attempts to drive
 				m_image_mat(),
@@ -137,7 +137,7 @@ namespace carolocup
 			//threshold: The minimum number of intersections to “detect” a line
 			//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded
 			//maxLineGap: The maximum gap between two points to be considered in the same line.
-            HoughLinesP(m_image_dst, lines, 2, CV_PI/180, 175, 75, 100);
+            HoughLinesP(m_image_dst, lines, 2, CV_PI/180, 150, 50, 100);
 
             for( size_t i = 0; i < lines.size(); i++ )
             {
