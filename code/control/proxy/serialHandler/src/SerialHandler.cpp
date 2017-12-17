@@ -233,7 +233,16 @@ namespace carolocup
 			}
 			else if (serialBehaviour.compare("in") == 0)
 			{
-				c = c;
+				if (c.getDataType() == ResetMSG::ID())
+				{
+					Container resetContainer = c.getData<ResetMSG>();
+					const ResetMSG resetMSG = resetContainer.getData<ResetMSG>();
+					if (resetMSG.getResetOdometer()) {
+						odometerCounter = 0;
+						km = 0;
+					}
+				}
+
 				isSensorValues = false;
 				raw_sensors[ID_IN_ULTRASONIC_CENTER].clear();
 				raw_sensors[ID_IN_ULTRASONIC_CENTER_R].clear();

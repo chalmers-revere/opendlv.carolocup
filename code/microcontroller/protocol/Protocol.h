@@ -11,6 +11,13 @@
 #define HEADER 0x7E
 #define CHECK 0xFF
 
+#define ID_LIGHTS               0
+#define ID_MOTOR                1
+#define ID_SERVO                2
+
+#define FORWARD_START           100
+#define BACKWARD_START          60
+
 /**
  * Final data form
  */
@@ -69,6 +76,7 @@ private:
 	bool isHeader(uint8_t byte);
 
 	protocol_data data;
+
 };
 
 #endif //CAROLOCUP_SOFTWARE_PROTOCOL_H

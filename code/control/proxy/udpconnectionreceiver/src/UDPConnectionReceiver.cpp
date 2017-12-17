@@ -43,42 +43,69 @@ namespace carolocup
 
 		void UDPReceiveBytes::nextString(const string &s)
 		{
-			cout << "RECEIVED : " << s.length() << " bytes containing '" << s << "'" << endl;
-			string received = decodedNetString(s).c_str();
+			try
+			{
+				cout << "RECEIVED : " << s.length() << " bytes containing '" << s << "'" << endl;
+				string received = decodedNetString(s).c_str();
 
-			if (!(notValid = received.compare("stop")))
-			{
-				_udpmsg.setStateFunctionLane(0);
-				_udpmsg.setStateFunctionOvertaker(0);
-				_udpmsg.setStateFunctionParker(0);
-			}
-			else if (!(notValid = received.compare("lane")))
-			{
-				_udpmsg.setStateFunctionLane(1);
-				_udpmsg.setStateFunctionOvertaker(0);
-				_udpmsg.setStateFunctionParker(0);
-			}
-			else if (!(notValid = received.compare("overtake")))
-			{
-				_udpmsg.setStateFunctionLane(0);
-				_udpmsg.setStateFunctionOvertaker(1);
-				_udpmsg.setStateFunctionParker(0);
-			}
-			else if (!(notValid = received.compare("park")))
-			{
-				_udpmsg.setStateFunctionLane(0);
-				_udpmsg.setStateFunctionOvertaker(0);
-				_udpmsg.setStateFunctionParker(1);
-			}
+				if (!(notValid = received.compare("stop")))
+				{
+					_udpmsg.setStateFunctionLane(0);
+					_udpmsg.setStateFunctionOvertaker(0);
+					_udpmsg.setStateFunctionParker(0);
+				}
+				else if (!(notValid = received.compare("lane")))
+				{
+					_udpmsg.setStateFunctionLane(1);
+					_udpmsg.setStateFunctionOvertaker(0);
+					_udpmsg.setStateFunctionParker(0);
+				}
+				else if (!(notValid = received.compare("overtake")))
+				{
+					_udpmsg.setStateFunctionLane(0);
+					_udpmsg.setStateFunctionOvertaker(1);
+					_udpmsg.setStateFunctionParker(0);
+				}
+				else if (!(notValid = received.compare("park")))
+				{
+					_udpmsg.setStateFunctionLane(0);
+					_udpmsg.setStateFunctionOvertaker(0);
+					_udpmsg.setStateFunctionParker(1);
+				}
+				else if (!(notValid = (received.find("p/") == string::npos)))
+				{
+					int delimiterIndex = received.find("/");
+					double value = atof(received.substr(delimiterIndex + 1).c_str());
+					_udpmsg.setP(value);
+				}
+				else if (!(notValid = (received.find("i/") == string::npos)))
+				{
+					int delimiterIndex = received.find("/");
+					double value = atof(received.substr(delimiterIndex + 1).c_str());
+					_udpmsg.setI(value);
+				}
+				else if (!(notValid = (received.find("d/") == string::npos)))
+				{
+					int delimiterIndex = received.find("/");
+					double value = atof(received.substr(delimiterIndex + 1).c_str());
+					_udpmsg.setD(value);
+				}
 
-			if (!notValid && hasConference)
-			{
-				cout << "SENDING CONTAINER" << endl;
-				Container container(_udpmsg);
-				// Send container.
-				conference->send(container);
+
+				if (!notValid && hasConference)
+				{
+					cout << "SENDING CONTAINER" << endl;
+					Container container(_udpmsg);
+					// Send container.
+					conference->send(container);
+				}
+
+				notValid = 1;
 			}
-			notValid = 1;
+			catch (const char *msg)
+			{
+				cerr << "Error while parsing UDP message: " << msg << endl;
+			}
 		}
 
 		UDPConnectionReceiver::UDPConnectionReceiver(const int &argc, char **argv)

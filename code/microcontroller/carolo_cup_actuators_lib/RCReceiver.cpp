@@ -49,7 +49,7 @@ int RCReceiver::filter(int val)
 	//convert to range 0 to 180
 	if (filtered >= LO && filtered <= DEAD_LOW)
 	{
-		filtered = map(filtered, LO, DEAD_LOW, FULL_BACKWARD, IDLE_SPEED);
+		filtered = map(filtered, LO, DEAD_LOW, MAX_LEFT, MED);
 	}
 	else if (filtered == MIDDLE)
 	{
@@ -57,7 +57,7 @@ int RCReceiver::filter(int val)
 	}
 	else if (filtered >= DEAD_HIGH && filtered <= HI)
 	{
-		filtered = map(filtered, DEAD_HIGH, HI, IDLE_SPEED, FULL_FORWARD);
+		filtered = map(filtered, DEAD_HIGH, HI, MED, MAX_RIGHT);
 	}
 	//end of convertion
 

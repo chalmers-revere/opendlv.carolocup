@@ -29,7 +29,7 @@
 
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
-#include "odvdcarolocupdatamodel/generated/gap/GyroMSG.h"
+#include "odvdcarolocupdatamodel/generated/gap/ResetMSG.h"
 
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/data/TimeStamp.h>

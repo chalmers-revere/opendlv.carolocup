@@ -1,9 +1,24 @@
 #!/bin/bash
 
-cwd=$(pwd)
-trap "docker-compose down" SIGINT
+cwd="$( cd "$(dirname "$0")" ; pwd -P )"
+BUILD=$1
 
-cd $HOME/CaroloCup/opendlv.carolocup/docker && make updateDockerBaseImage && make buildIncremental && make createDockerImage && make removeNoneImagesFromDocker &&
+trap "docker-compose down --rmi 'all' type --volumes --remove-orphans" SIGINT
 
-cd $cwd && xhost + && docker-compose down && docker-compose up --build >> log.txt
+if [ -n "${!BUILD}" ]; then
+    echo "Building First!!!" >&2
+    cd $HOME/CaroloCup/opendlv.carolocup/docker   
+    make buildIncremental
+    make createDockerImage
+    make removeNoneImagesFromDocker
+    make removeExitedContainers 
+else
+    echo "Not Building, Only Running!!!" >&2
+fi
+
+./findport.sh
+
+cd $cwd && xhost + && docker-compose down --rmi 'all' --volumes --remove-orphans &&
+
+docker-compose up --build >> log_data/"$(date +"%Y_%m_%d_%I_%M_%p").txt"
 

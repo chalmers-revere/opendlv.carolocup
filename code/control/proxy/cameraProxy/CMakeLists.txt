@@ -49,12 +49,31 @@ FIND_PACKAGE(OpenDaVINCI REQUIRED)
 FIND_PACKAGE(OpenCV REQUIRED)
 
 ###########################################################################
+# Find uEye drivers.
+SET(UEYE_PATH "/usr/local")
+FIND_PACKAGE(UEYE REQUIRED)
+
+###########################################################################
 # Find ODVDCaroloCupDataModel.
 find_package(ODVDCaroloCupDataModel REQUIRED)
+
+############################################################################
+## Set linking libraries to successfully link test suites and binaries.
+IF(UEYE_FOUND)
+    SET (LIBRARIES ${OPENDAVINCI_LIBRARIES} ${AUTOMOTIVEDATA_LIBRARIES} ${OPENCV_LIBRARIES} ${UEYE_LIBRARIES})
+ELSE()
+    SET (LIBRARIES ${OPENDAVINCI_LIBRARIES} ${AUTOMOTIVEDATA_LIBRARIES} ${OPENCV_LIBRARIES})
+ENDIF()
 
 ###############################################################################
 # Set header files from OpenCV.
 INCLUDE_DIRECTORIES(SYSTEM ${OpenCV_INCLUDE_DIR})
+# Set header files from uEye.
+IF(UEYE_FOUND)
+    SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_UEYE")
+    # Set header files from uEye.
+    INCLUDE_DIRECTORIES (${UEYE_INCLUDE_DIR})
+ENDIF()
 # Set header files from ODVDCaroloCupDataModel.
 INCLUDE_DIRECTORIES(SYSTEM ${ODVDCAROLOCUPDATAMODEL_INCLUDE_DIRS})
 # Set header files from OpenDaVINCI.
@@ -63,9 +82,16 @@ INCLUDE_DIRECTORIES(SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(include)
 
 # Set libraries to link against.
-set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
-        ${ODVDCAROLOCUPDATAMODEL_LIBRARIES}
-        ${OpenCV_LIBS})
+IF(UEYE_FOUND)
+    SET (LIBRARIES ${OPENDAVINCI_LIBRARIES}
+            ${ODVDCAROLOCUPDATAMODEL_LIBRARIES}
+            ${OpenCV_LIBS}
+            ${UEYE_LIBRARIES})
+ELSE()
+    set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
+            ${ODVDCAROLOCUPDATAMODEL_LIBRARIES}
+            ${OpenCV_LIBS})
+ENDIF()
 
 ###############################################################################
 # Build this project.

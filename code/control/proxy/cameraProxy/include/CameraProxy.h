@@ -36,6 +36,10 @@
 
 #include "Camera.h"
 
+#ifdef HAVE_UEYE
+#include "uEyeCamera.h"
+#endif
+
 namespace carolocup
 {
 	namespace control
