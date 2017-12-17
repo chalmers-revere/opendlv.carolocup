@@ -17,4 +17,4 @@
 
 # Date: 2016-09-15
 
-FROM seresearch/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev:latest
+FROM carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev

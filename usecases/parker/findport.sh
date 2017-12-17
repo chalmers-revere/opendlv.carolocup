@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #101 serial == UDOO_UDOO_X86__K71942200
-#uno serial == Arduino_Srl_Arduino_Uno_7563331323335120A121 (will chnage if chnage to another uno)
+#uno serial == Arduino_Srl_Arduino_Uno_7563331323335120A121 (will chnage if change to another uno)
 
 FILE=docker-compose.yml
 
@@ -12,32 +12,45 @@ then
    echo "##start
     # carolocup-control-proxy-serialinhandler
     carolocup-control-proxy-serialinhandler:
-        build: .
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
         network_mode: \"host\"
         ipc : host
         depends_on:
             - odsupercomponent
         devices:
-            - \"/dev/ttyUSB0:/dev/ttyUSB0\"
+            - \"*SENSORS:*SENSORS\"
         restart: on-failure
         privileged: true
         command: \"/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=\${CID} --freq=10 *SENSORS\"
 
     # carolocup-control-proxy-serialouthandler
     carolocup-control-proxy-serialouthandler:
-        build: .
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
         network_mode: \"host\"
         ipc : host
         depends_on:
             - odsupercomponent
         devices:
-            - \"/dev/ttyUSB0:/dev/ttyUSB0\"
+            - \"*ACTUATORS:*ACTUATORS\"
         restart: on-failure
         privileged: true
         command: \"/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=\${CID} --freq=10 *ACTUATORS\"
+        
+    #Micro-service for lidarhandler
+    proxy-lidarhandler:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: \"host\"
+        ipc : host
+        depends_on:
+           - odsupercomponent
+        devices:
+           - \"*LIDAR:*LIDAR\"
+        restart: on-failure
+        privileged: true
+        command: \"/opt/opendlv.carolocup/bin/carolocup-control-proxy-lidarhandler --cid=\${CID} --freq=10 *LIDAR\"
 ##end" >> $FILE
 else
-   echo "Please create $FILE first and do not forget to place ##start and ##end as delimeters for the serial services!!!" >&2
+   echo "Please create $FILE first and do not forget to place ##start and ##end as delimeters for the USB services!!!" >&2
    exit 1
 fi
 
@@ -51,14 +64,17 @@ for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
         eval "$(udevadm info -q property --export -p $syspath)"
         if [ -n "$ID_SERIAL" ]; then
              if  [ "$ID_VENDOR_ID" == "2a03" -a "$ID_MODEL_ID" == "0043" ]; then                 
-                    echo "$DEVNAME" >&2
+                    echo "SENSORS @ $DEVNAME" >&2
                     sed -i "s,*SENSORS,$DEVNAME,g" docker-compose.yml                             
              fi
              if  [ "$ID_VENDOR_ID" == "8087" -a "$ID_MODEL_ID" == "0ab6" ]; then
-                    echo "$DEVNAME" >&2
+                    echo "ACTUATORS @ $DEVNAME" >&2
                     sed -i "s,*ACTUATORS,$DEVNAME,g" docker-compose.yml  
              fi
-
+             if  [ "$ID_VENDOR_ID" == "0403" -a "$ID_SERIAL" == "DM00LTCO" ]; then
+                    echo "LIDAR @ $DEVNAME" >&2
+                    sed -i "s,*LIDAR,$DEVNAME,g" docker-compose.yml  
+             fi
         fi
     )
 done

@@ -115,7 +115,6 @@ namespace carolocup
 
 			void tearDown();
 
-
 			virtual void nextContainer(Container &c);
 
 			/**
@@ -124,7 +123,7 @@ namespace carolocup
  			 * return Gaps found during the parking process.
  			 */
 
-			double getIdealWheelEncoder(map<unsigned int,double>);
+			double getIdealWheelEncoder(map<uint32_t,double>);
 			void resetEncoders();
 			vector<double> getDistanceForStages();
 
@@ -133,10 +132,6 @@ namespace carolocup
 			char readOdometer();
 			int readSensorData(int sensorId);
 			void sendMotionData(double steeringAngle, int speed);
-
-
-
-
 		};
 	}
 } // carolocup::control
