@@ -58,7 +58,7 @@
 //#####################################################################################################################
 // LANE FOLLOWER
 //#####################################################################################################################
-#define _SPEED 102
+#define _SPEED 2
 
 #define M_CONTROL_SCAN_LINE 300 // Lane markings are searched for at this pixel line
 #define M_STOP_SCAN_LINE 160 // Stop line lane marking searched for at this pixel line
