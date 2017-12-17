@@ -70,9 +70,8 @@ namespace carolocup
 			newTime = time(0);
 			if (c.getDataType() == CommunicationLinkMSG::ID())
 			{
-				Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
-
-				const CommunicationLinkMSG communicationLinkMSG = communicationLinkContainer.getData<CommunicationLinkMSG>();
+				//Container communicationLinkContainer = c.getData<CommunicationLinkMSG>();
+				const CommunicationLinkMSG communicationLinkMSG = c.getData<CommunicationLinkMSG>();
 				map<uint32_t, double> sensors = communicationLinkMSG.getMapOfSensors();
 
 				//suff<
