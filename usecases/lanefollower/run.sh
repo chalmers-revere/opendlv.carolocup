@@ -18,7 +18,8 @@ fi
 
 ./findport.sh
 
-cd $cwd && xhost + && docker-compose down --rmi 'all' --volumes --remove-orphans &&
+cd $cwd && xhost + && docker-compose down &&
 
 docker-compose up --build >> log_data/"$(date +"%Y_%m_%d_%I_%M_%p").txt"
 
+#--rmi 'all' --volumes --remove-orphans
