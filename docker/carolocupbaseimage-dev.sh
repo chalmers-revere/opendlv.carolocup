@@ -11,7 +11,7 @@ xterm -hold -e "docker run -ti -v `pwd`:/opt/ueyeDriver/ $ORIGINAL_BASE_IMAGE_DE
 
 IMAGE_PID=$!
 
-sleep 3
+sleep 10
 
 DOCKER_CONTAINER=$(docker ps -qf ancestor=$ORIGINAL_BASE_IMAGE_DEV)
 
@@ -19,7 +19,7 @@ echo "Container $DOCKER_CONTAINER" >&2
 
 docker exec -d $DOCKER_CONTAINER /opt/ueyeDriver/install_driver.sh
 
-sleep 3
+sleep 10
 
 COMMAND_PROCESS=$!
 
@@ -29,6 +29,6 @@ docker commit $DOCKER_CONTAINER carolocup/scaledcars-on-opendlv-on-opendlv-core-
 
 docker exec -d $DOCKER_CONTAINER /opt/ueyeDriver/finish.sh
 
-sleep 3
+sleep 10
 
 kill $IMAGE_PID
