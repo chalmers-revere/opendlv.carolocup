@@ -137,7 +137,7 @@ namespace carolocup
 			//threshold: The minimum number of intersections to “detect” a line
 			//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded
 			//maxLineGap: The maximum gap between two points to be considered in the same line.
-            HoughLinesP(m_image_dst, lines, 1, CV_PI/180, 50, 25, 150);
+            HoughLinesP(m_image_dst, lines, 1, CV_PI/180, 60, 25, 150);
 
             for( size_t i = 0; i < lines.size(); i++ )
             {
