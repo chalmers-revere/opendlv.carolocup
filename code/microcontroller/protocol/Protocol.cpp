@@ -162,25 +162,25 @@ protocol_data Protocol::getData()
 uint8_t Protocol::encodeOneByte(int _id, int sub_id, int _value)
 {
 	uint8_t tosend = 0;
-	tosend = (_id & 0X03) << 6;
+	tosend = (uint8_t) (_id & 0X03) << 6;
 
-	if (data.id == ID_LIGHTS)
+	if (_id == ID_LIGHTS)
 	{
 		tosend |= (sub_id << 1);
 		tosend |= _value;
 	}
-	else if (data.id == ID_SERVO)
+	else if (_id == ID_SERVO)
 	{
 		tosend |= (_value / 3);
 	}
-	else if (data.id == ID_MOTOR)
+	else if (_id == ID_MOTOR)
 	{
 		if (_value >= -31 && _value <= 31)
 		{
 			if (_value < 0)
 			{
 				tosend |= 0X20; //negative sets bit 5 to one
-				tosend |= _value;
+				tosend |= abs(_value);
 			}
 			else
 			{
@@ -195,28 +195,27 @@ uint8_t Protocol::encodeOneByte(int _id, int sub_id, int _value)
 uint8_t Protocol::decodeOneByte(uint8_t byte)
 {
 	uint8_t received = 0;
-	received = (byte & 0XC0) >> 6;
+	received = (uint8_t) (byte & 0XC0) >> 6;
 	data.id = received;
 
 	if (data.id == ID_LIGHTS)
 	{
 		uint8_t sub_id = 0;
-		sub_id = (byte & 0X3E) >> 1;
+		sub_id = (uint8_t) (byte & 0X3E) >> 1;
 		data.sub_id = sub_id;
 
-		received = 0;
-		received = byte & 0X01;
+		received = (uint8_t) byte & 0X01;
 		data.value = received;
 
-		return data.id;
+		return (uint8_t) data.id;
 	}
 	else if (data.id == ID_SERVO)
 	{
 		uint8_t _received = 0;
-		_received = byte & 0X3F;
+		_received = (uint8_t) byte & 0X3F;
 		data.value = _received * 3;
 
-		return data.id;
+		return (uint8_t) data.id;
 	}
 	else if (data.id == ID_MOTOR)
 	{
@@ -226,15 +225,15 @@ uint8_t Protocol::decodeOneByte(uint8_t byte)
 		_received_ = byte & 0X20;
 		if (!_received_) // positive
 		{
-			v_dec = byte & 0X1F;
+			v_dec = (uint8_t) byte & 0X1F;
 			data.value = FORWARD_START + v_dec;
-			if (v_dec == 31) data.value = 90;
+			if (v_dec == 0) data.value = 90;
 		}
 		else
 		{
-			v_dec = byte & 0X1F;
+			v_dec = (uint8_t) byte & 0X1F;
 			data.value = BACKWARD_START - v_dec;
-			if (v_dec == 31) data.value = 90;
+			if (v_dec == 0) data.value = 90;
 		}
 
 		return data.id;

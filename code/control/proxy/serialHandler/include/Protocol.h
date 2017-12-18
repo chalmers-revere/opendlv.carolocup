@@ -6,6 +6,7 @@
 #define PROTOCOL_LIBRARY_H
 
 #include <stdint.h>
+#include <iostream>
 
 #define BUFFER_SIZE 5
 #define HEADER 0x7E
