@@ -3,7 +3,7 @@
 cwd="$( cd "$(dirname "$0")" ; pwd -P )"
 BUILD=$1
 
-trap "docker-compose down --rmi 'all' type --volumes --remove-orphans" SIGINT
+trap "docker-compose down --rmi 'all' --volumes --remove-orphans" SIGINT
 
 if [ -n "${!BUILD}" ]; then
     echo "Building First!!!" >&2

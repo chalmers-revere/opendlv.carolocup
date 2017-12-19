@@ -259,7 +259,10 @@ namespace carolocup
 										}
 										else
 										{
-											param[iteration] -= 2*dp[iteration];
+											if (param[iteration] >= 0.0)
+											{
+												param[iteration] -= 2*dp[iteration];
+											}
 											t_state = UPDATE_ERROR_3;
 										}
 										break;
@@ -273,7 +276,10 @@ namespace carolocup
 										}
 										else
 										{
-											param[iteration] += dp[iteration];
+											if (param[iteration] >= 0.0)
+											{
+												param[iteration] += dp[iteration];
+											}
 											dp[iteration] *= 0.95;
 										}
 
