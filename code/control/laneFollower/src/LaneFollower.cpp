@@ -252,7 +252,7 @@ namespace carolocup
 										if (err<best_err)
 										{
 											best_err = err;
-											dp[iteration] *= 1.1;
+											dp[iteration] *= 1.01;
 
 											//NEXT
 											t_state = LOOP;
@@ -273,12 +273,12 @@ namespace carolocup
 										if (err<best_err)
 										{
 											best_err = err;
-											dp[iteration] *= 1.05;
+											dp[iteration] *= 1.01;
 										}
 										else
 										{
 											param[iteration] += dp[iteration];
-											dp[iteration] *= 0.95;
+											dp[iteration] *= 0.99;
 										}
 
 										//NEXT
