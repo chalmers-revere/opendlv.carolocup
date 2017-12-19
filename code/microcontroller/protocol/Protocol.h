@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "Arduino.h"
+
 #define BUFFER_SIZE 5
 #define HEADER 0x7E
 #define CHECK 0xFF

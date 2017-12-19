@@ -48,8 +48,6 @@ services:
             - /dev/bus:/dev/bus
             - /dev/ueye:/dev/ueye
             - /var/run/ueyed:/var/run/ueyed
-#        devices:
-#            - "/dev/ueye/146__2-3__1225:/dev/ueye/146__2-3__1225"
         depends_on:
             - odsupercomponent
         privileged: true

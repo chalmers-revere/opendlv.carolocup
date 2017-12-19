@@ -238,4 +238,6 @@ uint8_t Protocol::decodeOneByte(uint8_t byte)
 
 		return data.id;
 	}
+
+	return -1;
 }
