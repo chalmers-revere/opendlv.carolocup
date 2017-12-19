@@ -65,7 +65,7 @@ services:
 #        privileged: true
 #        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionstreamer --verbose=1 --cid=${CID} --freq=25"
 
-    #Micro-service for udpconnectionreceiver
+    ##Micro-service for udpconnectionreceiver
     udpconnectionreceiver:
         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
         network_mode: host
