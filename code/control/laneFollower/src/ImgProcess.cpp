@@ -395,7 +395,7 @@ namespace carolocup
 			{
 				//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " IMG KP " << *p_gain << endl;
 
-				std::string speed = std::to_string(*_speed);
+				std::string speed = std::to_string(100 + *_speed);
 				putText(m_image_new, "Speed is " + speed, Point(m_image_new.cols - 150, 20), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
