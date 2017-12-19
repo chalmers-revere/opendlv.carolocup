@@ -32,7 +32,7 @@ namespace carolocup
 		SerialHandler::SerialHandler(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-serialhandler"),
 				  serial(),
-				  motor(31),
+				  motor(0),
 				  servo(90),
 				  lights(-1),
 				  brake(true),

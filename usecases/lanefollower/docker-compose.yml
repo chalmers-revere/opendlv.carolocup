@@ -56,20 +56,18 @@ services:
         restart: on-failure
         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-cameraproxy --cid=${CID} --freq=20 --configuration=/opt/configuration/configuration"
 
-#    #Micro-service for udpconnectionstreamer
+    #Micro-service for udpconnectionstreamer
 #    proxy-udpconnectionstreamer:
 #        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
 #        network_mode: "host"
 #        ipc : host
 #        depends_on:
 #            - odsupercomponent
-#        devices:
-#            - "/dev/ttyUSB0:/dev/ttyUSB0"
 #        restart: on-failure
 #        privileged: true
-#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionstreamer --cid=${CID} --freq=10 arduino=one"
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionstreamer --verbose=1 --cid=${CID} --freq=25"
 
-#    #Micro-service for udpconnectionreceiver
+    #Micro-service for udpconnectionreceiver
 #    udpconnectionreceiver:
 #        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
 #        network_mode: host
@@ -78,7 +76,7 @@ services:
 #            - odsupercomponent
 #        restart: on-failure
 #        privileged: true
-#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionreceiver --verbose=1 --cid=${CID} --rm=true --freq=25"
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionreceiver --verbose=1 --cid=${CID} --freq=25"
 
 ##start
 #    #Micro-service for serialinhandler
@@ -175,16 +173,16 @@ services:
 #         privileged: true
 #         command: "/opt/opendlv.carolocup/bin/carolocup-control-overtaker --verbose=1  --cid=${CID} --freq=20"
 
-#    #Micro-service for communication link
-#    communicationlink:
-#         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
-#         network_mode: host
-#         ipc: host
-#         volumes:
-#             - ../config:/opt/configuration
-#         depends_on:
-#             - odsupercomponent
-#         restart: on-failure
-#         privileged: true
-#         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
-#
+    #Micro-service for communication link
+    communicationlink:
+         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+         network_mode: host
+         ipc: host
+         volumes:
+             - ../config:/opt/configuration
+         depends_on:
+             - odsupercomponent
+         restart: on-failure
+         privileged: true
+         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
+

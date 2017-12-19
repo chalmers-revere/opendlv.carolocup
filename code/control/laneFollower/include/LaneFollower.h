@@ -125,6 +125,16 @@ namespace carolocup
 				DANGER
 			};
 
+			enum TwiddleState
+			{
+				BEGIN,
+				UPDATE_ERROR_1,
+				UPDATE_ERROR_2,
+				UPDATE_ERROR_3,
+				LOOP,
+				COMPLETE
+			};
+
 			StateMachine state, prevState;
 
 			bool inRightLane;
@@ -145,6 +155,8 @@ namespace carolocup
 			double sum;
 
 			int firstIteration, iteration;
+
+			TwiddleState t_state;
 
 			void laneFollower(double e);
 

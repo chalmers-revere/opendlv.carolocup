@@ -270,3 +270,8 @@ global.udpconnectionstreamer.example = example
 # SERIALS
 #
 global.serialhandler.example = example
+
+
+#######
+#Receiver port = 8888
+#Streamer port = 8899

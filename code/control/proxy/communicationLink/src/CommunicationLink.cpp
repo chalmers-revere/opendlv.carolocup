@@ -48,9 +48,9 @@ namespace carolocup
 			// Get configuration data.
 			KeyValueConfiguration kv = getKeyValueConfiguration();
 
-			communicationLinkMSG.setP(kv.getValue<double>("global.lanefollower.p"));
-			communicationLinkMSG.setI(kv.getValue<double>("global.lanefollower.d"));
-			communicationLinkMSG.setD(kv.getValue<double>("global.lanefollower.i"));
+			communicationLinkMSG.setP(kv.getValue<double>("global.lanefollower.p_gain"));
+			communicationLinkMSG.setI(kv.getValue<double>("global.lanefollower.d_gain"));
+			communicationLinkMSG.setD(kv.getValue<double>("global.lanefollower.i_gain"));
 
 		}
 
@@ -61,6 +61,8 @@ namespace carolocup
 
 		void CommunicationLink::nextContainer(Container &c)
 		{
+			TimeStamp now;
+
 			if (c.getDataType() == SensorsMSG::ID())
 			{
 				Container sensorBoardDataContainer = c.getData<SensorsMSG>();
@@ -122,6 +124,7 @@ namespace carolocup
 			}
 			else if (c.getDataType() == UdpMSG::ID())
 			{
+				cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " RECEIVED UDPMSG " << endl;
 				Container udpMSGContainer = c.getData<UdpMSG>();
 				UdpMSG udpMSG = udpMSGContainer.getData<UdpMSG>();
 

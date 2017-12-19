@@ -36,18 +36,18 @@ then
         privileged: true
         command: \"/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=\${CID} --freq=10 *ACTUATORS\"
         
-    #Micro-service for lidarhandler
-    proxy-lidarhandler:
-        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
-        network_mode: \"host\"
-        ipc : host
-        depends_on:
-           - odsupercomponent
-        devices:
-           - \"*LIDAR:*LIDAR\"
-        restart: on-failure
-        privileged: true
-        command: \"/opt/opendlv.carolocup/bin/carolocup-control-proxy-lidarhandler --cid=\${CID} --freq=10 *LIDAR\"
+#    #Micro-service for lidarhandler
+#    proxy-lidarhandler:
+#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#        network_mode: \"host\"
+#        ipc : host
+#        depends_on:
+#           - odsupercomponent
+#        devices:
+#           - \"*LIDAR:*LIDAR\"
+#        restart: on-failure
+#        privileged: true
+#        command: \"/opt/opendlv.carolocup/bin/carolocup-control-proxy-lidarhandler --cid=\${CID} --freq=10 *LIDAR\"
 ##end" >> $FILE
 else
    echo "Please create $FILE first and do not forget to place ##start and ##end as delimeters for the USB services!!!" >&2

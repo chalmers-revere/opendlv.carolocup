@@ -37,9 +37,9 @@
 #define _PI 3.1415926535897
 #define KM_IN_CM  100000
 #define BAUD_RATE 115200
-#define MOTOR_IDLE 31
-#define MOTOR_MIN  -30
-#define MOTOR_MAX  30
+#define MOTOR_IDLE 0
+#define MOTOR_MIN  -31
+#define MOTOR_MAX  31
 #define STRAIGHT_DEGREES 90
 #define MIN_DEGREES 0
 #define MAX_DEGREES 180

@@ -68,7 +68,8 @@ namespace carolocup
 				  err(0),
 				  sum(0),
 				  firstIteration(0),
-				  iteration(0)
+				  iteration(0),
+				  t_state(BEGIN)
 		{}
 
 		LaneFollower::~LaneFollower()
@@ -81,6 +82,16 @@ namespace carolocup
 			m_debug = kv.getValue<int32_t>("global.debug") == 1;
 			Sim = kv.getValue<int32_t>("global.sim") == 1;
 			pid_tuning = kv.getValue<int32_t>("global.laneFollower.pid_tuning");
+			string TYPE = kv.getValue<string>("global.cameraproxy.camera.type");
+			int cam_type = 0;
+			if (TYPE.compare("opencv") == 0)
+			{
+				cam_type = 1;
+			}
+			else if (TYPE.compare("ueye") == 0)
+			{
+				cam_type = 0;
+			}
 
 			if (pid_tuning < 2)
 			{
@@ -91,8 +102,8 @@ namespace carolocup
 				d_gain = kv.getValue<double>("global.laneFollower.d_gain");
 
 				param[0] = p_gain;
-				param[1] = p_gain;
-				param[2] = p_gain;
+				param[1] = i_gain;
+				param[2] = d_gain;
 
 				dp[0] = 1.0;
 				dp[1] = 1.0;
@@ -136,6 +147,8 @@ namespace carolocup
 
 			imgProcess._speed = &speed;
 			imgProcess._steer = &steer;
+
+			imgProcess.camType = &cam_type;
 
 			imgProcess.inRightLane = &inRightLane;
 
@@ -192,8 +205,8 @@ namespace carolocup
 
 				if (_state == 0)//TODO flip to one
 				{
-					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " Lanefollower _state " << _state << " && m_debug "
-						 << m_debug << endl;
+					//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " Lanefollower _state " << _state << " && m_debug "
+						 //<< m_debug << endl;
 					bool has_next_frame = false;
 					_stop = 0;
 
@@ -215,16 +228,89 @@ namespace carolocup
 							best_err = error;
 							firstIteration = 1;
 						}
-						sum = (dp[0]+dp[1]+dp[2]);
+
+						if (t_state == BEGIN)
+						{
+							sum = (dp[0]+dp[1]+dp[2]);
+							t_state = UPDATE_ERROR_1;
+							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE SUM " <<  t_state << endl;
+						}
 
 						if (pid_tuning == 0)
 						{
-//							auto_pid.updateError(error);
-//
-//							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " STEER " << 90 + (auto_pid.outputSteerAng() * (180 / 3.14)) << endl;
-//
-//							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " SPEED " << auto_pid.outputThrottle(31.0) << endl;
-//
+							if (sum > 0.000000001)
+							{
+								cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE CALIBRATING " <<  t_state << endl;
+								switch (t_state)
+								{
+									case UPDATE_ERROR_1:
+										param[iteration] += dp[iteration];
+										t_state = UPDATE_ERROR_2;
+										break;
+									case UPDATE_ERROR_2:
+										err = error;
+										if (err<best_err)
+										{
+											best_err = err;
+											dp[iteration] *= 1.1;
+
+											//NEXT
+											t_state = LOOP;
+										}
+										else
+										{
+											param[iteration] -= 2*dp[iteration];
+											t_state = UPDATE_ERROR_3;
+										}
+										break;
+									case UPDATE_ERROR_3:
+										err = error;
+
+										if (err<best_err)
+										{
+											best_err = err;
+											dp[iteration] *= 1.1;
+										}
+										else
+										{
+											param[iteration] += dp[iteration];
+											dp[iteration] *= 0.9;
+										}
+
+										//NEXT
+										t_state = LOOP;
+
+										break;
+									case LOOP:
+										iteration++;
+										if (iteration > 2) {
+											iteration = 0;
+											t_state = BEGIN;
+										}
+										cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE ITERATION " <<  iteration << endl;
+										break;
+									case BEGIN:
+
+										break;
+									case COMPLETE:
+
+										break;
+									default:
+										break;
+								}
+							}
+							else
+							{
+								t_state = COMPLETE;
+								cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE DONE " << endl;
+							}
+
+							//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " SPEED " << auto_pid.outputThrottle(31.0) << endl;
+
+							p_gain = param[0];
+							i_gain = param[1];
+							d_gain = param[2];
+
 							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " KP " << p_gain << endl;
 							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " KI " << i_gain << endl;
 							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " KD " << d_gain << endl;
@@ -234,6 +320,8 @@ namespace carolocup
 					}
 
 					state_machine();
+
+					cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " STEER " << 90 + (steer * (180 / 3.14)) << endl;
 
 					laneFollowerMSG.setDistanceToRightLane(*currentDistance);
 					laneFollowerMSG.setStateLane(inRightLane);

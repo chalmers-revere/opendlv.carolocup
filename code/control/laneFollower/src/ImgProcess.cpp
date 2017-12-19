@@ -29,18 +29,19 @@ namespace carolocup
 				currentDistance(0),
 				_speed(),
 				_steer(),
+		        camType(),
 				m_sharedImageMemory(),
 				m_hasAttachedToSharedImageMemory(false),
 				m_image(),
 				m_threshold1(50),  // Both thresholds are dynamically adjusted at image processing
 				m_threshold2(200),
 				m_control_scanline((M_CONTROL_SCAN_LINE * 2 / 4) + 10),// Lane markings are searched for at this pixel line
-				m_stop_scanline(M_STOP_SCAN_LINE),// Stop line lane marking searched for at this pixel line
+				m_stop_scanline((M_STOP_SCAN_LINE * 2 / 4) - 10),// Stop line lane marking searched for at this pixel line
 				m_distance(M_DISTANCE),  // Distance from the lane marking at which the car attempts to drive
-				m_image_mat(),
 				m_image_new(),
 				m_image_dst(),
 				m_hough(),
+				m_image_grey(),
 				counter(0),
 				state(_MOVING),
 				prevState(_MOVING)
@@ -74,8 +75,16 @@ namespace carolocup
 
 					if (m_image.empty())
 					{ // If image is empty, create a new image to hold the shared image data
-						m_image.create(si.getHeight(), si.getWidth(),
-									   CV_8UC1); //From opencv documentation: CV_8UC3 = unsigned integer 8bit matrix/image wih 3 channels (typically RGB or BRG in opencv case)
+						if (!*camType)
+						{
+							m_image.create(si.getHeight(), si.getWidth(),
+										   CV_8UC1);
+						}
+						else
+						{
+							m_image.create(si.getHeight(), si.getWidth(),
+										   CV_8UC3); //From opencv documentation: CV_8UC3 = unsigned integer 8bit matrix/image wih 3 channels (typically RGB or BRG in opencv case)
+						}
 					}
 					else
 					{ // Copying the image data
@@ -99,12 +108,18 @@ namespace carolocup
 // Process image logic
 		void ImgProcess::processImage()
 		{
-//			// New mat image
-//			m_image_new = Mat(m_image.rows, m_image.cols, CV_8UC1);
-//			// Copy the original image to the new image as greyscale
-//			cvtColor(m_image, m_image_new, COLOR_BGR2GRAY);
-			cerr << "size rows -> " <<  m_image.rows << " size cols -> " << m_image.cols << endl;
-			cerr << "size width -> " <<  m_image.size().width << " height -> " << m_image.size().height << endl;
+			if (*camType)
+			{
+				// New mat image
+				m_image_grey = Mat(m_image.rows, m_image.cols, CV_8UC1);
+
+				// Copy the original image to the new image as greyscale
+				cvtColor(m_image_grey, m_image, COLOR_BGR2GRAY);
+			}
+
+
+			//cerr << "size rows -> " <<  m_image.rows << " size cols -> " << m_image.cols << endl;
+			//cerr << "size width -> " <<  m_image.size().width << " height -> " << m_image.size().height << endl;
 			//Region of interest
 			Mat image_roi = m_image(Rect(0, m_image.size().height/4, m_image.size().width, m_image.size().height*2/4));
 
@@ -143,24 +158,15 @@ namespace carolocup
             {
 				Vec4i l = lines[i];
 				TimeStamp now;
-				//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LINES " << abs(l[2] - l[0]) << endl;
+
 				if (l[1] != l[3]) {
+					//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LINES " << ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5) << endl;
 					if ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5) {
 						line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 2, CV_AA);
 					}
-//					else
-//					{
-//						line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 0), 2, CV_AA);
-//					}
-
 				}
-//				if ( abs(l[2] - l[0]) < 300)
-//				{
-//					line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 2, CV_AA);
-//				}
 
 			}
-
 //			for( size_t i = 0; i < lines.size(); i++ )
 //			{
 //				double rho = lines[i][0], theta = lines[i][1];
@@ -387,7 +393,7 @@ namespace carolocup
 			// Prints several pieces of information onto the image for debugging purposes if debug flag is set to true
 			if (*m_debug)
 			{
-				cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " IMG KP " << *p_gain << endl;
+				//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " IMG KP " << *p_gain << endl;
 
 				std::string speed = std::to_string(*_speed);
 				putText(m_image_new, "Speed is " + speed, Point(m_image_new.cols - 150, 20), FONT_HERSHEY_PLAIN, 1,
@@ -397,10 +403,58 @@ namespace carolocup
 				putText(m_image_new, "Steering: " + steer, Point(m_image_new.cols - 150, 40), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
-				putText(m_image_new, "State: " + std::to_string(state), Point(m_image_new.cols - 150, 138), FONT_HERSHEY_PLAIN, 1,
+				string _st = "";
+				switch (state) {
+					case 0:
+						_st = "IDLE";
+				        break;
+					case 1:
+						_st = "MOVING";
+						break;
+					case 2:
+						_st = "RESUME";
+						break;
+					case 3:
+						_st = "STOP_LINE";
+						break;
+					case 4:
+						_st = "STOP";
+						break;
+					case 5:
+						_st = "DANGER";
+						break;
+				    default:
+				        break;
+				 }
+
+				putText(m_image_new, "State: " + _st, Point(m_image_new.cols - 150, 138), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
-				putText(m_image_new, "Old state: " + std::to_string(prevState), Point(m_image_new.cols - 150, 153), FONT_HERSHEY_PLAIN,
+				string _old_st = "";
+				switch (state) {
+					case 0:
+						_old_st = "IDDLE";
+						break;
+					case 1:
+						_old_st = "MOVING";
+						break;
+					case 2:
+						_old_st = "RESUME";
+						break;
+					case 3:
+						_old_st = "STOP LINE";
+						break;
+					case 4:
+						_old_st = "STOP";
+						break;
+					case 5:
+						_old_st = "DANGER";
+						break;
+					default:
+						break;
+				}
+
+				putText(m_image_new, "Old state: " + _old_st, Point(m_image_new.cols - 150, 153), FONT_HERSHEY_PLAIN,
 						1,
 						CV_RGB(255, 255, 255));
 
@@ -509,11 +563,11 @@ namespace carolocup
 				}
 			}
 
-//			//display the resulting image from hough algorithm implmentation
+			//display the resulting image from hough algorithm implmentation
 //            if (*m_debug) {
 //                if (!m_hough.empty()) {
 //                    imshow("Hough algorithm applied",
-//                           m_hough);
+//						   m_image_grey);
 //                    waitKey(10);
 //                }
 //            }

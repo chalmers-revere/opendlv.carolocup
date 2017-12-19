@@ -94,6 +94,8 @@ namespace carolocup
 
 			double *_speed, *_steer;
 
+			int *camType;
+
 		private:
 			shared_ptr <odcore::wrapper::SharedMemory> m_sharedImageMemory;
 			bool m_hasAttachedToSharedImageMemory;
@@ -116,7 +118,7 @@ namespace carolocup
 			int32_t m_distance;
 
 			// Class variables
-			Mat m_image_mat, m_image_new, m_image_dst, m_hough;
+			Mat m_image_new, m_image_dst, m_hough, m_image_grey;
 
 			double counter;
 			int state, prevState;
