@@ -66,15 +66,15 @@ services:
 #        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionstreamer --verbose=1 --cid=${CID} --freq=25"
 
     #Micro-service for udpconnectionreceiver
-#    udpconnectionreceiver:
-#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
-#        network_mode: host
-#        ipc : host
-#        depends_on:
-#            - odsupercomponent
-#        restart: on-failure
-#        privileged: true
-#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionreceiver --verbose=1 --cid=${CID} --freq=25"
+    udpconnectionreceiver:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: host
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        restart: on-failure
+        privileged: true
+        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionreceiver --verbose=1 --cid=${CID} --freq=25"
 
 ##start
 #    #Micro-service for serialinhandler
