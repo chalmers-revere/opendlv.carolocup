@@ -238,7 +238,7 @@ namespace carolocup
 
 						if (pid_tuning == 0)
 						{
-							if (sum > 0.000000001)
+							if (sum > 0.001) //0.000000001
 							{
 								cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE CALIBRATING " <<  t_state << endl;
 								switch (t_state)
@@ -269,12 +269,12 @@ namespace carolocup
 										if (err<best_err)
 										{
 											best_err = err;
-											dp[iteration] *= 1.1;
+											dp[iteration] *= 1.05;
 										}
 										else
 										{
 											param[iteration] += dp[iteration];
-											dp[iteration] *= 0.9;
+											dp[iteration] *= 0.95;
 										}
 
 										//NEXT
@@ -283,6 +283,7 @@ namespace carolocup
 										break;
 									case LOOP:
 										iteration++;
+										t_state = UPDATE_ERROR_1;
 										if (iteration > 2) {
 											iteration = 0;
 											t_state = BEGIN;
