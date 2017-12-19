@@ -213,11 +213,11 @@ global.sim = 0    # Set simulation true or false
 #
 # CONFIGURATION FOR LANEFOLLOWER
 #
-global.lanefollower.p_gain = 1 #1.2
-global.lanefollower.d_gain = 0 #0.2
-global.lanefollower.i_gain = 0 #0.01
+global.lanefollower.p_gain = 1.2
+global.lanefollower.d_gain = 0.2
+global.lanefollower.i_gain = 0.01
 
-global.laneFollower.pid_tuning = 0
+global.laneFollower.pid_tuning = 1
 
 ###############################################################################
 ###############################################################################
