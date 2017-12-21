@@ -216,7 +216,7 @@ namespace carolocup
 
 				}
 
-				if (_state)//TODO flip to one
+				if (_state == 0)//TODO flip to one
 				{
 					//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " Lanefollower _state " << _state << " && m_debug "
 					//<< m_debug << endl;
