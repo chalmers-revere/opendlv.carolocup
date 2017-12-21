@@ -65,6 +65,7 @@ namespace carolocup
 		using namespace gap;
 		using namespace cv;
 		using namespace odcore::data::image;
+		using namespace automotive;
 
 /**
  * Time-triggered laneFollower.
@@ -97,13 +98,10 @@ namespace carolocup
 			bool m_debug;
 			bool Sim;
 			int pid_tuning;
-
-			odcore::data::TimeStamp m_previousTime;
-
-			double m_eSum;
-			double m_eOld;
+			int cam_type;
 
 			AutomotiveMSG m_vehicleControl;
+			VehicleControl m_vehicleControl_sim;
 			LaneFollowerMSG laneFollowerMSG;
 
 			double p_gain;
@@ -145,11 +143,13 @@ namespace carolocup
 
 			ImgProcess imgProcess;
 
-			PID auto_pid;
+			PID pid_steer;
+
+			PID pid_speed;
 
 			double param[3];
 			double dp[3];
-
+			double error;
 			double best_err;
 			double err;
 			double sum;

@@ -29,12 +29,15 @@
 #include <cstdio>
 #include <cmath>
 
+#include <opendavinci/odcore/data/TimeStamp.h>
+
 namespace carolocup
 {
 	namespace control
 	{
 
 		using namespace std;
+		using namespace odcore::data;
 
 		class PID
 		{
@@ -55,13 +58,27 @@ namespace carolocup
 			 * @param ki the integral value for PID controller
 			 * @param kd the derivative value for PID controller
 			 */
-			void init(double kp, double ki, double kd);
+			void init(double _kp, double _ki, double _kd);
+
+//			/**
+//			 * Twiddle the PID gain variables
+//			 * @param cte the current cross track error
+//			 */
+//			void twiddle(double cte);
 
 			/**
 			 * Update the PID error variables given cross track error
 			 * @param cte the current cross track error
 			 */
 			void updateError(double cte);
+
+			/**
+			 * Update the PID gain variables
+			 * @param kp the proportional value for PID controller
+			 * @param ki the integral value for PID controller
+			 * @param kd the derivative value for PID controller
+			 */
+			void updateGains(double _kp, double _ki, double _kd);
 
 			/**
 			 * Compute the control command value according to PID controller
@@ -74,7 +91,7 @@ namespace carolocup
 			 * @param max_thro max throttle value
 			 * @return the computed throttle value
 			 */
-			double outputThrottle(double max_thro);
+			int outputThrottle(double max_thro);
 
 			double getKP();
 
@@ -96,6 +113,13 @@ namespace carolocup
 			double Kp;
 			double Ki;
 			double Kd;
+
+			double e;
+
+			odcore::data::TimeStamp m_previousTime;
+
+			double m_eSum;
+			double m_eOld;
 		};
 	}
 } // carolocup::control

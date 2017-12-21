@@ -29,14 +29,19 @@ namespace carolocup
 				currentDistance(0),
 				_speed(),
 				_steer(),
-		        camType(),
+				camType(),
+				error(),
 				m_sharedImageMemory(),
+				m_sharedProcessedImageMemory(),
+				m_sharedProcessedImage(),
 				m_hasAttachedToSharedImageMemory(false),
 				m_image(),
 				m_threshold1(50),  // Both thresholds are dynamically adjusted at image processing
 				m_threshold2(200),
-				m_control_scanline((M_CONTROL_SCAN_LINE * 2 / 4) + 10),// Lane markings are searched for at this pixel line
-				m_stop_scanline((M_STOP_SCAN_LINE * 2 / 4) - 10),// Stop line lane marking searched for at this pixel line
+				m_control_scanline(
+						(M_CONTROL_SCAN_LINE * 2 / 4) + 10),// Lane markings are searched for at this pixel line
+				m_stop_scanline(
+						(M_STOP_SCAN_LINE * 2 / 4) - 10),// Stop line lane marking searched for at this pixel line
 				m_distance(M_DISTANCE),  // Distance from the lane marking at which the car attempts to drive
 				m_image_new(),
 				m_image_dst(),
@@ -44,7 +49,12 @@ namespace carolocup
 				m_image_grey(),
 				counter(0),
 				state(_MOVING),
-				prevState(_MOVING)
+				prevState(_MOVING),
+				frameCounter(0),
+				timeBegin(time(0)),
+				timeNow(0),
+				tick(0),
+				fps(0)
 		{}
 
 		ImgProcess::~ImgProcess()
@@ -53,6 +63,10 @@ namespace carolocup
 // This method returns a boolean true if it gets an image from the shared image memory, copying it into a iplimage
 		bool ImgProcess::readSharedImage(Container &c)
 		{
+			TimeStamp now;
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " READ SHARED IMAGE " << endl;
+
 			bool retVal = false;
 
 			if (c.getDataType() == SharedImage::ID())
@@ -92,7 +106,6 @@ namespace carolocup
 							   si.getWidth() * si.getHeight() * si.getBytesPerPixel());
 					}
 
-
 					m_sharedImageMemory->unlock(); // Release the memory region lock
 					// If in Sim mode, flip the image
 					if (*Sim)
@@ -102,71 +115,132 @@ namespace carolocup
 					retVal = true;
 				}
 			}
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " READ SHARED IMAGE DONE" << endl;
 			return retVal;
 		}
 
 // Process image logic
 		void ImgProcess::processImage()
 		{
+			TimeStamp now;
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " PROCESS IMAGE " << endl;
+
+			frameCounter++;
+
+			timeNow = std::time(0) - timeBegin;
+
+			if (timeNow - tick >= 1)
+			{
+				tick++;
+				fps = frameCounter;
+				frameCounter = 0;
+			}
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " FPS: " << fps << endl;
+
 			if (*camType)
 			{
-				// New mat image
 				m_image_grey = Mat(m_image.rows, m_image.cols, CV_8UC1);
-
 				// Copy the original image to the new image as greyscale
-				cvtColor(m_image_grey, m_image, COLOR_BGR2GRAY);
-			}
+				cvtColor(m_image, m_image_grey, COLOR_BGR2GRAY);
+				// Apply a gaussian blur to the image, to smooth it out
+				GaussianBlur(m_image_grey, m_image_new, Size(5, 5), 0, 0);
+				// Calculate median of pixel color in order to dynamically calculate Canny thresholds
+				double median;
+				median = Median(m_image_new);
+				// Thresholds calculation
+				m_threshold1 = max(static_cast<double>(0), ((1.0 - 0.33) * median));
+				m_threshold2 = min(static_cast<double>(255), (1.0 + 0.33) * median);
+				// See header for algorithm and threshold explanation
+				Canny(m_image_new, m_image_new, m_threshold1, m_threshold2,
+					  3);
 
+				// Test for dilation operation see: https://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
+				Mat element = getStructuringElement(MORPH_RECT,
+													Size(2 + 1, 2 + 1),
+													Point(2, 2));
 
-			//cerr << "size rows -> " <<  m_image.rows << " size cols -> " << m_image.cols << endl;
-			//cerr << "size width -> " <<  m_image.size().width << " height -> " << m_image.size().height << endl;
-			//Region of interest
-			Mat image_roi = m_image(Rect(0, m_image.size().height/4, m_image.size().width, m_image.size().height*2/4));
+				dilate(m_image_new, m_image_dst, element);
 
-			// Apply a gaussian blur to the image, to smooth it out
-			GaussianBlur(image_roi, m_image_new, Size(5, 5), 0, 0);
+				// Apply hough line transformation algorithm, for more info see:  https://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
+				cvtColor(m_image_dst, m_hough, CV_GRAY2BGR);
 
-			// Calculate median of pixel color in order to dynamically calculate Canny thresholds
-			double median;
-			median = Median(m_image_new);
+				vector <Vec4i> lines;
 
-			// Thresholds calculation
-			m_threshold1 = max(static_cast<double>(0), ((1.0 - 0.33) * median));
-			m_threshold2 = min(static_cast<double>(255), (1.0 + 0.33) * median);
+				//threshold: The minimum number of intersections to “detect” a line
+				//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded
+				//maxLineGap: The maximum gap between two points to be considered in the same line.
+				HoughLinesP(m_image_dst, lines, 1, CV_PI / 180, 60, 25, 150);
 
-			// See header for algorithm and threshold explanation
-			Canny(m_image_new, m_image_new, m_threshold1, m_threshold2, 3);
+				for (size_t i = 0; i < lines.size(); i++)
+				{
+					Vec4i l = lines[i];
 
-			// Test for dilation operation see: https://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
-			Mat element = getStructuringElement(MORPH_RECT,
-												Size(2 + 1, 2 + 1),
-												Point(2, 2));
-
-			dilate(m_image_new, m_image_dst, element);
-
-			// Apply hough line transformation algorithm, for more info see:  https://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
-			cvtColor(m_image_dst, m_hough, CV_GRAY2BGR);
-
-            vector<Vec4i> lines;
-
-			//threshold: The minimum number of intersections to “detect” a line
-			//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded
-			//maxLineGap: The maximum gap between two points to be considered in the same line.
-            HoughLinesP(m_image_dst, lines, 1, CV_PI/180, 60, 25, 150);
-
-            for( size_t i = 0; i < lines.size(); i++ )
-            {
-				Vec4i l = lines[i];
-				TimeStamp now;
-
-				if (l[1] != l[3]) {
-					//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LINES " << ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5) << endl;
-					if ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5) {
-						line( m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 2, CV_AA);
+					if (l[1] != l[3])
+					{
+						//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LINES " << ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5) << endl;
+						if ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5)
+						{
+							line(m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 2, CV_AA);
+						}
 					}
-				}
 
+				}
 			}
+			else
+			{
+				//cerr << "size rows -> " <<  m_image.rows << " size cols -> " << m_image.cols << endl;
+				//cerr << "size width -> " <<  m_image.size().width << " height -> " << m_image.size().height << endl;
+				//Region of interest
+				Mat image_roi = m_image(
+						Rect(0, m_image.size().height / 4, m_image.size().width, m_image.size().height * 2 / 4));
+
+				// Apply a gaussian blur to the image, to smooth it out
+				GaussianBlur(image_roi, m_image_new, Size(5, 5), 0, 0);
+
+				// Calculate median of pixel color in order to dynamically calculate Canny thresholds
+				double median;
+				median = Median(m_image_new);
+
+				// Thresholds calculation
+				m_threshold1 = max(static_cast<double>(0), ((1.0 - 0.33) * median));
+				m_threshold2 = min(static_cast<double>(255), (1.0 + 0.33) * median);
+
+				// See header for algorithm and threshold explanation
+				Canny(m_image_new, m_image_new, m_threshold1, m_threshold2, 3);
+
+				// Test for dilation operation see: https://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
+				Mat element = getStructuringElement(MORPH_RECT,
+													Size(2 + 1, 2 + 1),
+													Point(2, 2));
+
+				dilate(m_image_new, m_image_dst, element);
+
+				// Apply hough line transformation algorithm, for more info see:  https://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
+				cvtColor(m_image_dst, m_hough, CV_GRAY2BGR);
+
+				vector <Vec4i> lines;
+
+				//threshold: The minimum number of intersections to “detect” a line
+				//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded
+				//maxLineGap: The maximum gap between two points to be considered in the same line.
+				HoughLinesP(m_image_dst, lines, 1, CV_PI / 180, 60, 25, 150);
+
+				for (size_t i = 0; i < lines.size(); i++)
+				{
+					Vec4i l = lines[i];
+
+					if (l[1] != l[3])
+					{
+						//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LINES " << ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5) << endl;
+						if ((abs(l[2] - l[0]) / (abs(l[3] - l[1]))) < 5)
+						{
+							line(m_image_new, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 2, CV_AA);
+						}
+					}
+
+				}
 //			for( size_t i = 0; i < lines.size(); i++ )
 //			{
 //				double rho = lines[i][0], theta = lines[i][1];
@@ -179,11 +253,20 @@ namespace carolocup
 //				pt2.y = cvRound(y0 - 1000*(a));
 //				line( m_image_new, pt1, pt2, Scalar(255,0,0), 3, CV_AA);
 //			}
+
+			}
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " PROCESS IMAGE DONE" << endl;
+
 		}
 
 // Pixel median value calculation
 		double ImgProcess::Median(Mat mat)
 		{
+			TimeStamp now;
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " MEDIAN CALCULATION " << endl;
+
 			double m = (mat.rows * mat.cols) / 2;
 			int bin = 0;
 			double med = -1.0;
@@ -203,6 +286,8 @@ namespace carolocup
 					med = i;
 			}
 
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " MEDIAN CALCULATION DONE" << endl;
+
 			return med;
 		}
 
@@ -210,6 +295,8 @@ namespace carolocup
 		double ImgProcess::errorCalculation()
 		{
 			TimeStamp now;
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " ERROR CALCULATION " << endl;
 
 			// Values adjusted for simulation environment, if sim flag is set
 			if (*Sim)
@@ -299,44 +386,44 @@ namespace carolocup
 				}
 			}
 
-				// Moving the pixel perception to the right, as to better keep track of right lane marking
-				if (right.x > 0) right.x += 10;
+			// Moving the pixel perception to the right, as to better keep track of right lane marking
+			if (right.x > 0) right.x += 10;
 
-				if (left.x > 0) left.x += 10;
+			if (left.x > 0) left.x += 10;
 
 
-				if (y == m_control_scanline)
-				{
+			if (y == m_control_scanline)
+			{
 
-					if (*inRightLane)
-					{ //Adapt to following the right lane
+				if (*inRightLane)
+				{ //Adapt to following the right lane
 
-						if (right.x > 0)
-						{
+					if (right.x > 0)
+					{
 
-							e = ((right.x - m_image_new.cols / 2.0) - m_distance) / m_distance;
-						}
-						else if (left.x > 0)
-						{
-
-							e = (m_distance - (m_image_new.cols / 2.0 - left.x)) / m_distance;
-						}
+						e = ((right.x - m_image_new.cols / 2.0) - m_distance) / m_distance;
 					}
-					else
-					{  //Adapt to following the left lane
+					else if (left.x > 0)
+					{
 
-						if (left.x > 0)
-						{
-
-							e = (m_distance - (m_image_new.cols / 2.0 - left.x)) / m_distance;
-						}
-						else if (right.x > 0)
-						{
-
-							e = ((right.x - m_image_new.cols / 2.0) - m_distance) / m_distance;
-						}
+						e = (m_distance - (m_image_new.cols / 2.0 - left.x)) / m_distance;
 					}
 				}
+				else
+				{  //Adapt to following the left lane
+
+					if (left.x > 0)
+					{
+
+						e = (m_distance - (m_image_new.cols / 2.0 - left.x)) / m_distance;
+					}
+					else if (right.x > 0)
+					{
+
+						e = ((right.x - m_image_new.cols / 2.0) - m_distance) / m_distance;
+					}
+				}
+			}
 
 			// Stopline logic
 			uchar front_left, front_right;
@@ -393,8 +480,6 @@ namespace carolocup
 			// Prints several pieces of information onto the image for debugging purposes if debug flag is set to true
 			if (*m_debug)
 			{
-				//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " IMG KP " << *p_gain << endl;
-
 				std::string speed = std::to_string(100 + *_speed);
 				putText(m_image_new, "Speed is " + speed, Point(m_image_new.cols - 150, 20), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
@@ -404,10 +489,11 @@ namespace carolocup
 						CV_RGB(255, 255, 255));
 
 				string _st = "";
-				switch (state) {
+				switch (state)
+				{
 					case 0:
 						_st = "IDLE";
-				        break;
+						break;
 					case 1:
 						_st = "MOVING";
 						break;
@@ -423,15 +509,16 @@ namespace carolocup
 					case 5:
 						_st = "DANGER";
 						break;
-				    default:
-				        break;
-				 }
+					default:
+						break;
+				}
 
 				putText(m_image_new, "State: " + _st, Point(m_image_new.cols - 150, 138), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
 				string _old_st = "";
-				switch (state) {
+				switch (state)
+				{
 					case 0:
 						_old_st = "IDDLE";
 						break;
@@ -458,7 +545,8 @@ namespace carolocup
 						1,
 						CV_RGB(255, 255, 255));
 
-				putText(m_image_new, "Stop counter :" + std::to_string(*stopCounter), Point(m_image_new.cols - 150, 168),
+				putText(m_image_new, "Stop counter :" + std::to_string(*stopCounter),
+						Point(m_image_new.cols - 150, 168),
 						FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
@@ -479,6 +567,16 @@ namespace carolocup
 				putText(m_image_new, "Distance " + std::to_string(currentDistance), Point(m_image_new.cols - 150, 120),
 						FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
+				cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " DISTANCE -> " << currentDistance << endl;
+
+				putText(m_image_new, "FPS " + std::to_string(fps) + " FPS", Point(m_image_new.cols - 150, 183),
+						FONT_HERSHEY_PLAIN, 1,
+						CV_RGB(255, 255, 255));
+
+				putText(m_image_new, "ERROR -> " + std::to_string(*error), Point(20, 20),
+						FONT_HERSHEY_PLAIN, 1,
+						CV_RGB(255, 255, 255));
+
 
 				if (left.x > 0)
 				{
@@ -547,6 +645,9 @@ namespace carolocup
 			{
 				stop = false;
 			}
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " ERROR CALCULATION DONE" << endl;
+
 			return e;
 		}
 
@@ -562,30 +663,12 @@ namespace carolocup
 					waitKey(10);
 				}
 			}
-
-			//display the resulting image from hough algorithm implmentation
-//            if (*m_debug) {
-//                if (!m_hough.empty()) {
-//                    imshow("Hough algorithm applied",
-//						   m_image_grey);
-//                    waitKey(10);
-//                }
-//            }
-//
-//			//display the resulting image from dilation algorithm implmentation
-//			if (*m_debug) {
-//				if (!m_image_dst.empty()) {
-//					imshow("Dilation algorithm applied",
-//						   m_image_dst);
-//					waitKey(10);
-//				}
-//			}
 		}
 
 		void ImgProcess::setUpWindowDebug()
 		{
-			//cvNamedWindow("Debug Image", CV_WINDOW_AUTOSIZE);
-			//cvMoveWindow("Debug Image", 300, 100);
+			cvNamedWindow("Debug Image", CV_WINDOW_AUTOSIZE);
+			cvMoveWindow("Debug Image", 300, 100);
 		}
 
 		void ImgProcess::destroyWindowDebug()

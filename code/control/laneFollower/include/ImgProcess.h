@@ -14,6 +14,8 @@
 #include <unistd.h>
 #include <algorithm>
 
+#include <ctime>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -96,8 +98,12 @@ namespace carolocup
 
 			int *camType;
 
+			double *error;
+
 		private:
 			shared_ptr <odcore::wrapper::SharedMemory> m_sharedImageMemory;
+			shared_ptr <odcore::wrapper::SharedMemory> m_sharedProcessedImageMemory;
+			odcore::data::image::SharedImage m_sharedProcessedImage;
 			bool m_hasAttachedToSharedImageMemory;
 
 			cv::Mat m_image;
@@ -122,6 +128,12 @@ namespace carolocup
 
 			double counter;
 			int state, prevState;
+
+			long frameCounter;
+
+			time_t timeBegin, timeNow;
+
+			int tick, fps;
 
 			double Median(cv::Mat mat);
 		};

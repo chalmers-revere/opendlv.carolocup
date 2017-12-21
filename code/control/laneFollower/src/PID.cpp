@@ -25,6 +25,7 @@ namespace carolocup
 	{
 
 		using namespace std;
+		using namespace odcore::data;
 
 		/**
  * Constructor
@@ -35,7 +36,11 @@ namespace carolocup
 		d_error(0),
 		Kp(0),
 		Ki(0),
-		Kd(0)
+		Kd(0),
+		e(0),
+		m_previousTime(),
+		m_eSum(0),
+		m_eOld(0)
 		{}
 
 /**
@@ -51,11 +56,11 @@ namespace carolocup
  * @param ki the integral value for PID controller
  * @param kd the derivative value for PID controller
  */
-		void PID::init(double kp, double ki, double kd)
+		void PID::init(double _kp, double _ki, double _kd)
 		{
-			Kp = kp;
-			Ki = ki;
-			Kd = kd;
+			Kp = _kp;
+			Ki = _ki;
+			Kd = _kd;
 
 			p_error = 0;
 			i_error = 0;
@@ -69,14 +74,46 @@ namespace carolocup
  */
 		void PID::updateError(double cte)
 		{
+			e = cte;
 
-			double pre_cte = p_error;
+			TimeStamp currentTime;
+			double timeStep = (currentTime.toMicroseconds() - m_previousTime.toMicroseconds()) / (1000.0 * 1000.0);
+			m_previousTime = currentTime;
 
-			p_error = cte;
-			i_error += cte;
-			d_error = cte - pre_cte;
+			// A way to handle toggling in corners
+			if (fabs(e) < 1e-2)
+			{
+				m_eSum = 0;
+			}
+			else
+			{
+				m_eSum += e;
+			}
+
+			// PID control algorithm uses the following values, with the meaning:
+			//Kp = p_gain -> Proportional -> the oscillation in the trajectory as the algorithm attempts to approach the error state to 0, moving towards the goal
+			//Ki = i_gain-> Integral -> Current -> how long/ how much of the oscillation is spent on either side of the goal, "look at the past"
+			//Kd = d_gain-> derivative -> how sharp the approximation to the goal is made, directly influencing the oscillation
+			p_error = Kp * e;
+			i_error = Ki * timeStep * m_eSum;
+			d_error = Kd * (e - m_eOld) / timeStep;
+
+			cerr << currentTime.getYYYYMMDD_HHMMSS_noBlank() << " ERROR -> " << e << endl;
+			m_eOld = e;
 		}
 
+/**
+ * Update the PID gain variables
+ * @param kp the proportional value for PID controller
+ * @param ki the integral value for PID controller
+ * @param kd the derivative value for PID controller
+ */
+		void PID::updateGains(double _kp, double _ki, double _kd)
+		{
+			Kp = _kp;
+			Ki = _ki;
+			Kd = _kd;
+		}
 
 /**
  * Compute the control command value according to PID controller
@@ -84,8 +121,25 @@ namespace carolocup
  */
 		double PID::outputSteerAng()
 		{
+			const double y = p_error + i_error + d_error;
 
-			return -Kp * p_error - Ki * i_error - Kd * d_error;
+			double desiredSteering = 0;
+
+			if (fabs(e) > 1e-2)
+			{
+				desiredSteering = y;
+			}
+			// Set an upper and lower limit for the desired steering
+			if (desiredSteering > 1.5)
+			{
+				desiredSteering = 1.5;
+			}
+			if (desiredSteering < -1.5)
+			{
+				desiredSteering = -1.5;
+			}
+
+			return desiredSteering;
 		}
 
 
@@ -94,9 +148,8 @@ namespace carolocup
  * @param max_thro max throttle value
  * @return the computed throttle value
  */
-		double PID::outputThrottle(double max_thro)
+		int PID::outputThrottle(double max_thro)
 		{
-
 			return max_thro - Kp * p_error - Ki * i_error - Kd * d_error;
 		}
 

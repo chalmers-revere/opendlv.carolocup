@@ -100,6 +100,10 @@ odplayerh264.portbaseforchildprocesses = 28000 # Every spawned child processes i
 #
 # CONFIGURATION FOR ODRECORDERH264
 #
+odrecorder.output = file://recorder.rec
+odrecorder.remoteControl = 0 # 0 = no remote control, 1 = allowing remote control (i.e. start and stop recording)
+odrecorder.dumpSharedData = 1 # 0 = do not dump shared images and shared images, 1 = otherwise
+
 #odrecorderh264.output = file://recorder.rec # If this parameter is not present, odrecorderh264 will autogenerate a filename.
 odrecorderh264.remoteControl = 0 # 0 = no remote control, 1 = allowing remote control (i.e. start and stop recording)
 odrecorderh264.dumpSharedData = 0 # 0 = do not dump shared images and shared images, 1 = otherwise
@@ -195,6 +199,108 @@ odsimvehicle.LinearBicycleModel.tauBrake=1.0
 odsimvehicle.LinearBicycleModel.KstaticBrake=100.0
 odsimvehicle.LinearBicycleModel.KdynamicBrake=60.0
 
+###############################################################################
+###############################################################################
+#
+# CONFIGURATION FOR VCR
+#
+VCR.camera_id = 2 # select here the proper camera
+VCR.debug = 1      # set to 0 to disable any windows and further output
+
+
+###############################################################################
+###############################################################################
+#
+# CONFIGURATION FOR EGOCONTROLLER
+#
+egocontroller.device=keyboard              # Which device for control to be used (currently, joysticks are working only under Linux, e.g. keyboard or /dev/input/js0).
+egocontroller.behavior=linearbicyclenew    # [simple,force,forcesimplifiedbicycle,forcebicycle,linearbicyclenew] Set to force or forcebicycle to get force-based control.
+egocontroller.minimumTurningRadius=4.24    # Minimum turning radius in m.
+egocontroller.vehicleMass=1700.0           # Mass in kg.
+egocontroller.adherenceCoefficient=100.0   # N per MPS (squared).
+egocontroller.idleForce=200.0              # Force if vehicle is in idle (no gear) in N.
+egocontroller.Ksteering=2.0
+egocontroller.maximumSteeringRate=50.0
+egocontroller.Kthrottle=40.0
+egocontroller.tauBrake=1.0
+egocontroller.KstaticBrake=100.0
+egocontroller.KdynamicBrake=60.0
+egocontroller.distanceCenterOfMassToFrontAxle = 1.344 # Parameter for bicycle model: Distance from center of mass to front axle.
+egocontroller.distanceCenterOfMassToRearAxle = 1.456  # Parameter for bicycle model: Distance from center of mass to rear axle.
+egocontroller.momentOfInertia = 2800                  # Parameter for bicycle model: Moment of inertia.
+egocontroller.skewStiffnessFront = 75000              # Parameter for bicycle model: Skew stiffness front wheels.
+egocontroller.skewStiffnessRear = 150000              # Parameter for bicycle model: Skew stiffness rear wheels.
+egocontroller.wheelbase = 3.4                         # Parameter for simplified bicycle model: Wheel base.
+egocontroller.start = (0;0;0)
+egocontroller.rotZ = 90
+egocontroller.LinearBicycleModelNew.minimumTurningRadiusLeft=4.85  # Minimum turning radius to the left (for calculating maximum steering angle to the left); Attention! we used data from the miniature vehicle Meili and thus, all values are scaled by factor 10 to be compatible with the simulation!
+egocontroller.LinearBicycleModelNew.minimumTurningRadiusRight=5.32 # Minimum turning radius to the right (for calculating maximum steering angle to the right); Attention! we used data from the miniature vehicle Meili and thus, all values are scaled by factor 10 to be compatible with the simulation!
+egocontroller.LinearBicycleModelNew.wheelbase=2.65                 # Wheelbase; Attention! we used data from the miniature vehicle Meili and thus, all values are scaled by factor 10 to be compatible with the simulation!
+egocontroller.LinearBicycleModelNew.maxSpeed=2.0                   # maxium speed in m/ss
+
+
+###############################################################################
+###############################################################################
+#
+# CONFIGURATION FOR THE DRIVER
+#
+driver.realSpeed = 11
+driver.startInBox = 1 # 1 - true, 0 - false
+driver.startboxLength = 2200 # in mm
+
+###############################################################################
+###############################################################################
+#
+# CONFIGURATION FOR PARKING
+#
+
+driver.MinParkingDist = 500
+driver.MaxParkingDist = 700
+driver.SafeDistance = 30
+driver.MinSafeDistance = 2
+driver.DesiredDistance1 = 250
+driver.DesiredDistance2 = 700
+driver.DesiredDistance3 = 480
+driver.DesiredDistance4 = 90
+driver.DesiredDistance5 = 30
+driver.SpeedF1 = 3
+driver.SpeedF2 = 6
+driver.SpeedB1 = -4
+driver.SpeedB2 = -6
+driver.Stop_Speed = 0
+driver.IRMaxDist = 25
+driver.IRMinDist = 0
+driver.isSmallGapSize = 0
+driver.DesiredMoreStates = 5
+driver.MoreStates = 2
+
+###############################################################################
+###############################################################################
+#
+# CONFIGURATION FOR LANEDETECTOR
+#
+lanedetector.camera_id = 2  # select here the proper camera
+lanedetector.debug = 1      # set to 0 to disable any windows and further output
+lanedetector.inspect_rec = file://recording.rec # Config for lanedetector-inspection
+# Choose what to inspect, where
+# getContours = 1
+# getRectangles = 2
+# classification = 3
+# filterAndMerge = 4
+# finalFilter = 5
+# finalResult = 6
+# createTrajectory = 6
+lanedetector.what_to_inspect = 7
+# Choose which windows to display. 0: no, 1: yes
+lanedetector.showRes_getContours = 1
+lanedetector.showRes_getRectangles = 1
+lanedetector.showRes_classification = 1
+lanedetector.showRes_filterAndMerge = 1
+lanedetector.showRes_finalFilter = 1
+lanedetector.showRes_finalResult = 1
+lanedetector.showRes_createTrajectory = 1
+lanedetector.threshBaseParameter=48
+
 
 ###############################################################################
 ###############################################################################
@@ -213,11 +319,11 @@ global.sim = 0    # Set simulation true or false
 #
 # CONFIGURATION FOR LANEFOLLOWER
 #
-global.lanefollower.p_gain = 1.2
-global.lanefollower.d_gain = 0.2
-global.lanefollower.i_gain = 0.01
+global.lanefollower.p_gain = 1
+global.lanefollower.i_gain = 0
+global.lanefollower.d_gain = 0
 
-global.laneFollower.pid_tuning = 2
+global.laneFollower.pid_tuning = 0
 
 ###############################################################################
 ###############################################################################

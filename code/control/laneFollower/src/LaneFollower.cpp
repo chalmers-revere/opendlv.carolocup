@@ -37,11 +37,10 @@ namespace carolocup
 				  m_debug(false),
 				  Sim(false),
 				  pid_tuning(0),
-				  m_previousTime(),
-				  m_eSum(0),
-				  m_eOld(0),
+				  cam_type(0),
 
 				  m_vehicleControl(),
+				  m_vehicleControl_sim(),
 				  laneFollowerMSG(),
 
 				  p_gain(0),       // The gain values for the PID control algorithm
@@ -61,9 +60,11 @@ namespace carolocup
 				  speed(0),
 				  steer(0),
 				  imgProcess(),
-				  auto_pid(),
+				  pid_steer(),
+				  pid_speed(),
 				  param(),
 				  dp(),
+				  error(0),
 				  best_err(0),
 				  err(0),
 				  sum(0),
@@ -77,18 +78,22 @@ namespace carolocup
 
 		void LaneFollower::setUp()
 		{
+			TimeStamp now;
+
 			// Get configuration data for this class.
 			KeyValueConfiguration kv = getKeyValueConfiguration();
 			m_debug = kv.getValue<int32_t>("global.debug") == 1;
 			Sim = kv.getValue<int32_t>("global.sim") == 1;
 			pid_tuning = kv.getValue<int32_t>("global.laneFollower.pid_tuning");
 			string TYPE = kv.getValue<string>("global.cameraproxy.camera.type");
-			int cam_type = 0;
-			if (TYPE.compare("opencv") == 0)
+
+			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " CAMTYPE " << TYPE << endl;
+
+			if (TYPE.compare("OpenCV") == 0)
 			{
 				cam_type = 1;
 			}
-			else if (TYPE.compare("ueye") == 0)
+			else if (TYPE.compare("UEYE") == 0)
 			{
 				cam_type = 0;
 			}
@@ -120,9 +125,11 @@ namespace carolocup
 				dp[2] = 1.0;
 			}
 
+			pid_steer.init(p_gain, i_gain, d_gain);
 
-
-			// TODO auto_pid.init(p_gain, i_gain, d_gain);
+#if PID_SPEED
+			pid_speed.init(0.45, 0.000, 0.5);
+#endif
 
 			// Setup window for debugging if debug flag set
 			if (m_debug)
@@ -152,6 +159,8 @@ namespace carolocup
 
 			imgProcess.inRightLane = &inRightLane;
 
+			imgProcess.error = &error;
+
 			stop = &imgProcess.stop;
 			currentDistance = &imgProcess.currentDistance;
 
@@ -170,6 +179,8 @@ namespace carolocup
 			while (getModuleStateAndWaitForRemainingTimeInTimeslice() == ModuleStateMessage::RUNNING)
 			{
 				TimeStamp now;
+
+				cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LaneFollower body START" << endl;
 
 				Container communicationLinkContainer = getKeyValueDataStore().get(CommunicationLinkMSG::ID());
 				if (communicationLinkContainer.getDataType() == CommunicationLinkMSG::ID())
@@ -199,14 +210,16 @@ namespace carolocup
 									"lanefolloweri=" + to_string(i_gain) + "\n" +
 									"lanefollowerd=" + to_string(d_gain) + "\n";
 						pid_file.close();
+
+						pid_steer.updateGains(p_gain, i_gain, d_gain);
 					}
 
 				}
 
-				if (_state == 0)//TODO flip to one
+				if (_state)//TODO flip to one
 				{
 					//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " Lanefollower _state " << _state << " && m_debug "
-						 //<< m_debug << endl;
+					//<< m_debug << endl;
 					bool has_next_frame = false;
 					_stop = 0;
 
@@ -221,7 +234,7 @@ namespace carolocup
 					if (has_next_frame)
 					{
 						imgProcess.processImage();
-						double error = imgProcess.errorCalculation();
+						error = imgProcess.errorCalculation();
 
 						if (!firstIteration)
 						{
@@ -231,16 +244,16 @@ namespace carolocup
 
 						if (t_state == BEGIN)
 						{
-							sum = (dp[0]+dp[1]+dp[2]);
+							sum = (dp[0] + dp[1] + dp[2]);
 							t_state = UPDATE_ERROR_1;
-							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE SUM " <<  t_state << endl;
+							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE SUM " << t_state << endl;
 						}
 
 						if (pid_tuning == 0)
 						{
 							if (sum > 0.001) //0.000000001
 							{
-								cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE CALIBRATING " <<  t_state << endl;
+								cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE CALIBRATING " << t_state << endl;
 								switch (t_state)
 								{
 									case UPDATE_ERROR_1:
@@ -249,17 +262,17 @@ namespace carolocup
 										break;
 									case UPDATE_ERROR_2:
 										err = error;
-										if (err<best_err)
+										if (err < best_err)
 										{
 											best_err = err;
-											dp[iteration] *= 1.01;
+											dp[iteration] *= 1.1;
 
 											//NEXT
 											t_state = LOOP;
 										}
 										else
 										{
-											param[iteration] -= 2*dp[iteration];
+											param[iteration] -= 2 * dp[iteration];
 											if (param[iteration] < 0.0)
 											{
 												param[iteration] = 0.0;
@@ -270,15 +283,15 @@ namespace carolocup
 									case UPDATE_ERROR_3:
 										err = error;
 
-										if (err<best_err)
+										if (err < best_err)
 										{
 											best_err = err;
-											dp[iteration] *= 1.01;
+											dp[iteration] *= 1.05;
 										}
 										else
 										{
 											param[iteration] += dp[iteration];
-											dp[iteration] *= 0.99;
+											dp[iteration] *= 0.95;
 										}
 
 										//NEXT
@@ -288,11 +301,13 @@ namespace carolocup
 									case LOOP:
 										iteration++;
 										t_state = UPDATE_ERROR_1;
-										if (iteration > 2) {
+										if (iteration > 2)
+										{
 											iteration = 0;
 											t_state = BEGIN;
 										}
-										cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE ITERATION " <<  iteration << endl;
+										cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE ITERATION " << iteration
+											 << endl;
 										break;
 									case BEGIN:
 
@@ -319,6 +334,8 @@ namespace carolocup
 							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " KP " << p_gain << endl;
 							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " KI " << i_gain << endl;
 							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " KD " << d_gain << endl;
+
+							pid_steer.updateGains(p_gain, i_gain, d_gain);
 						}
 						laneFollower(error);
 
@@ -337,8 +354,11 @@ namespace carolocup
 				{
 					_stop = 1;
 					m_vehicleControl.setBrakeLights(true);
+					m_vehicleControl_sim.setBrakeLights(true);
 					sendToConference(false);
 				}
+
+				cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " LaneFollower body END" << endl;
 			}
 			return ModuleExitCodeMessage::OKAY;
 		}
@@ -348,52 +368,37 @@ namespace carolocup
 		void LaneFollower::laneFollower(double e)
 		{
 			TimeStamp currentTime;
-			double timeStep = (currentTime.toMicroseconds() - m_previousTime.toMicroseconds()) / (1000.0 * 1000.0);
-			m_previousTime = currentTime;
 
-			// A way to handle toggling in corners
-			if (fabs(e) < 1e-2)
-			{
-				m_eSum = 0;
-			}
-			else
-			{
-				m_eSum += e;
-			}
-
-			// PID control algorithm uses the following values, with the meaning:
-			//Kp = p_gain -> Proportional -> the oscillation in the trajectory as the algorithm attempts to approach the error state to 0, moving towards the goal
-			//Ki = i_gain-> Integral -> Current -> how long/ how much of the oscillation is spent on either side of the goal, "look at the past"
-			//Kd = d_gain-> derivative -> how sharp the approximation to the goal is made, directly influencing the oscillation
-			const double p = p_gain * e;
-			const double i = i_gain * timeStep * m_eSum;
-			const double d = d_gain * (e - m_eOld) / timeStep;
-
-			cerr << currentTime.getYYYYMMDD_HHMMSS_noBlank() << " ERROR -> " << e << endl;
-			m_eOld = e;
-
-			const double y = p + i + d;
-
-			double desiredSteering = 0;
-
-			if (fabs(e) > 1e-2)
-			{
-				desiredSteering = y;
-			}
-			// Set an upper and lower limit for the desired steering
-			if (desiredSteering > 1.5)
-			{
-				desiredSteering = 1.5;
-			}
-			if (desiredSteering < -1.5)
-			{
-				desiredSteering = -1.5;
-			}
+			// PID steering controller processing
+			pid_steer.updateError(e);
+			double desiredSteering = pid_steer.outputSteerAng();
 
 			imgProcess.showDebugImage();
 
 			m_vehicleControl.setSteeringWheelAngle(desiredSteering);
+			m_vehicleControl_sim.setSteeringWheelAngle(desiredSteering);
 			steer = desiredSteering;
+
+			/////////////////////////////////////
+			double throttle = 1;
+
+			// PID throttle controller processing
+#if PID_SPEED
+			double max_throttle = 2;
+			pid_speed.updateError(fabs(desiredSteering));
+			throttle = pid_speed.outputThrottle(max_throttle);
+
+			if (throttle >= max_throttle)
+			{
+				throttle = max_throttle;
+			}
+			else if (throttle <= 0){
+				throttle = 1;
+			}
+#endif
+
+			cerr << currentTime.getYYYYMMDD_HHMMSS_noBlank() << " SPEED -> " << throttle << endl;
+			speed = throttle;
 		}
 
 		void LaneFollower::state_machine()
@@ -413,9 +418,9 @@ namespace carolocup
 					}
 					else
 					{
-						m_vehicleControl.setBrakeLights(false);
-						m_vehicleControl.setSpeed(1);
-						speed = 1;
+						m_vehicleControl_sim.setBrakeLights(false);
+						m_vehicleControl_sim.setSpeed(speed);
+						//speed = 1;
 						prevState = MOVING;
 						imgProcess.setPrev_State(MOVING);
 						state = MOVING;
@@ -433,8 +438,8 @@ namespace carolocup
 					else
 					{
 						m_vehicleControl.setBrakeLights(false);
-						m_vehicleControl.setSpeed(_SPEED);
-						speed = _SPEED;
+						m_vehicleControl.setSpeed(speed);
+						//speed = _SPEED;
 						prevState = MOVING;
 						imgProcess.setPrev_State(MOVING);
 						state = MOVING;
@@ -446,6 +451,7 @@ namespace carolocup
 			if (state == STOP)
 			{
 				m_vehicleControl.setSteeringWheelAngle(0);
+				m_vehicleControl_sim.setSteeringWheelAngle(0);
 				steer = 0;
 				if (Sim)
 				{
@@ -456,7 +462,7 @@ namespace carolocup
 					else
 					{
 						stopCounter += 0.5;
-						m_vehicleControl.setSpeed(0);
+						m_vehicleControl_sim.setSpeed(0);
 						speed = 0;
 					}
 					if (stopCounter > 40.9999)
@@ -486,23 +492,23 @@ namespace carolocup
 			{
 //TODO laneFollowerMSG.setDanger(0);
 				m_vehicleControl.setBrakeLights(false);
+				m_vehicleControl_sim.setBrakeLights(false);
 				if (Sim)
 				{
 					if (stopCounter < 65.9999)
 					{
 						stopCounter += 0.5;
-						m_vehicleControl.setSpeed(1);
-						speed = 1;
-						m_vehicleControl.setSteeringWheelAngle(0);
+						m_vehicleControl_sim.setSpeed(speed);
+						//speed = 1;
+						m_vehicleControl_sim.setSteeringWheelAngle(0);
 						steer = 0;
 					}
 					else
 					{
 						state = MOVING;
 						imgProcess.setState(MOVING);
-						m_vehicleControl.setBrakeLights(false);
-						m_vehicleControl.setSpeed(1);
-						speed = 1;
+						m_vehicleControl_sim.setSpeed(speed);
+						//speed = 1;
 					}
 				}
 				else
@@ -510,8 +516,8 @@ namespace carolocup
 					if (stopCounter < 45.9999)
 					{
 						stopCounter += 0.5;
-						m_vehicleControl.setSpeed(_SPEED);
-						speed = _SPEED;
+						m_vehicleControl.setSpeed(speed);
+						//speed = _SPEED;
 						m_vehicleControl.setSteeringWheelAngle(0.24);
 						steer = 0.24;
 
@@ -521,8 +527,8 @@ namespace carolocup
 						state = MOVING;
 						imgProcess.setState(MOVING);
 // m_vehicleControl.setBrakeLights(false);
-						m_vehicleControl.setSpeed(_SPEED);
-						speed = _SPEED;
+						m_vehicleControl.setSpeed(speed);
+						//speed = _SPEED;
 					}
 				}
 			}
@@ -533,8 +539,9 @@ namespace carolocup
 				{
 //TODO laneFollowerMSG.setDanger(0);
 					m_vehicleControl.setBrakeLights(false);
-					m_vehicleControl.setSpeed(_SPEED);
-					speed = _SPEED;
+					m_vehicleControl_sim.setBrakeLights(false);
+					m_vehicleControl.setSpeed(speed);
+					//speed = _SPEED;
 					m_vehicleControl.setSteeringWheelAngle(0);
 					steer = 0;
 				}
@@ -544,6 +551,7 @@ namespace carolocup
 					prevState = DANGER;
 					imgProcess.setPrev_State(DANGER);
 					m_vehicleControl.setBrakeLights(true);
+					m_vehicleControl_sim.setBrakeLights(true);
 //TODO laneFollowerMSG.setDanger(1);
 				}
 			}
@@ -557,9 +565,18 @@ namespace carolocup
 				getConference().send(lfMessage);
 			}
 			// Create container for finally sending the set values for the control algorithm.
-			Container c(m_vehicleControl);
-			// Send container
-			getConference().send(c);
+			if (!Sim)
+			{
+				Container c(m_vehicleControl);
+				// Send container
+				getConference().send(c);
+			}
+			else
+			{
+				Container c(m_vehicleControl_sim);
+				// Send container
+				getConference().send(c);
+			}
 		}
 	}
 } // carolocup::control

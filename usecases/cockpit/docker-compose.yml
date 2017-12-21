@@ -22,7 +22,7 @@ services:
         volumes:
         - ./config:/opt/configuration
         - /tmp/.X11-unix:/tmp/.X11-unix
-        - ~/CsvData/Overtaking:/opt/Datacsv
+        - ./CsvData/Overtaking:/opt/Datacsv
         - ~/recordings:/opt/recordings
 #        - .:/opt/opendlv.data
         ipc: host
