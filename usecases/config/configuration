@@ -286,7 +286,7 @@ lanedetector.threshBaseParameter=48
 # GLOBAL CONFIGURATION
 #
 global.debug = 1      # set to 0 to disable any windows and further output
-global.sim = 1    # Set simulation true or false
+global.sim = 0    # Set simulation true or false
 
 ###############################################################################
 ###############################################################################
