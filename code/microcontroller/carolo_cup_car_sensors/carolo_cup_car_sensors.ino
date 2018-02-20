@@ -1,8 +1,8 @@
 #include "CaroloCupSensors.h"
 #include "Protocol.h"
 
-#define RUN // uncomment this for normal executation and comment DEBUG
-//#define DEBUG //uncomment this for debugging and comment RUN
+//#define RUN // uncomment this for normal executation and comment DEBUG
+#define DEBUG //uncomment this for debugging and comment RUN
 
 #define BOUNCE_DURATION 700   // define an appropriate bounce time in ms for your switches
 
@@ -67,12 +67,12 @@ void loop()
 #ifdef DEBUG
 //	Serial.println(u_center.getDistance());
 //	Serial.println(u_front_right.getDistance());
-//  	Serial.println(u_right_front.getDistance());
-//	Serial.println(u_right_back.getDistance());
-//	Serial.println(u_back.getDistance());
-//	Serial.println(odometer.getDistance());
-//  	Serial.print("YAW ");
-//  	Serial.println(axes.getYaw());
+  	Serial.println(u_right_front.getDistance());
+	Serial.println(u_right_back.getDistance());
+	Serial.println(u_back.getDistance());
+	Serial.println(odometer.getDistance());
+  	Serial.print("YAW ");
+  	Serial.println(axes.getYaw());
 #endif
 }
 
