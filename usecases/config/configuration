@@ -322,11 +322,11 @@ global.cameraProxy.debug = 0
 global.cameraProxy.useRecorder = 1 # 1 = record all captured data directly, 0 otherwise.
 global.cameraProxy.recorder.output = file://recs/
 global.cameraProxy.camera.name = WebCam
-global.cameraProxy.camera.type = OpenCV # OpenCV or UEYE
+global.cameraProxy.camera.type = UEYE # OpenCV or UEYE
 global.cameraProxy.camera.id = 0 # Select here the proper ID for OpenCV
-global.cameraProxy.camera.width = 640 #752-UEYE, 640-OpenCV
+global.cameraProxy.camera.width = 752 #752-UEYE, 640-OpenCV
 global.cameraProxy.camera.height = 480
-global.cameraProxy.camera.bpp = 3 #3- openCV, 1-UEYE
+global.cameraProxy.camera.bpp = 1 #3- openCV, 1-UEYE
 global.cameraProxy.camera.flipped = 1 #1 = flipped image, 0 =notflipped image.
 global.cameraProxy.camera.dumpSharedData = 1
 

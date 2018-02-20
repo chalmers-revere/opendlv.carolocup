@@ -23,9 +23,9 @@
 #define ID_IN_ROLL                  12
 #define ID_IN_PITCH                 13
 
-#define US_BACK 0x71 //back ultrasonic pin
-#define US_SIDE_FRONT 0x72 //side front right ultrasonic
-#define US_SIDE_BACK 0x73 //side back ultrasonic pin
+#define US_BACK 0x75 //back ultrasonic pin
+#define US_SIDE_FRONT 0x71 //side front right ultrasonic
+#define US_SIDE_BACK 0x72 //side back ultrasonic pin
 
 #define ENCODER_A 2 //wheel encoder channel A pin
 #define ENCODER_B 3 //wheel encoder channel B pin
@@ -37,12 +37,12 @@
 #define WHEEL_CIRCUMFERENCE 18 //change this after accurate measurement of wheel circumference
 
 #define DEFAULT_SRF08_ADDRESS 112
-#define MIN_PING_DELAY 10
+#define MIN_PING_DELAY 15
 
 #define CLOCK_SPEED 400000
 
 #define RANGE 24
-#define GAIN 10
+#define GAIN 31
 
 class UltrasonicSensor
 {
