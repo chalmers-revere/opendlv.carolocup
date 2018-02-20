@@ -59,6 +59,7 @@ uint8_t serial_handshake(serial_state *state, uint8_t ab, uint8_t sb)
 	{
 		serialport_readbyte(state->fd, &b);
 		val = (b == ab);
+		std::cout << "<< Serial " << b << std::endl;
 		if (!val)
 		{
 			val = (b == sb);
