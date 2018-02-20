@@ -27,7 +27,7 @@ namespace carolocup
 		using namespace std;
 		using namespace odcore::base;
 		using namespace gap;
-
+		using namespace automotive::miniature;
 
 		SerialHandler::SerialHandler(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-serialhandler"),
@@ -291,7 +291,7 @@ namespace carolocup
 			{
 				if (_debug)
 				{
-					cout << ">> ID " << id << " | >> VALUE " << value << endl;
+					cout << ">>SENSOR ID " << id << " | >> VALUE " << value << endl;
 				}
 				if (id >= ID_IN_ULTRASONIC_CENTER && id <= ID_IN_ULTRASONIC_BACK)
 				{
@@ -357,6 +357,11 @@ namespace carolocup
 
 		void SerialHandler::sendSensorBoardData(map<uint32_t, double> sensor)
 		{
+//			SensorBoardData _sbd;
+//			_sbd.setMapOfDistances(sensor);
+//			Container c_sbd(_sbd);
+//			getConference().send(c_sbd);
+
 			sbd.setMapOfSensors(sensor);
 			Container c(sbd);
 			getConference().send(c);

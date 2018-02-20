@@ -26,7 +26,8 @@
 
 #include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
 #include <automotivedata/GeneratedHeaders_AutomotiveData.h>
-
+#include "automotivedata/generated/automotive/VehicleData.h"
+#include "automotivedata/generated/automotive/miniature/SensorBoardData.h"
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/ResetMSG.h"

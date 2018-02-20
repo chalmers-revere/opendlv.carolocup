@@ -1,0 +1,283 @@
+# docker-compose.yml - Composition of micro-services to run scaled cars software.
+# Copyright (C) 2016 Christian Berger
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+# Date: 2016-09-15
+
+version: '2'
+
+services:
+    #Micro-service for odsupercomponent
+    odsupercomponent:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: "host"
+        ipc : host
+        restart: on-failure
+        privileged: true
+        volumes:
+            - .:/opt/carolocup.data
+            - ../config:/opt/configuration
+        command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
+
+    # Micro-service for odsimvehicle.
+    odsimvehicle:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: host
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        logging:
+            driver: "none"
+        privileged: true
+        restart: on-failure
+        command: "/opt/od4/bin/odsimvehicle --cid=${CID} --freq=20"
+
+    #Micro-service for camera
+    odsimcamera:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: host
+        ipc: host
+        group_add:
+        - video
+        environment:
+        - DISPLAY=$DISPLAY
+        volumes:
+        - ../config:/opt/configuration
+        - /tmp/.X11-unix:/tmp/.X11-unix
+        depends_on:
+            - odsupercomponent
+        privileged: true
+        restart: on-failure
+        command: "/opt/od4/bin/odsimcamera --cid=${CID} --rm=true --freq=20"
+
+    #odcockpit
+    odcockpit:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: host
+        environment:
+        - DISPLAY=$DISPLAY
+        volumes:
+        - ../config:/opt/configuration
+        - /tmp/.X11-unix:/tmp/.X11-unix
+        - ./CsvData:/opt/Datacsv
+        ipc: host
+        depends_on:
+            - odsupercomponent
+        restart: on-failure
+        privileged: true
+        command: "/opt/od4/bin/odcockpit --cid=${CID} --configuration=/opt/configuration/configuration --freq=20"
+
+    #Micro-service for udpconnectionstreamer
+#    proxy-udpconnectionstreamer:
+#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#        network_mode: "host"
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionstreamer --verbose=1 --cid=${CID} --freq=25"
+
+#    ##Micro-service for udpconnectionreceiver
+#    udpconnectionreceiver:
+#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#        network_mode: host
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-udpconnectionreceiver --verbose=1 --cid=${CID} --freq=25"
+
+##start
+#    #Micro-service for serialinhandler
+#    proxy-serialinhandler:
+#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#        network_mode: "host"
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        devices:
+#            - "/dev/ttyUSB0:/dev/ttyUSB0"
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 arduino=one"
+
+#    #Micro-service for serialouthandler
+#    proxy-serialouthandler:
+#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#        network_mode: "host"
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        devices:
+#            - "/dev/ttyUSB0:/dev/ttyUSB0"
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-serialhandler --cid=${CID} --freq=10 /dev/ttyACM0"
+#
+#    #Micro-service for lidarhandler
+#    proxy-lidarhandler:
+#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#        network_mode: "host"
+#        ipc : host
+#        depends_on:
+#            - odsupercomponent
+#        devices:
+#            - "/dev/ttyUSB0:/dev/ttyUSB0"
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-lidarhandler --cid=${CID} --freq=10 arduino=one"
+##end
+
+    #Micro-service for lanefollower.
+    lanefollower:
+         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+         network_mode: host
+         ipc: host
+         environment:
+             - DISPLAY=$DISPLAY
+         volumes:
+             - ../config:/opt/configuration
+         depends_on:
+             - odsupercomponent
+#             - communicationlink
+         restart: on-failure
+         privileged: true
+         command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
+
+    # Micro-service for odsimvehicle.
+    odsimvehicle:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: host
+        ipc : host
+        depends_on:
+            - odsupercomponent
+        logging:
+            driver: "none"
+        privileged: true
+        restart: on-failure
+        command: "/opt/od4/bin/odsimvehicle --cid=${CID} --freq=20"
+
+#    #odsimirus
+#    odsimirus:
+#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#        network_mode: host
+#        ipc: host
+#        volumes:
+#             - ../config:/opt/configuration
+#        depends_on:
+#             - odsupercomponent
+#        command: "/opt/od4/bin/odsimirus --cid=${CID} --configuration=/opt/configuration/configuration --freq=10"
+
+#    #Micro-service for parker.
+#    parker:
+#         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#         network_mode: host
+#         ipc: host
+#         environment:
+#             - DISPLAY=$DISPLAY
+#         volumes:
+#             - ../config:/opt/configuration
+#         depends_on:
+#             - odsupercomponent
+#             #- carolocup-control-proxy-serialinhandler
+#             #- communicationlink
+#             - camera-proxy
+#         restart: on-failure
+#         privileged: true
+#         command: "/opt/opendlv.carolocup/bin/carolocup-control-parker --verbose=1  --cid=${CID} --freq=20"
+#
+#    #Micro-service for overtaker.
+#    overtaker:
+#         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#         network_mode: host
+#         ipc: host
+#         environment:
+#             - DISPLAY=$DISPLAY
+#         volumes:
+#             - ../config:/opt/configuration
+#         depends_on:
+#             - odsupercomponent
+#             #- carolocup-control-proxy-serialinhandler
+#             #- communicationlink
+#             - camera-proxy
+#         restart: on-failure
+#         privileged: true
+#         command: "/opt/opendlv.carolocup/bin/carolocup-control-overtaker --verbose=1  --cid=${CID} --freq=20"
+
+#    #Micro-service for communication link
+#    communicationlink:
+#         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+#         network_mode: host
+#         ipc: host
+#         volumes:
+#             - ../config:/opt/configuration
+#         depends_on:
+#             - odsupercomponent
+#         restart: on-failure
+#         privileged: true
+#         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
+
+#    # Micro-service for odrecorderh264.
+#    odrecorderh264:
+#        build: .
+#        depends_on:
+#            - odsupercomponent
+#            - odsimcamera
+#        volumes:
+#            - ~/recordings:/opt/recordings
+#        network_mode: host
+#        ipc: host
+#        working_dir: "/opt/recordings"
+#        command: "/opt/od4/bin/odrecorderh264 --cid=${CID}"
+
+
+#enable below to see the recording
+#
+#version: '2'
+#
+#services:
+#     # Micro-service for odsupercomponent.
+#    odsupercomponent:
+#        build: .
+#        network_mode: host
+#        ipc : host
+#        restart: on-failure
+#        volumes:
+#            - ./DIT-168:/opt/configuration
+#        privileged: true
+#        restart: on-failure
+#        command: "/opt/od4/bin/odsupercomponent --cid=${CID} --configuration=/opt/configuration/configuration --freq=20"
+#
+#    #odcockpit
+#    odcockpit:
+#        build: .
+#        network_mode: host
+#        environment:
+#        - DISPLAY=$DISPLAY
+#        volumes:
+#        - ./DIT-168:/opt/configuration
+#        - /tmp/.X11-unix:/tmp/.X11-unix
+#        - ~/CsvData/Overtaking:/opt/Datacsv
+#        - ~/recordings:/opt/recordings
+#        ipc: host
+#        depends_on:
+#            - odsupercomponent
+#        restart: on-failure
+#        privileged: true
+#        command: "/opt/od4/bin/odcockpit --cid=${CID} --freq=20"
+#

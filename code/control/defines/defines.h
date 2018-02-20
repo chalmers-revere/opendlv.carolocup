@@ -69,8 +69,8 @@
 #define M_DISTANCE 150   // Distance from the lane marking at which the car attempts to drive
 
 #define M_CONTROL_SCAN_LINE_SIM 350 // Lane markings are searched for at this pixel line
-#define M_STOP_SCAN_LINE_SIM 472 // Stop line lane marking searched for at this pixel line 462
-#define M_DISTANCE_SIM 230   // Distance from the lane marking at which the car attempts to drive
+#define M_STOP_SCAN_LINE_SIM 470 // Stop line lane marking searched for at this pixel line 462
+#define M_DISTANCE_SIM 280   // Distance from the lane marking at which the car attempts to drive
 
 #define _IDLE 0
 #define _MOVING 1

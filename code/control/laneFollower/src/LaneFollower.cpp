@@ -31,6 +31,7 @@ namespace carolocup
 		using namespace odcore::wrapper;
 		using namespace odcore::data::dmcp;
 		using namespace gap;
+		using namespace automotive::miniature;
 
 		LaneFollower::LaneFollower(const int &argc, char **argv)
 				: TimeTriggeredConferenceClientModule(argc, argv, "carolocup-lanefollower"),
@@ -249,7 +250,7 @@ namespace carolocup
 							cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " TWIDDLE SUM " << t_state << endl;
 						}
 
-						if (pid_tuning == 0)
+						if (pid_tuning == 1)
 						{
 							if (sum > 0.001) //0.000000001
 							{
@@ -399,6 +400,7 @@ namespace carolocup
 
 			cerr << currentTime.getYYYYMMDD_HHMMSS_noBlank() << " SPEED -> " << throttle << endl;
 			speed = throttle;
+			//speed = 0;
 		}
 
 		void LaneFollower::state_machine()

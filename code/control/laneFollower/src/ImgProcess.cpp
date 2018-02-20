@@ -130,6 +130,8 @@ namespace carolocup
 
 			timeNow = std::time(0) - timeBegin;
 
+			//cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " " << std::time(0) << endl;
+
 			if (timeNow - tick >= 1)
 			{
 				tick++;
@@ -153,7 +155,7 @@ namespace carolocup
 				m_threshold1 = max(static_cast<double>(0), ((1.0 - 0.33) * median));
 				m_threshold2 = min(static_cast<double>(255), (1.0 + 0.33) * median);
 				// See header for algorithm and threshold explanation
-				Canny(m_image_new, m_image_new, m_threshold1, m_threshold2,
+				Canny(m_image_new, m_image_new, m_threshold1, m_threshold2*3,
 					  3);
 
 				// Test for dilation operation see: https://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
@@ -164,7 +166,7 @@ namespace carolocup
 				dilate(m_image_new, m_image_dst, element);
 
 				// Apply hough line transformation algorithm, for more info see:  https://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
-				cvtColor(m_image_dst, m_hough, CV_GRAY2BGR);
+				//cvtColor(m_image_dst, m_hough, CV_GRAY2BGR);
 
 				vector <Vec4i> lines;
 
@@ -172,6 +174,8 @@ namespace carolocup
 				//minLinLength: The minimum number of points that can form a line. Lines with less than this number of points are disregarded
 				//maxLineGap: The maximum gap between two points to be considered in the same line.
 				HoughLinesP(m_image_dst, lines, 1, CV_PI / 180, 60, 25, 150);
+
+				//cvtColor(m_image_dst,m_image_new,CV_GRAY2RGB);
 
 				for (size_t i = 0; i < lines.size(); i++)
 				{
@@ -187,6 +191,8 @@ namespace carolocup
 					}
 
 				}
+
+				dilate(m_image_new, m_image_new, element);
 			}
 			else
 			{
@@ -298,6 +304,8 @@ namespace carolocup
 
 			cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " ERROR CALCULATION " << endl;
 
+			m_distance = M_DISTANCE;
+
 			// Values adjusted for simulation environment, if sim flag is set
 			if (*Sim)
 			{
@@ -387,9 +395,19 @@ namespace carolocup
 			}
 
 			// Moving the pixel perception to the right, as to better keep track of right lane marking
-			if (right.x > 0) right.x += 10;
+			if (right.x > 0)
+			{
+				right.x += 10;
+			}
 
-			if (left.x > 0) left.x += 10;
+			if (left.x > 0)
+			{
+				left.x += 10;
+			}
+
+			if (right.x > 0 && left.x > 0) {
+				m_distance = ((right.x - m_image_new.cols / 2) + (m_image_new.cols / 2 - left.x)) / 2;
+			}
 
 
 			if (y == m_control_scanline)
@@ -425,57 +443,63 @@ namespace carolocup
 				}
 			}
 
-			// Stopline logic
-			uchar front_left, front_right;
-			Point stop_left, stop_right;
-
 			int left_dist = 0;
-			// Set the column/ row at which to search
-			stop_left.x = (m_image_new.cols / 2) - 25;
-			stop_left.y = m_control_scanline;
-
-			// Find first grey pixel in the front of the car left side
-			for (int i = m_control_scanline; i > m_stop_scanline; i--)
-			{
-				front_left = m_image_new.at<uchar>(Point(stop_left.x, i));
-				if (front_left > 150)
-				{
-					stop_left.y = i;
-					left_dist = m_control_scanline - stop_left.y;
-					break;
-				}
-			}
-
 			int right_dist = 0;
-			// Set the column/ row at which to search
-			stop_right.x = (m_image_new.cols / 2) + 15;
-			stop_right.y = m_control_scanline;
 
-			// Find first grey pixel in front of the car right side
-			for (int i = m_control_scanline; i > m_stop_scanline; i--)
+			if (*_isOvertaker)
 			{
-				front_right = m_image_new.at<uchar>(Point(stop_right.x, i));
-				if (front_right > 150)
+				// Stopline logic
+				uchar front_left, front_right;
+				Point stop_left, stop_right;
+
+				// Set the column/ row at which to search
+				stop_left.x = (m_image_new.cols / 2) - 25;
+				stop_left.y = m_control_scanline;
+
+				// Find first grey pixel in the front of the car left side
+				for (int i = m_control_scanline; i > m_stop_scanline; i--)
 				{
-					stop_right.y = i;
-					right_dist = m_control_scanline - stop_right.y;
-					break;
+					front_left = m_image_new.at<uchar>(Point(stop_left.x, i));
+					if (front_left > 150)
+					{
+						stop_left.y = i;
+						left_dist = m_control_scanline - stop_left.y;
+						break;
+					}
+				}
+
+				// Set the column/ row at which to search
+				stop_right.x = (m_image_new.cols / 2) + 15;
+				stop_right.y = m_control_scanline;
+
+				// Find first grey pixel in front of the car right side
+				for (int i = m_control_scanline; i > m_stop_scanline; i--)
+				{
+					front_right = m_image_new.at<uchar>(Point(stop_right.x, i));
+					if (front_right > 150)
+					{
+						stop_right.y = i;
+						right_dist = m_control_scanline - stop_right.y;
+						break;
+					}
+				}
+
+				// Draw lines if debug true
+				if (*m_debug)
+				{
+					if (stop_left.y < m_control_scanline)
+					{
+						line(m_image_new, Point(stop_left.x, m_control_scanline), stop_left, Scalar(255, 0, 0));
+					}
+
+					if (stop_right.y < m_control_scanline)
+					{
+						line(m_image_new, Point(stop_right.x, m_control_scanline), stop_right, Scalar(255, 0, 0));
+					}
 				}
 			}
 
-			// Draw lines if debug true
-			if (*m_debug)
-			{
-				if (stop_left.y < m_control_scanline)
-				{
-					line(m_image_new, Point(stop_left.x, m_control_scanline), stop_left, Scalar(255, 0, 0));
-				}
 
-				if (stop_right.y < m_control_scanline)
-				{
-					line(m_image_new, Point(stop_right.x, m_control_scanline), stop_right, Scalar(255, 0, 0));
-				}
-			}
 
 			// Prints several pieces of information onto the image for debugging purposes if debug flag is set to true
 			if (*m_debug)
@@ -513,7 +537,7 @@ namespace carolocup
 						break;
 				}
 
-				putText(m_image_new, "State: " + _st, Point(m_image_new.cols - 150, 138), FONT_HERSHEY_PLAIN, 1,
+				putText(m_image_new, "State: " + _st, Point(20, 60), FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
 				string _old_st = "";
@@ -541,12 +565,12 @@ namespace carolocup
 						break;
 				}
 
-				putText(m_image_new, "Old state: " + _old_st, Point(m_image_new.cols - 150, 153), FONT_HERSHEY_PLAIN,
+				putText(m_image_new, "Old state: " + _old_st, Point(20, 80), FONT_HERSHEY_PLAIN,
 						1,
 						CV_RGB(255, 255, 255));
 
 				putText(m_image_new, "Stop counter :" + std::to_string(*stopCounter),
-						Point(m_image_new.cols - 150, 168),
+						Point(20, 100),
 						FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
@@ -564,12 +588,16 @@ namespace carolocup
 						FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
-				putText(m_image_new, "Distance " + std::to_string(currentDistance), Point(m_image_new.cols - 150, 120),
+				putText(m_image_new, "Distance " + std::to_string(currentDistance), Point(20, 40),
+						FONT_HERSHEY_PLAIN, 1,
+						CV_RGB(255, 255, 255));
+
+				putText(m_image_new, "M_Distance " + std::to_string(m_distance), Point(m_image_new.cols - 150, 120),
 						FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 				cerr << now.getYYYYMMDD_HHMMSS_noBlank() << " DISTANCE -> " << currentDistance << endl;
 
-				putText(m_image_new, "FPS " + std::to_string(fps) + " FPS", Point(m_image_new.cols - 150, 183),
+				putText(m_image_new, "FPS " + std::to_string(fps) + " FPS", Point(m_image_new.cols / 2, 30), //cols rows
 						FONT_HERSHEY_PLAIN, 1,
 						CV_RGB(255, 255, 255));
 
