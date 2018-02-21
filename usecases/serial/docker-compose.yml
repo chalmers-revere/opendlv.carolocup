@@ -72,35 +72,35 @@ services:
          privileged: true
          command: "/opt/opendlv.carolocup/bin/carolocup-control-lanefollower --verbose=1  --cid=${CID} --freq=20"
 
-#    #Micro-service for communication link
-#    communicationlink:
-#         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
-#         network_mode: host
-#         ipc: host
-#         volumes:
-#             - ../config:/opt/configuration
-#         depends_on:
-#             - odsupercomponent
-#         restart: on-failure
-#         privileged: true
-#         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
-#
-#    #odcockpit
-#    odcockpit:
-#        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
-#        network_mode: host
-#        environment:
-#        - DISPLAY=$DISPLAY
-#        volumes:
-#        - ../config:/opt/configuration
-#        - /tmp/.X11-unix:/tmp/.X11-unix
-#        - ./CsvData:/opt/Datacsv
-#        ipc: host
-#        depends_on:
-#            - odsupercomponent
-#        restart: on-failure
-#        privileged: true
-#        command: "/opt/od4/bin/odcockpit --cid=${CID} --configuration=/opt/configuration/configuration --freq=20"
+    #Micro-service for communication link
+    communicationlink:
+         image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+         network_mode: host
+         ipc: host
+         volumes:
+             - ../config:/opt/configuration
+         depends_on:
+             - odsupercomponent
+         restart: on-failure
+         privileged: true
+         command: "/opt/opendlv.carolocup/bin/carolocup-control-proxy-communicationlink --verbose=1  --cid=${CID} --freq=20"
+
+    #odcockpit
+    odcockpit:
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
+        network_mode: host
+        environment:
+        - DISPLAY=$DISPLAY
+        volumes:
+        - ../config:/opt/configuration
+        - /tmp/.X11-unix:/tmp/.X11-unix
+        - ./CsvData:/opt/Datacsv
+        ipc: host
+        depends_on:
+            - odsupercomponent
+        restart: on-failure
+        privileged: true
+        command: "/opt/od4/bin/odcockpit --cid=${CID} --configuration=/opt/configuration/configuration --freq=20"
 
 ##start
 #    #Micro-service for serialinhandler

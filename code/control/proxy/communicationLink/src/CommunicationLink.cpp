@@ -32,6 +32,7 @@ namespace carolocup
 		using namespace odcore::wrapper;
 		using namespace odcore::data::dmcp;
 		using namespace gap;
+		using namespace automotive::miniature;
 
 		CommunicationLink::CommunicationLink(const int &argc, char **argv)
 				: DataTriggeredConferenceClientModule(argc, argv, "carolocup-communicationlink"),

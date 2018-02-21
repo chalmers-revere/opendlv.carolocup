@@ -289,11 +289,6 @@ namespace carolocup
 
 					sendSensorBoardData(sensors);
 
-					SensorBoardData _sbd;
-					_sbd.setMapOfDistances(sensors);
-					Container c_sbd(_sbd);
-					getConference().send(c_sbd);
-
 				}//end
 			}
 

@@ -190,6 +190,11 @@ namespace carolocup
 					_state = communicationLinkMSG.getStateLaneFollower();
 					_isOvertaking = communicationLinkMSG.getStateOvertaker();
 
+					SensorBoardData _sbd;
+					_sbd.setMapOfDistances(communicationLinkMSG.getMapOfSensors());
+					Container c_sbd(_sbd);
+					getConference().send(c_sbd);
+
 					if (pid_tuning == 2)
 					{
 						p_gain = communicationLinkMSG.getP();
