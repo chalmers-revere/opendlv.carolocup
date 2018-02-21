@@ -151,7 +151,8 @@ namespace carolocup
 
 		void SerialHandler::nextContainer(Container &c)
 		{
-			cerr << "New CONTAINER : " << serialBehaviour << " " << serialBehaviour.compare("in") == 0 << endl;
+			int verif = serialBehaviour.compare("in") == 0;
+			cerr << "New CONTAINER : " << serialBehaviour << " " << verif << endl;
 
 			if (serialBehaviour.compare("out") == 0)
 			{
