@@ -20,6 +20,6 @@ cd $cwd &&
 
 ./findport.sh && xhost + && docker-compose down &&
 
-docker-compose up --build >> log_data/log.txt
+docker-compose up --build # >> log_data/log.txt
 
 #--rmi 'all' --volumes --remove-orphans
