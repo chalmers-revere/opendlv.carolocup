@@ -48,10 +48,12 @@
 
 #include <opendavinci/odcore/wrapper/SharedMemoryFactory.h>
 #include <opendavinci/odcore/wrapper/SharedMemory.h>
+
 #include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
 #include <automotivedata/GeneratedHeaders_AutomotiveData.h>
 #include "automotivedata/generated/automotive/VehicleData.h"
 #include "automotivedata/generated/automotive/miniature/SensorBoardData.h"
+
 #include "odvdcarolocupdatamodel/generated/gap/CommunicationLinkMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/LaneFollowerMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"

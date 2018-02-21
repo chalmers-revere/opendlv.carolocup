@@ -23,17 +23,22 @@
 #include "../../../defines/defines.h"
 
 #include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+
+#include "opendavinci/odcore/io/conference/ContainerConference.h"
+#include <opendavinci/odcore/data/Container.h>
+#include <opendavinci/odcore/data/TimeStamp.h>
+#include <opendavinci/odcore/base/Lock.h>
 
 #include <opendavinci/GeneratedHeaders_OpenDaVINCI.h>
 #include <automotivedata/GeneratedHeaders_AutomotiveData.h>
 #include "automotivedata/generated/automotive/VehicleData.h"
 #include "automotivedata/generated/automotive/miniature/SensorBoardData.h"
+
 #include "odvdcarolocupdatamodel/generated/gap/AutomotiveMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/SensorsMSG.h"
 #include "odvdcarolocupdatamodel/generated/gap/ResetMSG.h"
 
-#include <opendavinci/odcore/data/Container.h>
-#include <opendavinci/odcore/data/TimeStamp.h>
 #include <opendavinci/odcore/base/Thread.h>
 
 #include <opendavinci/odcore/base/Service.h>
@@ -68,7 +73,6 @@ namespace carolocup
 		using namespace odcore::data;
 		using namespace odcore::wrapper;
 		using namespace automotive;
-		using namespace automotive::miniature;
 		using namespace gap;
 
 		void __on_read(uint8_t b);

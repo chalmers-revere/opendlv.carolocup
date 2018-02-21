@@ -561,6 +561,7 @@ namespace carolocup
 
 		void LaneFollower::sendToConference(bool sendMSG)
 		{
+			SensorBoardData _s;
 			if (sendMSG)
 			{
 				Container lfMessage(laneFollowerMSG);
