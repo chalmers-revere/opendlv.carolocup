@@ -63,6 +63,7 @@ uint8_t serial_handshake(serial_state *state, uint8_t ab, uint8_t sb)
 		if (!val)
 		{
 			val = (b == sb);
+			std::cout << "<< Val " << val << std::endl;
 		}
 	}
 
