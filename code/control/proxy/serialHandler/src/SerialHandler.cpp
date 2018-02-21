@@ -96,22 +96,21 @@ namespace carolocup
 
 				odcore::base::Thread::usleepFor(5 * ONE_SECOND);
 
-				if (serialBehaviour.compare("out") == 0)
-				{
-					protocol_data d_motor;
-					d_motor.id = ID_OUT_MOTOR;
-					d_motor.value = MOTOR_IDLE;
-					d_motor.sub_id = NO_DATA;
 
-					serial_send(this->serial, d_motor);
+				protocol_data d_motor;
+				d_motor.id = ID_OUT_MOTOR;
+				d_motor.value = MOTOR_IDLE;
+				d_motor.sub_id = NO_DATA;
 
-					protocol_data d_servo;
-					d_servo.id = ID_OUT_SERVO;
-					d_servo.value = STRAIGHT_DEGREES;
-					d_servo.sub_id = NO_DATA;
+				serial_send(this->serial, d_motor);
 
-					serial_send(this->serial, d_servo);
-				}
+				protocol_data d_servo;
+				d_servo.id = ID_OUT_SERVO;
+				d_servo.value = STRAIGHT_DEGREES;
+				d_servo.sub_id = NO_DATA;
+
+				serial_send(this->serial, d_servo);
+
 
 				odcore::base::Thread::usleepFor(2 * ONE_SECOND);
 
@@ -241,7 +240,8 @@ namespace carolocup
 				{
 					Container resetContainer = c.getData<ResetMSG>();
 					const ResetMSG resetMSG = resetContainer.getData<ResetMSG>();
-					if (resetMSG.getResetOdometer()) {
+					if (resetMSG.getResetOdometer())
+					{
 						odometerCounter = 0;
 						km = 0;
 					}
