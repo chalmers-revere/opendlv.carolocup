@@ -151,7 +151,8 @@ namespace carolocup
 
 		void SerialHandler::nextContainer(Container &c)
 		{
-			cerr << "New CONTAINER : " << endl;
+			cerr << "New CONTAINER : " << serialBehaviour << endl;
+
 			if (serialBehaviour.compare("out") == 0)
 			{
 				if (c.getDataType() == AutomotiveMSG::ID())
