@@ -21,7 +21,7 @@ version: '2'
 
 services:
     odsupercomponent:
-        build: .
+        image: carolocup/carolocup-on-scaledcars-on-opendlv-on-opendlv-core-on-opendavinci-on-base-dev
         network_mode: "host"
         ipc : host
         restart: on-failure
