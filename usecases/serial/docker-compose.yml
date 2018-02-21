@@ -28,7 +28,7 @@ services:
         privileged: true
         volumes:
             - .:/opt/carolocup.data
-            - ./config:/opt/configuration
+            - ../config:/opt/configuration
         command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/configuration/configuration --freq=20"
 
     #Micro-service for camera-proxy
