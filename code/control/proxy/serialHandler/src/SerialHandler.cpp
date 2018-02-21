@@ -151,7 +151,7 @@ namespace carolocup
 
 		void SerialHandler::nextContainer(Container &c)
 		{
-			cerr << "New CONTAINER : " << serialBehaviour << endl;
+			cerr << "New CONTAINER : " << serialBehaviour << " " << serialBehaviour.compare("in") == 0 << endl;
 
 			if (serialBehaviour.compare("out") == 0)
 			{
@@ -235,6 +235,7 @@ namespace carolocup
 			}
 			else if (serialBehaviour.compare("in") == 0)
 			{
+				cerr << "IN : " << endl;
 				if (c.getDataType() == ResetMSG::ID())
 				{
 					Container resetContainer = c.getData<ResetMSG>();
